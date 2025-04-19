@@ -1,0 +1,107 @@
+"use client";
+import Link from "next/link";
+import {
+  BarChart3,
+  Users,
+  Package,
+  Settings,
+  HelpCircle,
+  LogOut,
+  Home,
+  ShoppingCart,
+  PieChart,
+  MessageSquare,
+  ChevronRight,
+} from "lucide-react";
+
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar";
+
+export function DashboardSidebar() {
+  const menuItems = [
+    { icon: Home, label: "Dashboard", href: "/", isActive: true },
+    { icon: ShoppingCart, label: "Sales", href: "/sales" },
+    { icon: Users, label: "Customers", href: "/customers" },
+    { icon: Package, label: "Products", href: "/products" },
+    { icon: BarChart3, label: "Analytics", href: "/analytics" },
+    { icon: PieChart, label: "Reports", href: "/reports" },
+    { icon: MessageSquare, label: "Messages", href: "/messages" },
+  ];
+
+  const bottomMenuItems = [
+    { icon: Settings, label: "Settings", href: "/settings" },
+    { icon: HelpCircle, label: "Help", href: "/help" },
+    { icon: LogOut, label: "Logout", href: "/logout" },
+  ];
+
+  return (
+    <Sidebar collapsible="icon" className="sidebar border-r border-gray-200 dark:border-zinc-800 !bg-white dark:bg-zinc-900">
+      <SidebarHeader className="flex h-16 items-center shadow-sm border-zinc-800 px-6">
+        <div className="flex items-center gap-2 font-semibold">
+          <BarChart3 className="h-6 w-6 text-blue-500" />
+          <span className="text-lg">CRM</span>
+        </div>
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-zinc-400">
+            Main Menu
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {menuItems.map((item) => (
+                <SidebarMenuItem key={item.label}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={item.isActive}
+                    className={item.isActive ? "bg-zinc-800" : ""}
+                  >
+                    <Link href={item.href} className="flex justify-between">
+                      <div className="flex items-center">
+                        <item.icon
+                          className={`h-5 w-5 ${
+                            item.isActive ? "text-blue-500" : ""
+                          }`}
+                        />
+                        <span className="ml-2">{item.label}</span>
+                      </div>
+                      {item.isActive && <ChevronRight className="h-4 w-4" />}
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+      <SidebarFooter className="border-t  border-gray-200 dark:border-zinc-800">
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {bottomMenuItems.map((item) => (
+                <SidebarMenuItem key={item.label}>
+                  <SidebarMenuButton asChild>
+                    <Link href={item.href}>
+                      <item.icon className="h-5 w-5" />
+                      <span className="ml-2">{item.label}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarFooter>
+    </Sidebar>
+  );
+}
