@@ -55,8 +55,8 @@ export function MainHeader() {
                   src="/placeholder.svg?height=32&width=32"
                   alt="User"
                 />
-                <AvatarFallback className="bg-purple-600 text-white">
-                  JD
+                <AvatarFallback className="bg-[dodgerblue] text-white">
+                  D
                 </AvatarFallback>
               </Avatar>
               <span className="sr-only">User menu</span>

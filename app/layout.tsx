@@ -9,10 +9,13 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "CRM",
+  title: "| Admin",
   description: "By Dostonbek",
+  icons: {
+    icon: "/CRM-logo/vector/isolated-monochrome-white.svg",
+    shortcut: "/favicon.ico",
+  },
 };
-
 export default function RootLayout({
   children,
 }: Readonly<{

@@ -26,6 +26,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import logo from "@/public/CRM-logo/vector/default-monochrome-black.svg";
+import logowhite from "@/public/CRM-logo/vector/default-monochrome-white.svg";
+import Image from "next/image";
 
 export function DashboardSidebar() {
   const menuItems = [
@@ -45,11 +48,22 @@ export function DashboardSidebar() {
   ];
 
   return (
-    <Sidebar collapsible="icon" className="sidebar border-r border-gray-200 dark:border-zinc-800 !bg-white dark:bg-zinc-900">
-      <SidebarHeader className="flex h-16 items-center shadow-sm border-zinc-800 px-6">
-        <div className="flex items-center gap-2 font-semibold">
-          <BarChart3 className="h-6 w-6 text-blue-500" />
-          <span className="text-lg">CRM</span>
+    <Sidebar
+      collapsible="icon"
+      className="sidebar border-r border-gray-200 dark:border-zinc-800 !bg-white dark:bg-zinc-900"
+    >
+      <SidebarHeader className="flex h-16 items-start shadow-sm border-zinc-800 px-6">
+        <div className="flex items-start gap-2 font-semibold">
+          <Image
+            src={logo}
+            alt="dark-logo"
+            className="!block dark:!hidden max-w-[120px]"
+          />
+          <Image
+            src={logowhite}
+            alt="light-logo"
+            className="!hidden dark:!block max-w-[120px]"
+          />
         </div>
       </SidebarHeader>
       <SidebarContent>
