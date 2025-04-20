@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import Provider from "@/providers";
+import { Toaster } from "react-hot-toast";
 const inter = Inter({
   subsets: ["latin"],
   weight: ["100", "400", "500", "700"],
@@ -34,6 +35,7 @@ export default function RootLayout({
           </ThemeProvider>
         </body>
       </html>
+      <Toaster />
     </Provider>
   );
 }
