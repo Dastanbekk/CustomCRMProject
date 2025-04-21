@@ -7,6 +7,8 @@ import { z } from "zod";
 import { useLoginMutation } from "@/request/mutation";
 import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
+import Image from "next/image";
+import logo from "@/public/CRM-logo/vector/default-monochrome-white.svg";
 
 const loginSchema = z.object({
   email: z.string().email("Email noto‘g‘ri formatda"),
@@ -51,7 +53,10 @@ const Login = () => {
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="relative z-10 w-[90%] max-w-md p-8 bg-[#1c1c1c]/80 backdrop-blur-md border border-[#2e2e2e] rounded-2xl shadow-xl"
       >
-        <h2 className="text-white text-2xl font-semibold mb-6 text-center">
+        <div className="flex items-center justify-center">
+          <Image src={logo} alt="logo" style={{ maxWidth: "200px" }} />
+        </div>
+        <h2 className="text-white  font-semibold mt-5 mb-2 text-center">
           Tizimga Kirish
         </h2>
 

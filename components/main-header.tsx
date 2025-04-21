@@ -16,9 +16,11 @@ import {
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ModeToggle } from "./mode-toggle";
+import { useLogOutMutation } from "@/request/mutation";
 
 export function MainHeader() {
   const { setTheme, theme } = useTheme();
+  const { mutate } = useLogOutMutation();
 
   return (
     <header className="sticky top-0 z-30 flex h-16  items-center gap-4 border-b bg-white dark:bg-zinc-900 px-6 shadow-sm">
@@ -30,7 +32,7 @@ export function MainHeader() {
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
-              placeholder="Search..."
+              placeholder="Qidirish..."
               className="w-full rounded-lg bg-background pl-8 md:w-[240px] lg:w-[320px]"
             />
           </div>
@@ -63,10 +65,9 @@ export function MainHeader() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Settings</DropdownMenuItem>
+            <DropdownMenuItem>Profilim</DropdownMenuItem>
+            <DropdownMenuItem>So'zlamalar</DropdownMenuItem>
             <DropdownMenuItem onClick={() => setTheme("light")}>
               Light Mode
             </DropdownMenuItem>
@@ -74,7 +75,7 @@ export function MainHeader() {
               Dark Mode
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => mutate()}>Chiqish</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

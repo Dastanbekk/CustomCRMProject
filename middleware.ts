@@ -3,15 +3,23 @@ import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
   const token = request.cookies.get("jwt");
-  if (token) {
-    return NextResponse.next();
+  const pathname = request.nextUrl.pathname;
+
+  if (pathname.startsWith("/dashboard")) {
+    // dashboardga faqat token bo‘lsa kiritamiz
+    if (!token) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
   }
-  {
-    return NextResponse.redirect(new URL("/", request.url));
+
+  if (pathname === "/" && token) {
+    // login sahifasiga token bo‘lsa, dashboardga yuboramiz
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
+
+  return NextResponse.next();
 }
 
-// See "Matching Paths" below to learn more
 export const config = {
-  matcher: "/dashboard/:path*",
+  matcher: ["/dashboard/:path*", "/"], // ham dashboard, ham root login sahifasini tekshiradi
 };

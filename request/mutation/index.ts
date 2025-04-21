@@ -26,3 +26,23 @@ export const useLoginMutation = () => {
     },
   });
 };
+
+export const useLogOutMutation = () => {
+  const router = useRouter();
+  return useMutation({
+    mutationKey: ["logout"],
+    mutationFn: () => {
+      return new Promise<void>((resolve) => {
+        cookie.remove("jwt");
+        resolve();
+      });
+    },
+    onSuccess() {
+      toast.success("Tizimdan chiqdingiz");
+      router.push("login");
+    },
+    onError(err) {
+      toast.error(`Tizimdan chiqishda xatolik ${err.message}`);
+    },
+  });
+};

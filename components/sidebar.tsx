@@ -3,15 +3,14 @@ import Link from "next/link";
 import {
   BarChart3,
   Users,
-  Package,
   Settings,
   HelpCircle,
   LogOut,
   Home,
-  ShoppingCart,
-  PieChart,
   MessageSquare,
   ChevronRight,
+  User,
+  Group,
 } from "lucide-react";
 
 import {
@@ -33,18 +32,18 @@ import Image from "next/image";
 export function DashboardSidebar() {
   const menuItems = [
     { icon: Home, label: "Dashboard", href: "/", isActive: true },
-    { icon: ShoppingCart, label: "Sales", href: "/sales" },
-    { icon: Users, label: "Customers", href: "/customers" },
-    { icon: Package, label: "Products", href: "/products" },
-    { icon: BarChart3, label: "Analytics", href: "/analytics" },
-    { icon: PieChart, label: "Reports", href: "/reports" },
+    { icon: User, label: "Menejerlar", href: "/sales" },
+    { icon: User, label: "Adminstratorlar", href: "/customers" },
+    { icon: Users, label: "O'quvchilar", href: "/products" },
+    { icon: BarChart3, label: "Analitika", href: "/analytics" },
+    { icon: Group, label: "Guruhlar", href: "/reports" },
     { icon: MessageSquare, label: "Messages", href: "/messages" },
   ];
 
   const bottomMenuItems = [
-    { icon: Settings, label: "Settings", href: "/settings" },
-    { icon: HelpCircle, label: "Help", href: "/help" },
-    { icon: LogOut, label: "Logout", href: "/logout" },
+    { icon: Settings, label: "Sozlamalar", href: "/settings" },
+    { icon: HelpCircle, label: "Yordam", href: "/help" },
+    { icon: LogOut, label: "Chiqish", href: "/logout" },
   ];
 
   return (
@@ -69,7 +68,7 @@ export function DashboardSidebar() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel className="text-zinc-400">
-            Main Menu
+            Asosiy Menu
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>

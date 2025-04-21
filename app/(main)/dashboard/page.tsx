@@ -1,12 +1,21 @@
 "use client"
-
-import { DashboardSidebar } from "@/components/sidebar"
-import { MainHeader } from "@/components/main-header"
-import { MainContent } from "@/components/main-content"
-import { SidebarProvider } from "@/components/ui/sidebar"
-import { ThemeProvider } from "@/components/theme-provider"
+import { DashboardSidebar } from "@/components/sidebar";
+import { MainHeader } from "@/components/main-header";
+import { MainContent } from "@/components/main-content";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { ThemeProvider } from "@/components/theme-provider";
+import { useLogOutMutation } from "@/request/mutation";
+import { Loader2 } from "lucide-react";
 
 export default function Dashboard() {
+  const { isPending } = useLogOutMutation();
+  if (isPending) {
+    return (
+      <div className="w-ful h-screen flex items-center justify-center">
+        <Loader2 />
+      </div>
+    );
+  }
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <SidebarProvider>
@@ -19,5 +28,5 @@ export default function Dashboard() {
         </div>
       </SidebarProvider>
     </ThemeProvider>
-  )
+  );
 }
