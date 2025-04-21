@@ -51,7 +51,11 @@ export function MainHeader() {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-full">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-full cursor-pointer"
+            >
               <Avatar>
                 <AvatarImage
                   src="/placeholder.svg?height=32&width=32"
@@ -66,16 +70,18 @@ export function MainHeader() {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Profilim</DropdownMenuItem>
-            <DropdownMenuItem>So'zlamalar</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setTheme("light")}>
+            <DropdownMenuItem className="cursor-pointer" >Profilim</DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer" >So'zlamalar</DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer"  onClick={() => setTheme("light")}>
               Light Mode
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setTheme("dark")}>
+            <DropdownMenuItem className="cursor-pointer"  onClick={() => setTheme("dark")}>
               Dark Mode
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => mutate()}>Chiqish</DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer"  onClick={() => mutate()}>
+              Chiqish
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

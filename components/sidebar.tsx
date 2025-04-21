@@ -1,17 +1,6 @@
 "use client";
 import Link from "next/link";
-import {
-  BarChart3,
-  Users,
-  Settings,
-  HelpCircle,
-  LogOut,
-  Home,
-  MessageSquare,
-  ChevronRight,
-  User,
-  Group,
-} from "lucide-react";
+import { ChevronRight } from "lucide-react";
 
 import {
   Sidebar,
@@ -28,24 +17,11 @@ import {
 import logo from "@/public/CRM-logo/vector/default-monochrome-black.svg";
 import logowhite from "@/public/CRM-logo/vector/default-monochrome-white.svg";
 import Image from "next/image";
+import { bottomMenuItems, menuItems } from "@/utils";
+import { usePathname } from "next/navigation";
 
 export function DashboardSidebar() {
-  const menuItems = [
-    { icon: Home, label: "Dashboard", href: "/", isActive: true },
-    { icon: User, label: "Menejerlar", href: "/sales" },
-    { icon: User, label: "Adminstratorlar", href: "/customers" },
-    { icon: Users, label: "O'quvchilar", href: "/products" },
-    { icon: BarChart3, label: "Analitika", href: "/analytics" },
-    { icon: Group, label: "Guruhlar", href: "/reports" },
-    { icon: MessageSquare, label: "Messages", href: "/messages" },
-  ];
-
-  const bottomMenuItems = [
-    { icon: Settings, label: "Sozlamalar", href: "/settings" },
-    { icon: HelpCircle, label: "Yordam", href: "/help" },
-    { icon: LogOut, label: "Chiqish", href: "/logout" },
-  ];
-
+  const pathname = usePathname();
   return (
     <Sidebar
       collapsible="icon"
@@ -76,19 +52,30 @@ export function DashboardSidebar() {
                 <SidebarMenuItem key={item.label}>
                   <SidebarMenuButton
                     asChild
-                    isActive={item.isActive}
-                    className={item.isActive ? "bg-zinc-800" : ""}
+                    className={pathname == item.href ? "bg-zinc-800" : ""}
                   >
                     <Link href={item.href} className="flex justify-between">
                       <div className="flex items-center">
                         <item.icon
                           className={`h-5 w-5 ${
-                            item.isActive ? "text-blue-500" : ""
+                            pathname == item.href ? "text-blue-500" : ""
                           }`}
                         />
-                        <span className="ml-2">{item.label}</span>
+                        <span
+                          className={`ml-2 ${
+                            pathname == item.href ? "text-blue-500" : ""
+                          }`}
+                        >
+                          {item.label}
+                        </span>
                       </div>
-                      {item.isActive && <ChevronRight className="h-4 w-4" />}
+                      {pathname == item.href && (
+                        <ChevronRight
+                          className={`h-4 w-4 ${
+                            pathname == item.href ? "text-blue-500" : ""
+                          }`}
+                        />
+                      )}
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
