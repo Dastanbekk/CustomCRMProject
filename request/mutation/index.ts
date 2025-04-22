@@ -17,6 +17,7 @@ export const useLoginMutation = () => {
         .then((res) => res.data.data),
     onSuccess(data) {
       cookie.set("jwt", data.token);
+      cookie.set("user", JSON.stringify(data));
       toast.success("Tizimga kirdingiz");
       router.push("/dashboard");
     },

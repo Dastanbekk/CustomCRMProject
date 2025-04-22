@@ -43,7 +43,7 @@ export function DashboardSidebar() {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="text-zinc-400">
+          <SidebarGroupLabel className=" text-zinc-700 text-md">
             Asosiy Menu
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -52,18 +52,21 @@ export function DashboardSidebar() {
                 <SidebarMenuItem key={item.label}>
                   <SidebarMenuButton
                     asChild
-                    className={pathname == item.href ? "bg-zinc-800" : ""}
+                    className={`h-10  ${pathname == item.href ? " bg-accent " : " !py-3"}`}
                   >
-                    <Link href={item.href} className="flex justify-between">
+                    <Link
+                      href={item.href}
+                      className="flex text-zinc-400  mt-2 justify-between"
+                    >
                       <div className="flex items-center">
                         <item.icon
-                          className={`h-5 w-5 ${
-                            pathname == item.href ? "text-blue-500" : ""
+                          className={`h-6 w-6  ${
+                            pathname == item.href ? "text-gray-400" : ""
                           }`}
                         />
                         <span
-                          className={`ml-2 ${
-                            pathname == item.href ? "text-blue-500" : ""
+                          className={`ml-2 text-md  ${
+                            pathname == item.href ? "text-gray-400" : ""
                           }`}
                         >
                           {item.label}
@@ -71,8 +74,8 @@ export function DashboardSidebar() {
                       </div>
                       {pathname == item.href && (
                         <ChevronRight
-                          className={`h-4 w-4 ${
-                            pathname == item.href ? "text-blue-500" : ""
+                          className={`h-5 w-5 ${
+                            pathname == item.href ? "text-gray-400" : ""
                           }`}
                         />
                       )}

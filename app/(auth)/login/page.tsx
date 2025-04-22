@@ -94,7 +94,7 @@ const Login = () => {
             disabled={isPending}
             className="bg-gradient-to-r cursor-pointer from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-xl mt-2 transition-all"
           >
-            {isPending ? <Loader2 /> : "Kirish"}
+            {isPending ? <Loader2 className=" animate-spin" /> : "Kirish"}
           </Button>
         </form>
       </motion.div>
