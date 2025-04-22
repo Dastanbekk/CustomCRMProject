@@ -17,10 +17,21 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ModeToggle } from "./mode-toggle";
 import { useLogOutMutation } from "@/request/mutation";
+import { useState } from "react";
+import Cookies from "js-cookie";
+import { UserType } from "@/@types";
 
 export function MainHeader() {
   const { setTheme, theme } = useTheme();
   const { mutate } = useLogOutMutation();
+  const [edit, setEdit] = useState(true);
+  const cookie = Cookies;
+  const userCookie = cookie.get("user");
+  const user: UserType = userCookie ? JSON.parse(userCookie) : null;
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  };
 
   return (
     <header className="sticky top-0 z-30 flex h-16  items-center gap-4 border-b bg-white dark:bg-zinc-900 px-6 shadow-sm">
@@ -62,6 +73,7 @@ export function MainHeader() {
                   alt="User"
                 />
                 <AvatarFallback className="bg-[dodgerblue] text-white">
+                  {/* {user?.first_name ? user.first_name.charAt(0) : ""} */}
                   D
                 </AvatarFallback>
               </Avatar>
@@ -70,16 +82,17 @@ export function MainHeader() {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer" >Profilim</DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer" >So'zlamalar</DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer"  onClick={() => setTheme("light")}>
-              Light Mode
+            <DropdownMenuItem className="cursor-pointer">
+              Profilim
             </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer"  onClick={() => setTheme("dark")}>
-              Dark Mode
+            <DropdownMenuItem className="cursor-pointer">
+              So'zlamalar
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer"  onClick={() => mutate()}>
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={() => mutate()}
+            >
               Chiqish
             </DropdownMenuItem>
           </DropdownMenuContent>

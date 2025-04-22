@@ -4,6 +4,7 @@ import { request } from "..";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import cookie from "js-cookie";
+import { ManagersType } from "@/@types";
 
 export const useLoginMutation = () => {
   const router = useRouter();
@@ -44,6 +45,46 @@ export const useLogOutMutation = () => {
     },
     onError(err) {
       toast.error(`Tizimdan chiqishda xatolik ${err.message}`);
+    },
+  });
+};
+
+export const useGetManagersMutation = () => {
+  const token = cookie.get("jwt");
+  return useMutation({
+    mutationKey: ["managers"],
+    mutationFn: async () => {
+      const res = await request.get("/api/staff/all-managers", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await res;
+      return data.data.data;
+    },
+    onError: (err: any) => {
+      toast.error(`Xatolik: ${err.message}`);
+    },
+  });
+};
+
+export const useGetAdminsMutation = () => {
+  const token = cookie.get("jwt");
+  return useMutation({
+    mutationKey: ["managers"],
+    mutationFn: async () => {
+      const res = await request.get("/api/staff/all-admins", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await res;
+      return data.data.data;
+    },
+    onError: (err: any) => {
+      toast.error(`Xatolik: ${err.message}`);
     },
   });
 };

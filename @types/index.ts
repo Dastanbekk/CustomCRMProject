@@ -22,3 +22,17 @@ export interface UserType {
   work_end: null;
   _id: string;
 }
+
+export interface ManagersType {
+  _id: string;
+  first_name: string;
+  last_name: string;
+  avatar?: string;
+  status?: "active" | "inactive";
+  role?: string;
+  phone?: string;
+  gender?: string;
+  birthday?: string;
+  address?: string;
+  email: string;
+}
