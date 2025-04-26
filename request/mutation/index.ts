@@ -128,3 +128,16 @@ export const useDeleteAdminsMutation = () => {
     },
   });
 };
+
+export const useAddAdminMutation = () => {
+  return useMutation({
+    mutationKey: ["add-admin"],
+    mutationFn: (data: object) => request.post("/api/staff/create-admin", data),
+    onSuccess() {
+      toast.success("Admin qo'shildi");
+    },
+    onError(err) {
+      toast.error(`Xatolik ${err.message}`);
+    },
+  });
+};

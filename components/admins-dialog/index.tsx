@@ -5,7 +5,6 @@ import { Plus } from "lucide-react";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -16,26 +15,34 @@ import { Input } from "../ui/input";
 import { UserType } from "@/@types";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
+import { useAddAdminMutation } from "@/request/mutation";
 
 const AdminsDialog = () => {
+  const { mutate, isPending } = useAddAdminMutation();
   const cookie = Cookies;
   const userCookie = cookie.get("user");
   const user: UserType = userCookie ? JSON.parse(userCookie) : null;
   const [openDialog, setOpenDialog] = useState(false);
   const [formData, setFormData] = useState({
-    _id: "",
-    email: "",
-    status: "",
     first_name: "",
     last_name: "",
+    email: "",
+    password: "",
+    role: "admin",
+    work_date: new Date().toISOString().split("T")[0], // bugungi sana avtomatik
+    status: "faol",
+    active: true,
+    is_deleted: false,
   });
+  
+
   return (
     <div>
       <Dialog onOpenChange={() => setOpenDialog(false)}>
         <DialogTrigger asChild>
           <Button
             onClick={() => {
-              user?.role.toLowerCase() == "manager"
+              user?.role.toLowerCase() !== "manager"
                 ? toast.error("Sizga ruxsat berilmagan")
                 : setOpenDialog(!openDialog);
             }}
@@ -89,6 +96,19 @@ const AdminsDialog = () => {
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="password" className="text-right">
+                Parol :
+              </Label>
+              <Input
+                id="password"
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="status" className="text-right">
                 Status :
               </Label>
@@ -108,13 +128,10 @@ const AdminsDialog = () => {
               type="button"
               onClick={() => {
                 setOpenDialog(!openDialog);
-                // editAdmin({
-                //   ...formData,
-                // });
+                mutate(formData);
               }}
             >
-              {/* {isEditing ? "Saqlanmoqda..." : "Save changes"} */}
-              Saqlash
+              {isPending ? "Saqlanmoqda..." : "Save changes"}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -22,8 +22,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { GitPullRequestDraft, Plus } from "lucide-react";
 import AdminsDialog from "@/components/admins-dialog";
-import { UserType } from "@/@types";
-import Cookies from "js-cookie";
 
 const Admins = () => {
 
@@ -68,7 +66,7 @@ const Admins = () => {
               </DropdownMenuRadioGroup>
             </DropdownMenuContent>
           </DropdownMenu>
-          <AdminsDialog  />
+          <AdminsDialog />
         </div>
       </div>
       <div className="rounded-lg border bg-card mt-5 text-card-foreground shadow-sm overflow-hidden">

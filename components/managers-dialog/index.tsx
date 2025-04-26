@@ -36,7 +36,7 @@ const ManagersDialog = () => {
         <DialogTrigger asChild>
           <Button
             onClick={() => {
-              user?.role.toLowerCase() == "manager"
+              user?.role.toLowerCase() !== "manager"
                 ? toast.error("Sizga ruxsat berilmagan")
                 : setOpenDialog(!openDialog);
             }}
