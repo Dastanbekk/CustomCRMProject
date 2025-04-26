@@ -4,7 +4,6 @@ import { request } from "..";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import cookie from "js-cookie";
-import { ManagersType } from "@/@types";
 
 export const useLoginMutation = () => {
   const router = useRouter();
@@ -70,20 +69,27 @@ export const useGetManagersMutation = () => {
 };
 
 export const useGetAdminsMutation = () => {
-  const token = cookie.get("jwt");
   return useMutation({
     mutationKey: ["managers"],
     mutationFn: async () => {
-      const res = await request.get("/api/staff/all-admins", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
+      const res = await request.get("/api/staff/all-admins");
       const data = await res;
       return data.data.data;
     },
     onError: (err: any) => {
+      toast.error(`Xatolik: ${err.message}`);
+    },
+  });
+};
+
+export const useEditAdminsMutation = () => {
+  return useMutation({
+    mutationKey: ["editAdmin"],
+    mutationFn: (data: any) => request.post("/api/staff/edited-admin", data),
+    onSuccess() {
+      toast.success("Admin o'zgartirildi");
+    },
+    onError(err) {
       toast.error(`Xatolik: ${err.message}`);
     },
   });

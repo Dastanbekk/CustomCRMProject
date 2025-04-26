@@ -28,7 +28,7 @@ export interface ManagersType {
   first_name: string;
   last_name: string;
   avatar?: string;
-  status?: "active" | "inactive";
+  status?: string;
   role?: string;
   phone?: string;
   gender?: string;

@@ -25,7 +25,7 @@ const Profile = () => {
       <Image
         src={backgroundImg}
         alt="profile-bg"
-        className="min-h-[70px] w-full"
+        className="min-h-[100px] max-h-[200px] rounded-t-[80px] h-full w-full"
       />
       <div className="flex items-center mt-3 justify-between">
         <div className="flex items-center gap-3">
