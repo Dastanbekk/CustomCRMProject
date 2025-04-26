@@ -1,9 +1,10 @@
 "use client";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { request } from "..";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import cookie from "js-cookie";
+import { ManagersType, UserType } from "@/@types";
 
 export const useLoginMutation = () => {
   const router = useRouter();
@@ -35,6 +36,7 @@ export const useLogOutMutation = () => {
     mutationFn: () => {
       return new Promise<void>((resolve) => {
         cookie.remove("jwt");
+        cookie.remove("user");
         resolve();
       });
     },
@@ -70,7 +72,7 @@ export const useGetManagersMutation = () => {
 
 export const useGetAdminsMutation = () => {
   return useMutation({
-    mutationKey: ["managers"],
+    mutationKey: ["admins"],
     mutationFn: async () => {
       const res = await request.get("/api/staff/all-admins");
       const data = await res;
@@ -82,15 +84,47 @@ export const useGetAdminsMutation = () => {
   });
 };
 
+// const updateAdminsCache = (queryClient, data) => {
+//   queryClient.setQueryData(["admins"], (oldData) => {
+//     if (!oldData) return [];
+//     return oldData.map((value) =>
+//       value._id === data._id ? { ...value, ...data } : value
+//     );
+//   });
+// };
+
 export const useEditAdminsMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["editAdmin"],
-    mutationFn: (data: any) => request.post("/api/staff/edited-admin", data),
+    mutationFn: (data: object) => {
+      // updateAdminsCache(queryClient, data);
+      return request.post("/api/staff/edited-admin", data);
+    },
     onSuccess() {
       toast.success("Admin o'zgartirildi");
     },
     onError(err) {
       toast.error(`Xatolik: ${err.message}`);
+    },
+  });
+};
+
+export const useDeleteAdminsMutation = () => {
+  return useMutation({
+    mutationKey: ["deleteAdmin"],
+    mutationFn: (data: ManagersType) => {
+      return request({
+        url: "/api/staff/deleted-admin",
+        data: { _id: data?._id },
+        method: "DELETE",
+      });
+    },
+    onSuccess() {
+      toast.success("Admin tizimdan chiqarildi");
+    },
+    onError(err) {
+      toast.error(`Xatolik ${err.message}`);
     },
   });
 };

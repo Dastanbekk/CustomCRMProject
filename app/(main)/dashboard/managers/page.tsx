@@ -1,10 +1,25 @@
 "use client";
+import ManagersDialog from "@/components/managers-dialog";
 import { UsersTable } from "@/components/managers-table";
 import { Button } from "@/components/ui/button";
 import { DatePickerWithRange } from "@/components/ui/date";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { GitPullRequestDraft } from "lucide-react";
 import React from "react";
 
@@ -50,6 +65,7 @@ const Managers = () => {
               </DropdownMenuRadioGroup>
             </DropdownMenuContent>
           </DropdownMenu>
+          <ManagersDialog />
         </div>
       </div>
       <div className="rounded-lg border bg-card mt-5 text-card-foreground shadow-sm overflow-hidden">

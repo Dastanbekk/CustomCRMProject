@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import {
+  useDeleteAdminsMutation,
   useEditAdminsMutation,
   useGetAdminsMutation,
 } from "@/request/mutation";
@@ -38,6 +39,7 @@ import {
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import toast from "react-hot-toast";
 
 export function AdminsTable() {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -46,6 +48,8 @@ export function AdminsTable() {
   const { data: usersData, mutate, isPending } = useGetAdminsMutation();
   const users = usersData;
   const { mutate: editAdmin, isPending: isEditing } = useEditAdminsMutation();
+  const { mutate: deleteAdmin, isPending: isDeleting } =
+    useDeleteAdminsMutation();
 
   const [formData, setFormData] = useState({
     _id: "",
@@ -138,9 +142,17 @@ export function AdminsTable() {
                   <TableCell>
                     <Badge
                       variant="outline"
-                      className= {`${user.status === "faol" ?"bg-green-500/10 text-green-500 border-green-500/20" :"bg-red-500/10 text-red-500 border-red-500/20" }`} 
+                      className={`${
+                        user.status === "faol"
+                          ? "bg-green-500/10 text-green-500 border-green-500/20"
+                          : "bg-red-500/10 text-red-500 border-red-500/20"
+                      }`}
                     >
-                      <span className= {`${user.status === "faol" ?"bg-green-700" :"bg-red-500" } mr-1.5 h-1.5 w-1.5 rounded-full inline-block`} ></span>
+                      <span
+                        className={`${
+                          user.status === "faol" ? "bg-green-700" : "bg-red-500"
+                        } mr-1.5 h-1.5 w-1.5 rounded-full inline-block`}
+                      ></span>
                       {user.status === "faol" ? "Faol" : "Nofaol"}
                     </Badge>
                   </TableCell>
@@ -175,7 +187,10 @@ export function AdminsTable() {
                           Edit user
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem className="text-red-500 cursor-pointer">
+                        <DropdownMenuItem
+                          onClick={() => deleteAdmin(user)}
+                          className="text-red-500 cursor-pointer"
+                        >
                           Delete
                         </DropdownMenuItem>
                       </DropdownMenuContent>

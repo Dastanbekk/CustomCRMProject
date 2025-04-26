@@ -132,8 +132,6 @@ export function UsersTable() {
                       </button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuItem>View details</DropdownMenuItem>
                       <DropdownMenuItem>Edit user</DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem className="text-red-500">

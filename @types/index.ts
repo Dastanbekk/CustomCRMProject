@@ -36,3 +36,4 @@ export interface ManagersType {
   address?: string;
   email: string;
 }
+

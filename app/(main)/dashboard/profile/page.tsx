@@ -25,10 +25,10 @@ const Profile = () => {
       <Image
         src={backgroundImg}
         alt="profile-bg"
-        className="min-h-[100px] max-h-[200px] rounded-t-[80px] h-full w-full"
+        className="min-h-[70px] max-h-[150px] object-cover rounded-t- h-full w-full"
       />
-      <div className="flex items-center mt-3 justify-between">
-        <div className="flex items-center gap-3">
+      <div className="flex items-end mt-[-4%] px-5  justify-between">
+        <div className="flex items-end gap-3">
           <div className="bg-gray-200 rounded-full">
             <Image
               src={userDefaultImg}
@@ -48,7 +48,7 @@ const Profile = () => {
 
       <form
         onSubmit={handleSubmit}
-        className="grid grid-cols-1 mt-5 sm:grid-cols-2 gap-3 sm:gap-5"
+        className="grid grid-cols-1 mt-5 px-5 sm:grid-cols-2 gap-3 sm:gap-5"
       >
         <div className="flex flex-col space-y-3">
           <Label htmlFor="first_name">First Name:</Label>

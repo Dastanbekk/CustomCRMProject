@@ -14,10 +14,19 @@ import {
 } from "@/components/ui/select";
 import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import {  GitPullRequestDraft } from "lucide-react";
+import {
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { GitPullRequestDraft, Plus } from "lucide-react";
+import AdminsDialog from "@/components/admins-dialog";
+import { UserType } from "@/@types";
+import Cookies from "js-cookie";
 
 const Admins = () => {
+
   return (
     <div className="pt-10 px-5">
       <h3 className="font-bold text-2xl">Admins</h3>
@@ -43,11 +52,12 @@ const Admins = () => {
           {/* DROPDOWN */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline"><GitPullRequestDraft className="rotate-90" /> ko'rish</Button>
+              <Button variant="outline">
+                <GitPullRequestDraft className="rotate-90" /> ko'rish
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-10">
-              <DropdownMenuRadioGroup
-              >
+              <DropdownMenuRadioGroup>
                 <DropdownMenuRadioItem value="top">Top</DropdownMenuRadioItem>
                 <DropdownMenuRadioItem value="bottom">
                   Bottom
@@ -58,6 +68,7 @@ const Admins = () => {
               </DropdownMenuRadioGroup>
             </DropdownMenuContent>
           </DropdownMenu>
+          <AdminsDialog  />
         </div>
       </div>
       <div className="rounded-lg border bg-card mt-5 text-card-foreground shadow-sm overflow-hidden">
