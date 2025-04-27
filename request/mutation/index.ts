@@ -4,7 +4,7 @@ import { request } from "..";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import cookie from "js-cookie";
-import { ManagersType, UserType } from "@/@types";
+import { ManagersType, NewUserType, UserType } from "@/@types";
 
 export const useLoginMutation = () => {
   const router = useRouter();
@@ -135,6 +135,46 @@ export const useAddAdminMutation = () => {
     mutationFn: (data: object) => request.post("/api/staff/create-admin", data),
     onSuccess() {
       toast.success("Admin qo'shildi");
+    },
+    onError(err) {
+      toast.error(`Xatolik ${err.message}`);
+    },
+  });
+};
+
+export const useUploadImgMutation = () => {
+  return useMutation({
+    mutationKey: ["upload-img"],
+    mutationFn: (data: FormData) =>
+      request.post("/api/auth/edit-profile-img", data),
+    onSuccess() {
+      toast.success("Rasm qo'shildi");
+    },
+    onError(err) {
+      toast.error(`Xatolik: ${err.message}`);
+    },
+  });
+};
+
+export const useUpdateUserProfile = () => {
+  return useMutation({
+    mutationKey: ["update-profile"],
+    mutationFn: (data: object) => request.post("/api/auth/edit-profile", data),
+    onSuccess() {
+      toast.success("Ma'lumotlaringiz o'zgartirildi");
+    },
+    onError(err) {
+      toast.error(`Xatolik ${err.message}`);
+    },
+  });
+};
+
+export const useAdminStaffMutation = () => {
+  return useMutation({
+    mutationKey: ["admin-staff"],
+    mutationFn: (data: object) => request.post("/api/staff/leave-staff", data),
+    onSuccess() {
+      toast.success("Sabab qo'shildi");
     },
     onError(err) {
       toast.error(`Xatolik ${err.message}`);

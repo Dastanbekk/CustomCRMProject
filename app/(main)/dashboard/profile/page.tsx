@@ -1,33 +1,66 @@
 "use client";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Cookies from "js-cookie";
 import Image from "next/image";
 import backgroundImg from "@/public/profileBg.png";
 import userDefaultImg from "@/public/user.svg";
-import { UserType } from "@/@types";
+import { FormDataType, NewUserType, UserType } from "@/@types";
 import { Button } from "@/components/ui/button";
 import { Edit } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useUpdateUserProfile, useUploadImgMutation } from "@/request/mutation";
 
 const Profile = () => {
   const [edit, setEdit] = useState(true);
   const cookie = Cookies;
   const userCookie = cookie.get("user");
   const user: UserType = userCookie ? JSON.parse(userCookie) : null;
-
+  const { mutate } = useUploadImgMutation();
+  const { mutate: updateProfile } = useUpdateUserProfile();
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   };
 
+  const [newUser, setNewUser] = useState<NewUserType>({
+    first_name: "",
+    last_name: "",
+    email: "",
+  });
+
+  const handlePush = () => {
+    updateProfile(newUser);
+    console.log(newUser);
+  };
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+    }
+  };
+  const handleUpload = () => {
+    if (!selectedFile) {
+      alert("Iltimos, rasm tanlang!");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", selectedFile);
+
+    mutate(formData);
+    console.log(formData);
+  };
   return (
     <div className="px-5 py-5">
       <Image
         src={backgroundImg}
         alt="profile-bg"
-        className="min-h-[70px] max-h-[150px] object-cover rounded-t- h-full w-full"
+        className="min-h-[70px] max-h-[150px] object-cover rounded-t-xl h-full w-full"
       />
-      <div className="flex items-end mt-[-4%] px-5  justify-between">
+      <div className="flex items-end mt-[-3%] px-5 justify-between">
         <div className="flex items-end gap-3">
           <div className="bg-gray-200 rounded-full">
             <Image
@@ -37,8 +70,12 @@ const Profile = () => {
             />
           </div>
           <div className="flex flex-col">
-            <h3 className="font-bold text-lg">{`${user?.first_name}  ${user?.last_name}`}</h3>
-            <h3 className="text-[15px] text-zinc-400">{user?.email}</h3>
+            <h3 className="font-bold text-lg">{`${
+              user ? user?.first_name : ""
+            }  ${user ? user?.first_name : ""}`}</h3>
+            <h3 className="text-[15px] text-zinc-400">
+              {user ? user?.first_name : ""}
+            </h3>
           </div>
         </div>
         <Button onClick={() => setEdit(!edit)} className="cursor-pointer">
@@ -46,6 +83,28 @@ const Profile = () => {
         </Button>
       </div>
 
+      <div className="flex items-start">
+        <div className="flex  gap-1 p-4">
+          <div className="flex">
+            <label
+              htmlFor="file-upload"
+              className="cursor-pointer w-full dark:border-white border border-black text-black  dark:text-white  px-2 py-[2px] rounded-md text-sm text-center"
+            >
+              Rasm tanlash
+            </label>
+            <Input
+              id="file-upload"
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              className="hidden"
+            />
+          </div>
+          <Button size="sm" onClick={handleUpload}>
+            Rasmni yuklash
+          </Button>
+        </div>
+      </div>
       <form
         onSubmit={handleSubmit}
         className="grid grid-cols-1 mt-5 px-5 sm:grid-cols-2 gap-3 sm:gap-5"
@@ -56,6 +115,9 @@ const Profile = () => {
             id="first_name"
             disabled={edit}
             defaultValue={user?.first_name}
+            onChange={(e) =>
+              setNewUser({ ...newUser, first_name: e.target.value })
+            }
           />
         </div>
 
@@ -65,6 +127,9 @@ const Profile = () => {
             id="last_name"
             disabled={edit}
             defaultValue={user?.last_name}
+            onChange={(e) =>
+              setNewUser({ ...newUser, last_name: e.target.value })
+            }
           />
         </div>
 
@@ -75,6 +140,7 @@ const Profile = () => {
             type="email"
             disabled={edit}
             defaultValue={user?.email}
+            onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
           />
         </div>
 
@@ -83,7 +149,11 @@ const Profile = () => {
           <Input id="role" disabled={edit} defaultValue={user?.role} />
         </div>
         <div>
-          <Button disabled={edit} className="flex items-start">
+          <Button
+            onClick={handlePush}
+            disabled={edit}
+            className="flex items-start"
+          >
             Saqlash
           </Button>
         </div>

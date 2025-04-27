@@ -5,6 +5,12 @@ export interface FormDataType {
   password: string;
 }
 
+export interface NewUserType {
+  email: string;
+  first_name: string;
+  last_name: string;
+}
+
 export interface ChildrenType {
   children: React.ReactNode;
 }
@@ -30,10 +36,24 @@ export interface ManagersType {
   avatar?: string;
   status?: string;
   role?: string;
+  active?: boolean;
   phone?: string;
   gender?: string;
   birthday?: string;
   address?: string;
   email: string;
+  createdAt?: string;
+  image?: string;
+  is_deleted?: boolean;
+  updatedAt?: string;
+  work_date?: string;
+  work_end?: null;
+  leave_history: [
+    {
+      start_date: string;
+      end_date: string;
+      reason: string;
+      _id: string;
+    }
+  ];
 }
-

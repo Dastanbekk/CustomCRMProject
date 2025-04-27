@@ -17,29 +17,20 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ModeToggle } from "./mode-toggle";
 import { useLogOutMutation } from "@/request/mutation";
-import { useState } from "react";
 import Cookies from "js-cookie";
 import { UserType } from "@/@types";
 
 export function MainHeader() {
-  const { setTheme, theme } = useTheme();
   const { mutate } = useLogOutMutation();
-  const [edit, setEdit] = useState(true);
   const cookie = Cookies;
   const userCookie = cookie.get("user");
   const user: UserType = userCookie ? JSON.parse(userCookie) : null;
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-  };
 
   return (
     <header className="sticky top-0 z-30 flex h-16  items-center gap-4 border-b bg-white dark:bg-zinc-900 px-6 shadow-sm">
       <SidebarTrigger className="lg:hidden" />
 
-      <div className="w-full flex-1 md:w-auto md:flex-none">
-
-      </div>
+      <div className="w-full flex-1 md:w-auto md:flex-none"></div>
 
       <div className="flex items-center gap-4 ml-auto">
         <ModeToggle />
@@ -63,9 +54,8 @@ export function MainHeader() {
                   src="/placeholder.svg?height=32&width=32"
                   alt="User"
                 />
-                <AvatarFallback className="bg-[dodgerblue] text-white">
-                  {/* {user?.first_name ? user.first_name.charAt(0) : ""} */}
-                  D
+                <AvatarFallback className="bg-black  dark:text-black dark:bg-white text-white">
+                  {/* {user ? user?.first_name?.slice(0, 1) : ""} */}D
                 </AvatarFallback>
               </Avatar>
               <span className="sr-only">User menu</span>

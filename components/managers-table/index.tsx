@@ -50,6 +50,8 @@ export function UsersTable() {
         : [...prev, userId]
     );
   };
+  console.log(users);
+
   return (
     <div className="w-full overflow-auto">
       <Table className="min-w-[1000px] ">

@@ -40,6 +40,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import toast from "react-hot-toast";
+import AdminsStaffDialog from "../admins-staff-dialog";
 
 export function AdminsTable() {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -79,135 +80,138 @@ export function AdminsTable() {
         : [...prev, userId]
     );
   };
+  console.log(users);
   return (
     <div className="w-full overflow-auto">
-      <Dialog open={dialogOpen} onOpenChange={() => setDialogOpen(false)}>
-        <Table className="min-w-[1000px] ">
-          <TableHeader className="bg-muted/20">
-            <TableRow>
-              <TableHead className="w-[40px]">
-                <Checkbox
-                  checked={
-                    isPending
-                      ? false
-                      : selectedUsers?.length === users?.length &&
-                        users?.length > 0
-                  }
-                  onCheckedChange={toggleSelectAll}
-                  aria-label="Select all"
-                />
-              </TableHead>
-              <TableHead className="min-w-[180px]">Full Name</TableHead>
-              <TableHead className="min-w-[100px]">Status</TableHead>
-              <TableHead className="min-w-[120px]">Role</TableHead>
-              <TableHead className="min-w-[150px]">Phone Number</TableHead>
-              <TableHead className="min-w-[100px]">Gender</TableHead>
-              <TableHead className="min-w-[150px]">Email</TableHead>
-              <TableHead className="min-w-[200px]">Address</TableHead>
-              <TableHead className="w-[80px]">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          {isPending ? (
-            ""
-          ) : (
-            <TableBody>
-              {users?.map((user: ManagersType) => (
-                <TableRow key={user._id}>
-                  <TableCell>
-                    <Checkbox
-                      checked={selectedUsers.includes(user._id)}
-                      onCheckedChange={() => toggleSelectUser(user._id)}
-                      aria-label={`Select ${user.first_name}`}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      <Avatar>
-                        <AvatarImage
-                          src={user.avatar || "/placeholder.svg"}
-                          alt={user.first_name}
-                        />
-                        <AvatarFallback>
-                          {user.first_name.charAt(0)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <div className="font-medium">{user.first_name}</div>
-                        <div className="text-sm text-muted-foreground">
-                          {user.last_name}
-                        </div>
+      <Table className="min-w-[1000px] ">
+        <TableHeader className="bg-muted/20">
+          <TableRow>
+            <TableHead className="w-[40px]">
+              <Checkbox
+                checked={
+                  isPending
+                    ? false
+                    : selectedUsers?.length === users?.length &&
+                      users?.length > 0
+                }
+                onCheckedChange={toggleSelectAll}
+                aria-label="Select all"
+              />
+            </TableHead>
+            <TableHead className="min-w-[180px]">Full Name</TableHead>
+            <TableHead className="min-w-[100px]">Status</TableHead>
+            <TableHead className="min-w-[120px]">Role</TableHead>
+            <TableHead className="min-w-[150px]">Phone Number</TableHead>
+            <TableHead className="min-w-[100px]">Reason</TableHead>
+            <TableHead className="min-w-[150px]">Email</TableHead>
+            <TableHead className="min-w-[200px]">Address</TableHead>
+            <TableHead className="w-[80px]">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        {isPending ? (
+          ""
+        ) : (
+          <TableBody>
+            {users?.map((user: ManagersType) => (
+              <TableRow key={user._id}>
+                <TableCell>
+                  <Checkbox
+                    checked={selectedUsers.includes(user._id)}
+                    onCheckedChange={() => toggleSelectUser(user._id)}
+                    aria-label={`Select ${user.first_name}`}
+                  />
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-3">
+                    <Avatar>
+                      <AvatarImage
+                        src={user.avatar || "/placeholder.svg"}
+                        alt={user.first_name}
+                      />
+                      <AvatarFallback>
+                        {user.first_name.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <div className="font-medium">{user.first_name}</div>
+                      <div className="text-sm text-muted-foreground">
+                        {user.last_name}
                       </div>
                     </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge
-                      variant="outline"
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <Badge
+                    variant="outline"
+                    className={`${
+                      user.status === "faol"
+                        ? "bg-green-500/10 text-green-500 border-green-500/20"
+                        : "bg-red-500/10 text-red-500 border-red-500/20"
+                    }`}
+                  >
+                    <span
                       className={`${
-                        user.status === "faol"
-                          ? "bg-green-500/10 text-green-500 border-green-500/20"
-                          : "bg-red-500/10 text-red-500 border-red-500/20"
-                      }`}
-                    >
-                      <span
-                        className={`${
-                          user.status === "faol" ? "bg-green-700" : "bg-red-500"
-                        } mr-1.5 h-1.5 w-1.5 rounded-full inline-block`}
-                      ></span>
-                      {user.status === "faol" ? "Faol" : "Nofaol"}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>{user.role}</TableCell>
-                  <TableCell>{user.phone}</TableCell>
-                  <TableCell>{user.gender}</TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell>{user.address}</TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <button className="h-8 w-8 p-0 flex items-center justify-center">
-                          <span className="sr-only">Open menu</span>
-                          <MoreHorizontal className="h-4 w-4" />
-                        </button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem
-                          className="w-full cursor-pointer"
-                          onClick={() => {
-                            setDialogOpen(!dialogOpen);
-                            setId(user._id);
-                            setFormData({
-                              _id: user._id,
-                              email: user.email,
-                              status: user.status as string,
-                              first_name: user.first_name,
-                              last_name: user.last_name,
-                            });
-                          }}
-                        >
-                          Edit user
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                          onClick={() => deleteAdmin(user)}
-                          className="text-red-500 cursor-pointer"
-                        >
-                          Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          )}
-        </Table>
-        {isPending ? (
-          <div className="flex items-center justify-center w-full h-[80vh] text-center">
-            <Loader className="animate-spin flex justify-center text-center" />
-          </div>
-        ) : (
-          ""
+                        user.status === "faol" ? "bg-green-700" : "bg-red-500"
+                      } mr-1.5 h-1.5 w-1.5 rounded-full inline-block`}
+                    ></span>
+                    {user.status === "faol" ? "Faol" : "Nofaol"}
+                  </Badge>
+                </TableCell>
+                <TableCell>{user.role}</TableCell>
+                <TableCell>{user.phone}</TableCell>
+                <TableCell>{user?.leave_history[0]?.reason}</TableCell>
+                <TableCell>{user.email}</TableCell>
+                <TableCell>{user.address}</TableCell>
+                <TableCell>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button className="h-8 w-8 p-0 flex items-center justify-center">
+                        <span className="sr-only">Open menu</span>
+                        <MoreHorizontal className="h-4 w-4" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem
+                        className="w-full cursor-pointer"
+                        onClick={() => {
+                          setDialogOpen(!dialogOpen);
+                          setId(user._id);
+                          setFormData({
+                            _id: user._id,
+                            email: user.email,
+                            status: user.status as string,
+                            first_name: user.first_name,
+                            last_name: user.last_name,
+                          });
+                        }}
+                      >
+                        Edit user
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <AdminsStaffDialog prop={user._id} />
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        onClick={() => deleteAdmin(user)}
+                        className="text-red-500 cursor-pointer"
+                      >
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
         )}
+      </Table>
+      {isPending ? (
+        <div className="flex items-center justify-center w-full h-[80vh] text-center">
+          <Loader className="animate-spin flex justify-center text-center" />
+        </div>
+      ) : (
+        ""
+      )}
+      <Dialog open={dialogOpen} onOpenChange={() => setDialogOpen(false)}>
         {users?.map(
           (value: ManagersType) =>
             value?._id === id && (
