@@ -19,6 +19,7 @@ import { ModeToggle } from "./mode-toggle";
 import { useLogOutMutation } from "@/request/mutation";
 import Cookies from "js-cookie";
 import { UserType } from "@/@types";
+import Image from "next/image";
 
 export function MainHeader() {
   const { mutate } = useLogOutMutation();
@@ -55,7 +56,16 @@ export function MainHeader() {
                   alt="User"
                 />
                 <AvatarFallback className="bg-black  dark:text-black dark:bg-white text-white">
-                  {/* {user ? user?.first_name?.slice(0, 1) : ""} */}D
+                  <div className="bg-gray-200 rounded-full">
+                    <Image
+                      src={user?.image}
+                      alt="default-user-img"
+                      loading="lazy"
+                      width={100}
+                      height={100}
+                      className="rounded-full object-cover"
+                    />
+                  </div>
                 </AvatarFallback>
               </Avatar>
               <span className="sr-only">User menu</span>

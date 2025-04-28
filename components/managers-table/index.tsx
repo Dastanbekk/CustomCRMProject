@@ -96,7 +96,7 @@ export function UsersTable() {
                   <div className="flex items-center gap-3">
                     <Avatar>
                       <AvatarImage
-                        src={user.avatar || "/placeholder.svg"}
+                        src={user.image || "/placeholder.svg"}
                         alt={user.first_name}
                       />
                       <AvatarFallback>

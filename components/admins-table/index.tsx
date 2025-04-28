@@ -26,7 +26,7 @@ import {
   useEditAdminsMutation,
   useGetAdminsMutation,
 } from "@/request/mutation";
-import { ManagersType } from "@/@types";
+import { ManagersType, UserType } from "@/@types";
 import {
   Dialog,
   DialogContent,
@@ -41,6 +41,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import toast from "react-hot-toast";
 import AdminsStaffDialog from "../admins-staff-dialog";
+import Cookies from "js-cookie";
 
 export function AdminsTable() {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -49,9 +50,11 @@ export function AdminsTable() {
   const { data: usersData, mutate, isPending } = useGetAdminsMutation();
   const users = usersData;
   const { mutate: editAdmin, isPending: isEditing } = useEditAdminsMutation();
-  const { mutate: deleteAdmin, isPending: isDeleting } =
-    useDeleteAdminsMutation();
+  const { mutate: deleteAdmin } = useDeleteAdminsMutation();
 
+  const cookie = Cookies;
+  const userCookie = cookie.get("user");
+  const user: UserType = userCookie ? JSON.parse(userCookie) : null;
   const [formData, setFormData] = useState({
     _id: "",
     email: "",
@@ -80,7 +83,6 @@ export function AdminsTable() {
         : [...prev, userId]
     );
   };
-  console.log(users);
   return (
     <div className="w-full overflow-auto">
       <Table className="min-w-[1000px] ">
@@ -125,7 +127,7 @@ export function AdminsTable() {
                   <div className="flex items-center gap-3">
                     <Avatar>
                       <AvatarImage
-                        src={user.avatar || "/placeholder.svg"}
+                        src={user.image || "/placeholder.svg"}
                         alt={user.first_name}
                       />
                       <AvatarFallback>
@@ -174,7 +176,9 @@ export function AdminsTable() {
                       <DropdownMenuItem
                         className="w-full cursor-pointer"
                         onClick={() => {
-                          setDialogOpen(!dialogOpen);
+                          user?.role?.toLowerCase() !== "manager"
+                            ? toast.error("Sizga ruxsat yoq")
+                            : setDialogOpen(!dialogOpen);
                           setId(user._id);
                           setFormData({
                             _id: user._id,
@@ -191,7 +195,11 @@ export function AdminsTable() {
                       <AdminsStaffDialog prop={user._id} />
                       <DropdownMenuSeparator />
                       <DropdownMenuItem
-                        onClick={() => deleteAdmin(user)}
+                        onClick={() => {
+                          user?.role?.toLowerCase() !== "manager"
+                            ? toast.error("Sizga ruxsat yoq")
+                            : deleteAdmin(user);
+                        }}
                         className="text-red-500 cursor-pointer"
                       >
                         Delete

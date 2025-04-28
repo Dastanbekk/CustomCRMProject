@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { lazy, useRef, useState } from "react";
 import Cookies from "js-cookie";
 import Image from "next/image";
 import backgroundImg from "@/public/profileBg.png";
@@ -30,8 +30,8 @@ const Profile = () => {
 
   const handlePush = () => {
     updateProfile(newUser);
-    console.log(newUser);
   };
+  console.log(newUser, "userbek");
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -51,7 +51,6 @@ const Profile = () => {
     formData.append("image", selectedFile);
 
     mutate(formData);
-    console.log(formData);
   };
   return (
     <div className="px-5 py-5">
@@ -64,9 +63,12 @@ const Profile = () => {
         <div className="flex items-end gap-3">
           <div className="bg-gray-200 rounded-full">
             <Image
-              src={userDefaultImg}
+              src={user?.image}
               alt="default-user-img"
-              className="max-w-[100px] max-h-[100px] w-full h-full"
+              loading="lazy"
+              width={100}
+              height={100}
+              className="rounded-full object-cover"
             />
           </div>
           <div className="flex flex-col">
