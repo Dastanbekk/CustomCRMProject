@@ -1,15 +1,12 @@
 "use client";
 
 import { Bell, Search, Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -17,15 +14,23 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ModeToggle } from "./mode-toggle";
 import { useLogOutMutation } from "@/request/mutation";
-import Cookies from "js-cookie";
 import { UserType } from "@/@types";
+import Cookies from "js-cookie";
 import Image from "next/image";
+import userDefaultImg from "@/public/user.svg";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export function MainHeader() {
   const { mutate } = useLogOutMutation();
-  const cookie = Cookies;
-  const userCookie = cookie.get("user");
-  const user: UserType = userCookie ? JSON.parse(userCookie) : null;
+  const [user, setUser] = useState<UserType | null>(null);
+  const router = useRouter();
+  useEffect(() => {
+    const userCookie = Cookies.get("user");
+    if (userCookie) {
+      setUser(JSON.parse(userCookie));
+    }
+  }, []);
 
   return (
     <header className="sticky top-0 z-30 flex h-16  items-center gap-4 border-b bg-white dark:bg-zinc-900 px-6 shadow-sm">
@@ -58,7 +63,7 @@ export function MainHeader() {
                 <AvatarFallback className="bg-black  dark:text-black dark:bg-white text-white">
                   <div className="bg-gray-200 rounded-full">
                     <Image
-                      src={user?.image}
+                      src={user ? user?.image : userDefaultImg}
                       alt="default-user-img"
                       loading="lazy"
                       width={100}
@@ -72,12 +77,11 @@ export function MainHeader() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer">
+            <DropdownMenuItem
+              onClick={() => router.push("/dashboard/profile")}
+              className="cursor-pointer"
+            >
               Profilim
-            </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer">
-              So'zlamalar
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem

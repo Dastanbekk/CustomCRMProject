@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import cookie from "js-cookie";
 import { ManagersType, NewUserType, UserType } from "@/@types";
+import Cookies from "js-cookie";
 
 export const useLoginMutation = () => {
   const router = useRouter();
@@ -23,7 +24,6 @@ export const useLoginMutation = () => {
       router.push("/dashboard");
     },
     onError(err) {
-      console.log(err.message);
       toast.error(`Xatolik | ${err.message}`);
     },
   });
@@ -147,8 +147,14 @@ export const useUploadImgMutation = () => {
     mutationKey: ["upload-img"],
     mutationFn: (data: FormData) =>
       request.post("/api/auth/edit-profile-img", data),
-    onSuccess() {
-      toast.success("Rasm qo'shildi");
+    onSuccess(data) {
+      const userCookie = Cookies.get("user");
+      if (userCookie) {
+        const user = JSON.parse(userCookie);
+        const updatedUser = { ...user, image: data?.data?.data?.image };
+        Cookies.set("user", JSON.stringify(updatedUser));
+      }
+      toast.success("Rasm yuklandi");
     },
     onError(err) {
       toast.error(`Xatolik: ${err.message}`);
@@ -160,7 +166,7 @@ export const useUpdateUserProfile = () => {
   return useMutation({
     mutationKey: ["update-profile"],
     mutationFn: (data: object) => request.post("/api/auth/edit-profile", data),
-    onSuccess() {
+    onSuccess(data) {
       toast.success("Ma'lumotlaringiz o'zgartirildi");
     },
     onError(err) {

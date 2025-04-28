@@ -1,10 +1,10 @@
 "use client";
-import React, { lazy, useRef, useState } from "react";
+import React, { lazy, useEffect, useRef, useState } from "react";
 import Cookies from "js-cookie";
 import Image from "next/image";
 import backgroundImg from "@/public/profileBg.png";
 import userDefaultImg from "@/public/user.svg";
-import { FormDataType, NewUserType, UserType } from "@/@types";
+import { NewUserType, UserType } from "@/@types";
 import { Button } from "@/components/ui/button";
 import { Edit } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -14,8 +14,13 @@ import { useUpdateUserProfile, useUploadImgMutation } from "@/request/mutation";
 const Profile = () => {
   const [edit, setEdit] = useState(true);
   const cookie = Cookies;
-  const userCookie = cookie.get("user");
-  const user: UserType = userCookie ? JSON.parse(userCookie) : null;
+  const [user, setUser] = useState<UserType | null>(null);
+  useEffect(() => {
+    const userCookie = Cookies.get("user");
+    if (userCookie) {
+      setUser(JSON.parse(userCookie));
+    }
+  }, []);
   const { mutate } = useUploadImgMutation();
   const { mutate: updateProfile } = useUpdateUserProfile();
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -30,8 +35,16 @@ const Profile = () => {
 
   const handlePush = () => {
     updateProfile(newUser);
+    cookie.set(
+      "user",
+      JSON.stringify({
+        ...user,
+        first_name: newUser.first_name,
+        last_name: newUser.last_name,
+        email: newUser.email,
+      })
+    );
   };
-  console.log(newUser, "userbek");
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -63,7 +76,7 @@ const Profile = () => {
         <div className="flex items-end gap-3">
           <div className="bg-gray-200 rounded-full">
             <Image
-              src={user?.image}
+              src={user ? user.image : userDefaultImg}
               alt="default-user-img"
               loading="lazy"
               width={100}
@@ -148,7 +161,7 @@ const Profile = () => {
 
         <div className="flex flex-col space-y-3">
           <Label htmlFor="role">Role:</Label>
-          <Input id="role" disabled={edit} defaultValue={user?.role} />
+          <Input id="role" disabled={true} defaultValue={user?.role} />
         </div>
         <div>
           <Button

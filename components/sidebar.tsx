@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, LogOut } from "lucide-react";
 
 import {
   Sidebar,
@@ -19,8 +19,21 @@ import logowhite from "@/public/CRM-logo/vector/default-monochrome-white.svg";
 import Image from "next/image";
 import { bottomMenuItems, menuItems } from "@/utils";
 import { usePathname } from "next/navigation";
+import { Button } from "./ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "./ui/alert-dialog";
+import { useLogOutMutation } from "@/request/mutation";
 
 export function DashboardSidebar() {
+  const { mutate } = useLogOutMutation();
   const pathname = usePathname();
   return (
     <Sidebar
@@ -52,7 +65,9 @@ export function DashboardSidebar() {
                 <SidebarMenuItem key={item.label}>
                   <SidebarMenuButton
                     asChild
-                    className={`h-10  ${pathname == item.href ? " bg-accent " : " !py-3"}`}
+                    className={`h-10  ${
+                      pathname == item.href ? " bg-accent " : " !py-3"
+                    }`}
                   >
                     <Link
                       href={item.href}
@@ -101,6 +116,33 @@ export function DashboardSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              <SidebarMenuItem>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button className="w-full text-start cursor-pointer bg-transparent border border-red-600 text-red-600 hover:text-white  hover:bg-red-600 ">
+                      <LogOut className="rotate-180" /> Chiqish
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Platformadan chiqishni xohlaysizmi?
+                      </AlertDialogTitle>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel className="cursor-pointer">
+                        Yo'q
+                      </AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => mutate()}
+                        className="cursor-pointer bg-red-600 text-white hover:bg-red-500"
+                      >
+                        Xa
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

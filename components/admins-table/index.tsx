@@ -176,9 +176,7 @@ export function AdminsTable() {
                       <DropdownMenuItem
                         className="w-full cursor-pointer"
                         onClick={() => {
-                          user?.role?.toLowerCase() !== "manager"
-                            ? toast.error("Sizga ruxsat yoq")
-                            : setDialogOpen(!dialogOpen);
+                          setDialogOpen(!dialogOpen);
                           setId(user._id);
                           setFormData({
                             _id: user._id,
@@ -196,9 +194,7 @@ export function AdminsTable() {
                       <DropdownMenuSeparator />
                       <DropdownMenuItem
                         onClick={() => {
-                          user?.role?.toLowerCase() !== "manager"
-                            ? toast.error("Sizga ruxsat yoq")
-                            : deleteAdmin(user);
+                          deleteAdmin(user);
                         }}
                         className="text-red-500 cursor-pointer"
                       >
