@@ -20,6 +20,12 @@ import Image from "next/image";
 import userDefaultImg from "@/public/user.svg";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
 
 export function MainHeader() {
   const { mutate } = useLogOutMutation();
@@ -31,6 +37,8 @@ export function MainHeader() {
       setUser(JSON.parse(userCookie));
     }
   }, []);
+
+  console.log(user);
 
   return (
     <header className="sticky top-0 z-30 flex h-16  items-center gap-4 border-b bg-white dark:bg-zinc-900 px-6 shadow-sm">
@@ -48,6 +56,33 @@ export function MainHeader() {
           <span className="sr-only">Notifications</span>
         </Button>
 
+        <div className="flex flex-col justify-end">
+          <h3 className="text-sm">
+            {user?.first_name} {user?.last_name}
+          </h3>
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="flex items-center justify-end cursor-pointer gap-1">
+                  <div
+                    className={`w-[10px] h-[10px] rounded-full ${
+                      user?.status?.toLowerCase() == "faol"
+                        ? "bg-green-500"
+                        : "bg-red-500"
+                    }`}
+                  ></div>
+                  <p className="text-end text-[12px] capitalize">
+                    {user?.role}
+                  </p>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{user?.status}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
@@ -63,7 +98,13 @@ export function MainHeader() {
                 <AvatarFallback className="bg-black  dark:text-black dark:bg-white text-white">
                   <div className="bg-gray-200 rounded-full">
                     <Image
-                      src={user ? user?.image : userDefaultImg}
+                      src={
+                        user
+                          ? user?.image
+                            ? user?.image
+                            : userDefaultImg
+                          : userDefaultImg
+                      }
                       alt="default-user-img"
                       loading="lazy"
                       width={100}

@@ -25,6 +25,7 @@ import {
   useDeleteAdminsMutation,
   useEditAdminsMutation,
   useGetAdminsMutation,
+  useLeaveExitStaff,
 } from "@/request/mutation";
 import { ManagersType, UserType } from "@/@types";
 import {
@@ -60,7 +61,7 @@ export function AdminsTable() {
   const users = usersData;
   const { mutate: editAdmin, isPending: isEditing } = useEditAdminsMutation();
   const { mutate: deleteAdmin } = useDeleteAdminsMutation();
-  console.log(users);
+  const { mutate: exitStaff } = useLeaveExitStaff();
 
   const cookie = Cookies;
   const userCookie = cookie.get("user");
@@ -203,6 +204,12 @@ export function AdminsTable() {
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <AdminsStaffDialog prop={user._id} />
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        onClick={() => exitStaff({ _id: user?._id })}
+                      >
+                        Faollashtirish
+                      </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem
                         onClick={() => {

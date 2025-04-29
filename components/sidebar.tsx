@@ -66,7 +66,9 @@ export function DashboardSidebar() {
                   <SidebarMenuButton
                     asChild
                     className={`h-10  ${
-                      pathname == item.href ? " bg-accent " : " !py-3"
+                      pathname == item.href
+                        ? " bg-black hover:bg-black dark:bg-white  dark:hover:bg-white"
+                        : " !py-3"
                     }`}
                   >
                     <Link
@@ -76,12 +78,16 @@ export function DashboardSidebar() {
                       <div className="flex items-center">
                         <item.icon
                           className={`h-6 w-6  ${
-                            pathname == item.href ? "text-gray-400" : ""
+                            pathname == item.href
+                              ? "text-white dark:text-black"
+                              : ""
                           }`}
                         />
                         <span
                           className={`ml-2 text-md  ${
-                            pathname == item.href ? "text-gray-400" : ""
+                            pathname == item.href
+                              ? "text-white dark:text-black"
+                              : ""
                           }`}
                         >
                           {item.label}
@@ -90,7 +96,9 @@ export function DashboardSidebar() {
                       {pathname == item.href && (
                         <ChevronRight
                           className={`h-5 w-5 ${
-                            pathname == item.href ? "text-gray-400" : ""
+                            pathname == item.href
+                              ? "text-white dark:text-black"
+                              : ""
                           }`}
                         />
                       )}

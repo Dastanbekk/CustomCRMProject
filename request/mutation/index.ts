@@ -7,7 +7,6 @@ import cookie from "js-cookie";
 import { ManagersType, NewUserType, UserType } from "@/@types";
 import Cookies from "js-cookie";
 
-
 // Tizimga kirish uchun mutation
 export const useLoginMutation = () => {
   const router = useRouter();
@@ -31,7 +30,6 @@ export const useLoginMutation = () => {
   });
 };
 
-
 // Tizimdan chiqish uchun mutation
 export const useLogOutMutation = () => {
   const router = useRouter();
@@ -53,7 +51,6 @@ export const useLogOutMutation = () => {
     },
   });
 };
-
 
 // Managerlarni backendan  olish uchun mutation
 export const useGetManagersMutation = () => {
@@ -100,7 +97,6 @@ export const useGetAdminsMutation = () => {
 //   });
 // };
 
-
 // Adminni ozgartirish uchun mutation
 export const useEditAdminsMutation = () => {
   const queryClient = useQueryClient();
@@ -118,7 +114,6 @@ export const useEditAdminsMutation = () => {
     },
   });
 };
-
 
 // Adminni o'chirish uchun mutation
 export const useDeleteAdminsMutation = () => {
@@ -140,7 +135,6 @@ export const useDeleteAdminsMutation = () => {
   });
 };
 
-
 // Admin qo'shish uchun mutation
 export const useAddAdminMutation = () => {
   return useMutation({
@@ -154,7 +148,6 @@ export const useAddAdminMutation = () => {
     },
   });
 };
-
 
 // Profile Img ozgartirish uchun mutation
 export const useUploadImgMutation = () => {
@@ -191,7 +184,6 @@ export const useUpdateUserProfile = () => {
   });
 };
 
-
 // Sababli qilish  uchun mutation
 export const useAdminStaffMutation = () => {
   return useMutation({
@@ -202,6 +194,36 @@ export const useAdminStaffMutation = () => {
     },
     onError(err) {
       toast.error(`Xatolik ${err.message}`);
+    },
+  });
+};
+
+// Parolni ozgartirish uchun mutation
+export const useForgotPasswordMutation = () => {
+  return useMutation({
+    mutationKey: ["forgot-password"],
+    mutationFn: (data: object) => request.post("/api/auth/edit-password", data),
+    onSuccess() {
+      toast.success("Parolingiz o'zgartirildi");
+    },
+    onError(err) {
+      toast.error(`Xatolik ${err}`);
+    },
+  });
+};
+
+// Faollashtirish uchun mutation
+
+export const useLeaveExitStaff = () => {
+  return useMutation({
+    mutationKey: ["exit-staff"],
+    mutationFn: (data: object) =>
+      request.post("/api/staff/leave-exit-staff", data),
+    onSuccess() {
+      toast.success("Faollashtirildi");
+    },
+    onError(err) {
+      toast.error(`Xatolik ${err}`);
     },
   });
 };

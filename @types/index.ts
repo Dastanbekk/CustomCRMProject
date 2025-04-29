@@ -27,6 +27,7 @@ export interface UserType {
   work_date: string;
   work_end: null;
   _id: string;
+  status: string;
 }
 
 export interface ManagersType {
