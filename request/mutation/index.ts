@@ -213,7 +213,6 @@ export const useForgotPasswordMutation = () => {
 };
 
 // Faollashtirish uchun mutation
-
 export const useLeaveExitStaff = () => {
   return useMutation({
     mutationKey: ["exit-staff"],

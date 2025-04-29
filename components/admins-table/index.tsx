@@ -52,6 +52,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import toast from "react-hot-toast";
+import { useSearchParams } from "next/navigation";
 
 export function AdminsTable() {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -62,7 +63,8 @@ export function AdminsTable() {
   const { mutate: editAdmin, isPending: isEditing } = useEditAdminsMutation();
   const { mutate: deleteAdmin } = useDeleteAdminsMutation();
   const { mutate: exitStaff } = useLeaveExitStaff();
-
+  const searchParams = useSearchParams();
+  const [value, setValue] = useState("");
   const cookie = Cookies;
   const userCookie = cookie.get("user");
   const loggedUser: UserType = userCookie ? JSON.parse(userCookie) : null;
@@ -76,7 +78,10 @@ export function AdminsTable() {
   useEffect(() => {
     mutate();
   }, []);
-
+  useEffect(() => {
+    const currentStatus = searchParams.get("status");
+    setValue(currentStatus || "barchasi");
+  }, [searchParams]);
   const toggleSelectAll = () => {
     if (!users) return;
 
@@ -93,6 +98,7 @@ export function AdminsTable() {
         : [...prev, userId]
     );
   };
+
   return (
     <div className="w-full overflow-auto">
       <Table className="min-w-[1000px] ">
@@ -123,109 +129,231 @@ export function AdminsTable() {
           ""
         ) : (
           <TableBody>
-            {users?.map((user: ManagersType) => (
-              <TableRow key={user._id}>
-                <TableCell>
-                  <Checkbox
-                    checked={selectedUsers.includes(user._id)}
-                    onCheckedChange={() => toggleSelectUser(user._id)}
-                    aria-label={`Select ${user.first_name}`}
-                  />
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-3">
-                    <Avatar>
-                      <AvatarImage
-                        src={user.image || "/placeholder.svg"}
-                        alt={user.first_name}
-                      />
-                      <AvatarFallback>
-                        {user.first_name.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <div className="font-medium">{user.first_name}</div>
-                      <div className="text-sm text-muted-foreground">
-                        {user.last_name}
+            {users?.map((user: ManagersType) =>
+              "barchasi" === value ? (
+                <TableRow key={user._id}>
+                  <TableCell>
+                    <Checkbox
+                      checked={selectedUsers.includes(user._id)}
+                      onCheckedChange={() => toggleSelectUser(user._id)}
+                      aria-label={`Select ${user.first_name}`}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-3">
+                      <Avatar>
+                        <AvatarImage
+                          src={user.image || "/placeholder.svg"}
+                          alt={user.first_name}
+                        />
+                        <AvatarFallback>
+                          {user.first_name.charAt(0)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <div className="font-medium">{user.first_name}</div>
+                        <div className="text-sm text-muted-foreground">
+                          {user.last_name}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Badge
-                    variant="outline"
-                    className={`${
-                      user.status === "faol"
-                        ? "bg-green-500/10 text-green-500 border-green-500/20"
-                        : "bg-red-500/10 text-red-500 border-red-500/20"
-                    }`}
-                  >
-                    <span
+                  </TableCell>
+                  <TableCell>
+                    <Badge
+                      variant="outline"
                       className={`${
-                        user.status === "faol" ? "bg-green-700" : "bg-red-500"
-                      } mr-1.5 h-1.5 w-1.5 rounded-full inline-block`}
-                    ></span>
-                    {user.status === "faol" ? "Faol" : user.status}
-                  </Badge>
-                </TableCell>
-                <TableCell>{user.role}</TableCell>
-                <TableCell>{user.createdAt?.slice(0, 10)}</TableCell>
-                <TableCell>
-                  {user?.leave_history[user?.leave_history.length - 1]?.reason}
-                </TableCell>
+                        user.status === "faol"
+                          ? "bg-green-500/10 text-green-500 border-green-500/20"
+                          : "bg-red-500/10 text-red-500 border-red-500/20"
+                      }`}
+                    >
+                      <span
+                        className={`${
+                          user.status === "faol" ? "bg-green-700" : "bg-red-500"
+                        } mr-1.5 h-1.5 w-1.5 rounded-full inline-block`}
+                      ></span>
+                      {user.status === "faol" ? "Faol" : user.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>{user.role}</TableCell>
+                  <TableCell>{user.createdAt?.slice(0, 10)}</TableCell>
+                  <TableCell>
+                    {
+                      user?.leave_history[user?.leave_history.length - 1]
+                        ?.reason
+                    }
+                  </TableCell>
 
-                <TableCell>{user.email}</TableCell>
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <button className="h-8 w-8 p-0 flex items-center justify-center">
-                        <span className="sr-only">Open menu</span>
-                        <MoreHorizontal className="h-4 w-4" />
-                      </button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem
-                        className="w-full cursor-pointer"
-                        onClick={() => {
-                          loggedUser?.role?.toLowerCase() !== "manager"
-                            ? toast.error("Sizga ruxsat berilmagan!")
-                            : setDialogOpen(!dialogOpen);
-                          setId(user._id);
-                          setFormData({
-                            _id: user._id,
-                            email: user.email,
-                            status: user.status as string,
-                            first_name: user.first_name,
-                            last_name: user.last_name,
-                          });
-                        }}
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button className="h-8 w-8 p-0 flex items-center justify-center">
+                          <span className="sr-only">Open menu</span>
+                          <MoreHorizontal className="h-4 w-4" />
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem
+                          className="w-full cursor-pointer"
+                          onClick={() => {
+                            loggedUser?.role?.toLowerCase() !== "manager"
+                              ? toast.error("Sizga ruxsat berilmagan!")
+                              : setDialogOpen(!dialogOpen);
+                            setId(user._id);
+                            setFormData({
+                              _id: user._id,
+                              email: user.email,
+                              status: user.status as string,
+                              first_name: user.first_name,
+                              last_name: user.last_name,
+                            });
+                          }}
+                        >
+                          Edit user
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <AdminsStaffDialog prop={user._id} />
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onClick={() =>
+                            loggedUser.role.toLowerCase() !== "manager"
+                              ? toast.error("Sizga ruxsat berilmagan")
+                              : exitStaff({ _id: user?._id })
+                          }
+                        >
+                          Faollashtirish
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onClick={() => {
+                            loggedUser?.role !== "manager"
+                              ? toast.error("Sizga ruxsat berilmagan!")
+                              : deleteAdmin(user);
+                          }}
+                          className="text-red-500 cursor-pointer"
+                        >
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                user?.status == value && (
+                  <TableRow key={user._id}>
+                    <TableCell>
+                      <Checkbox
+                        checked={selectedUsers.includes(user._id)}
+                        onCheckedChange={() => toggleSelectUser(user._id)}
+                        aria-label={`Select ${user.first_name}`}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <Avatar>
+                          <AvatarImage
+                            src={user.image || "/placeholder.svg"}
+                            alt={user.first_name}
+                          />
+                          <AvatarFallback>
+                            {user.first_name.charAt(0)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <div className="font-medium">{user.first_name}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {user.last_name}
+                          </div>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        variant="outline"
+                        className={`${
+                          user.status === "faol"
+                            ? "bg-green-500/10 text-green-500 border-green-500/20"
+                            : "bg-red-500/10 text-red-500 border-red-500/20"
+                        }`}
                       >
-                        Edit user
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <AdminsStaffDialog prop={user._id} />
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        onClick={() => exitStaff({ _id: user?._id })}
-                      >
-                        Faollashtirish
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        onClick={() => {
-                          loggedUser?.role !== "manager"
-                            ? toast.error("Sizga ruxsat berilmagan!")
-                            : deleteAdmin(user);
-                        }}
-                        className="text-red-500 cursor-pointer"
-                      >
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
+                        <span
+                          className={`${
+                            user.status === "faol"
+                              ? "bg-green-700"
+                              : "bg-red-500"
+                          } mr-1.5 h-1.5 w-1.5 rounded-full inline-block`}
+                        ></span>
+                        {user.status === "faol" ? "Faol" : user.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>{user.role}</TableCell>
+                    <TableCell>{user.createdAt?.slice(0, 10)}</TableCell>
+                    <TableCell>
+                      {
+                        user?.leave_history[user?.leave_history.length - 1]
+                          ?.reason
+                      }
+                    </TableCell>
+
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button className="h-8 w-8 p-0 flex items-center justify-center">
+                            <span className="sr-only">Open menu</span>
+                            <MoreHorizontal className="h-4 w-4" />
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem
+                            className="w-full cursor-pointer"
+                            onClick={() => {
+                              loggedUser?.role?.toLowerCase() !== "manager"
+                                ? toast.error("Sizga ruxsat berilmagan!")
+                                : setDialogOpen(!dialogOpen);
+                              setId(user._id);
+                              setFormData({
+                                _id: user._id,
+                                email: user.email,
+                                status: user.status as string,
+                                first_name: user.first_name,
+                                last_name: user.last_name,
+                              });
+                            }}
+                          >
+                            Edit user
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <AdminsStaffDialog prop={user._id} />
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
+                            onClick={() =>
+                              loggedUser.role.toLowerCase() !== "manager"
+                                ? toast.error("Sizga ruxsat berilmagan")
+                                : exitStaff({ _id: user?._id })
+                            }
+                          >
+                            Faollashtirish
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
+                            onClick={() => {
+                              loggedUser?.role !== "manager"
+                                ? toast.error("Sizga ruxsat berilmagan!")
+                                : deleteAdmin(user);
+                            }}
+                            className="text-red-500 cursor-pointer"
+                          >
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                )
+              )
+            )}
           </TableBody>
         )}
       </Table>

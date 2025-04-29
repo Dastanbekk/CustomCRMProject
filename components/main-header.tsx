@@ -37,9 +37,6 @@ export function MainHeader() {
       setUser(JSON.parse(userCookie));
     }
   }, []);
-
-  console.log(user);
-
   return (
     <header className="sticky top-0 z-30 flex h-16  items-center gap-4 border-b bg-white dark:bg-zinc-900 px-6 shadow-sm">
       <SidebarTrigger className="lg:hidden" />

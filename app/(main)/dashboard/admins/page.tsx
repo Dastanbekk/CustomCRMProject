@@ -1,7 +1,7 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { AdminsTable } from "@/components/admins-table";
-import { DatePickerWithRange } from "@/components/ui/date";
+
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -22,8 +22,31 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { GitPullRequestDraft, Plus } from "lucide-react";
 import AdminsDialog from "@/components/admins-dialog";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
 
 const Admins = () => {
+  const [value, setValue] = useState("");
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const handleChange = (newValue: string) => {
+    setValue(newValue);
+
+    const params = new URLSearchParams(searchParams.toString());
+    if (newValue === "barchasi") {
+      params.delete("status");
+      const newUrl = params.toString()
+        ? `${pathname}?${params.toString()}`
+        : pathname;
+      router.replace(newUrl);
+    } else {
+      params.set("status", newValue);
+      router.replace(`${pathname}?${params.toString()}`);
+    }
+
+    router.push(`${pathname}?${params.toString()}`);
+  };
 
   return (
     <div className="pt-10 px-5">
@@ -32,16 +55,19 @@ const Admins = () => {
         <Input className="max-w-[20%]" placeholder="Qidirish..." />{" "}
         <div className="flex items-center gap-3">
           {/* SELECT */}
-          <Select>
+          <Select value={value} onValueChange={handleChange}>
             <SelectTrigger className="max-w-[180px]">
-              <SelectValue placeholder="Faol" />
+              <SelectValue placeholder="Barchasi" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel>Fruits</SelectLabel>
-                <SelectItem value="apple">Faol</SelectItem>
-                <SelectItem value="banana">Nofaol</SelectItem>
-                <SelectItem value="blueberry">Ishdan ketgan</SelectItem>
+                <SelectLabel>Faolik</SelectLabel>
+                <SelectItem value="barchasi">Barchasi</SelectItem>
+                <SelectItem value="faol">Faol</SelectItem>
+                <SelectItem value="ta'tilda">Nofaol</SelectItem>
+                <SelectItem value="ishdan bo'shatilgan">
+                  Ishdan ketgan
+                </SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -56,7 +82,7 @@ const Admins = () => {
               <DropdownMenuRadioGroup>
                 <DropdownMenuRadioItem value="top">Top</DropdownMenuRadioItem>
                 <DropdownMenuRadioItem value="bottom">
-                  Bottom
+                  role Bottom
                 </DropdownMenuRadioItem>
                 <DropdownMenuRadioItem value="right">
                   Right
