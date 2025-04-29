@@ -39,9 +39,17 @@ import {
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import toast from "react-hot-toast";
 import AdminsStaffDialog from "../admins-staff-dialog";
 import Cookies from "js-cookie";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 export function AdminsTable() {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -51,6 +59,7 @@ export function AdminsTable() {
   const users = usersData;
   const { mutate: editAdmin, isPending: isEditing } = useEditAdminsMutation();
   const { mutate: deleteAdmin } = useDeleteAdminsMutation();
+  console.log(users);
 
   const cookie = Cookies;
   const userCookie = cookie.get("user");
@@ -75,7 +84,6 @@ export function AdminsTable() {
       setSelectedUsers(users?.map((user: ManagersType) => user._id));
     }
   };
-
   const toggleSelectUser = (userId: string) => {
     setSelectedUsers((prev) =>
       prev.includes(userId)
@@ -103,7 +111,7 @@ export function AdminsTable() {
             <TableHead className="min-w-[180px]">Full Name</TableHead>
             <TableHead className="min-w-[100px]">Status</TableHead>
             <TableHead className="min-w-[120px]">Role</TableHead>
-            <TableHead className="min-w-[150px]">Phone Number</TableHead>
+            <TableHead className="min-w-[150px]">CreatedAt</TableHead>
             <TableHead className="min-w-[100px]">Reason</TableHead>
             <TableHead className="min-w-[150px]">Email</TableHead>
             <TableHead className="min-w-[200px]">Address</TableHead>
@@ -156,12 +164,15 @@ export function AdminsTable() {
                         user.status === "faol" ? "bg-green-700" : "bg-red-500"
                       } mr-1.5 h-1.5 w-1.5 rounded-full inline-block`}
                     ></span>
-                    {user.status === "faol" ? "Faol" : "Nofaol"}
+                    {user.status === "faol" ? "Faol" : user.status}
                   </Badge>
                 </TableCell>
                 <TableCell>{user.role}</TableCell>
-                <TableCell>{user.phone}</TableCell>
-                <TableCell>{user?.leave_history[0]?.reason}</TableCell>
+                <TableCell>{user.createdAt?.slice(0, 10)}</TableCell>
+                <TableCell>
+                  {user?.leave_history[user?.leave_history.length - 1]?.reason}
+                </TableCell>
+
                 <TableCell>{user.email}</TableCell>
                 <TableCell>{user.address}</TableCell>
                 <TableCell>
@@ -178,6 +189,7 @@ export function AdminsTable() {
                         onClick={() => {
                           setDialogOpen(!dialogOpen);
                           setId(user._id);
+                          console.log(formData);
                           setFormData({
                             _id: user._id,
                             email: user.email,
@@ -271,14 +283,28 @@ export function AdminsTable() {
                     <Label htmlFor="status" className="text-right">
                       Status
                     </Label>
-                    <Input
-                      id="status"
+                    <Select
                       value={formData.status}
-                      onChange={(e) =>
-                        setFormData({ ...formData, status: e.target.value })
+                      onValueChange={(value) =>
+                        setFormData({ ...formData, status: value })
                       }
-                      className="col-span-3"
-                    />
+                    >
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Statusni tanlang" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Status</SelectLabel>
+                          <SelectItem value="faol">Faol</SelectItem>
+                          <SelectItem value="ishdan bo'shatilgan">
+                            Ishdan boshatish
+                          </SelectItem>
+                          <SelectItem value="ta'tilda">
+                            Ta'tilga chiqarish
+                          </SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
                 <DialogFooter>

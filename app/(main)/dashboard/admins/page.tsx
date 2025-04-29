@@ -31,8 +31,6 @@ const Admins = () => {
       <div className="pt-3 flex justify-between">
         <Input className="max-w-[20%]" placeholder="Qidirish..." />{" "}
         <div className="flex items-center gap-3">
-          {/* DATE */}
-          <DatePickerWithRange />
           {/* SELECT */}
           <Select>
             <SelectTrigger className="max-w-[180px]">

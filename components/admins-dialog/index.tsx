@@ -114,6 +114,7 @@ const AdminsDialog = () => {
               </Label>
               <Input
                 id="status"
+                disabled
                 value={formData.status}
                 onChange={(e) =>
                   setFormData({ ...formData, status: e.target.value })

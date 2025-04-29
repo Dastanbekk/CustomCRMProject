@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { Button } from "../ui/button";
-import { Plus } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -14,10 +13,16 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { UserType } from "@/@types";
 import Cookies from "js-cookie";
-import toast from "react-hot-toast";
 import { useAdminStaffMutation } from "@/request/mutation";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Calendar } from "../ui/calendar";
+import { CalendarIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 
 const AdminsStaffDialog = ({ prop }: { prop: string }) => {
+  const [date, setDate] = React.useState<Date>();
+  const [endDate, setEndDate] = React.useState<Date>();
   const { mutate, isPending } = useAdminStaffMutation();
   const cookie = Cookies;
   const userCookie = cookie.get("user");
@@ -29,52 +34,71 @@ const AdminsStaffDialog = ({ prop }: { prop: string }) => {
     end_date: "",
     reason: "",
   });
-
   return (
     <div>
       <Dialog onOpenChange={() => setOpenDialog(!openDialog)}>
         <DialogTrigger asChild>
           <Button
-            onClick={() => {
-              user?.role.toLowerCase() !== "manager"
-                ? toast.error("Sizga ruxsat berilmagan")
-                : setOpenDialog(!openDialog);
-            }}
-            className="cursor-pointer bg-transparent flex items-start w-full dark:text-white hover:!bg-transparent text-start text-zinc-900 "
+            onClick={() => setOpenDialog(!openDialog)}
+            className="cursor-pointer bg-transparent flex items-start ml-[-10px] dark:text-gray-200 hover:!bg-transparent text-start text-zinc-900 "
           >
             Sabab bildirish
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Admin Qo'shish</DialogTitle>
+            <DialogTitle>Sabab bildirish</DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="start" className="text-start">
-                Boshlanish vaqti
-              </Label>
-              <Input
-                id="start"
-                value={formData.start_date}
-                onChange={(e) =>
-                  setFormData({ ...formData, start_date: e.target.value })
-                }
-                className="col-span-3"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="end" className="text-start">
-                Tamom bo'lish vaqti
-              </Label>
-              <Input
-                id="end"
-                value={formData.end_date}
-                onChange={(e) =>
-                  setFormData({ ...formData, end_date: e.target.value })
-                }
-                className="col-span-3"
-              />
+            <div className="grid grid-cols-2 gap-3">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "w-[170px] justify-start text-left font-normal",
+                      !date && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon />
+                    {date ? format(date, "PPP") : <span>Boshlanish vaqti</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={date}
+                    onSelect={setDate}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "w-[170px] justify-start text-left font-normal",
+                      !endDate && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon />
+                    {endDate ? (
+                      format(endDate, "PPP")
+                    ) : (
+                      <span>Tugash vaqti</span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={endDate}
+                    onSelect={setEndDate}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="reason" className="text-right">
@@ -95,9 +119,14 @@ const AdminsStaffDialog = ({ prop }: { prop: string }) => {
               className="cursor-pointer"
               type="button"
               onClick={() => {
-                console.log(formData);
-                setOpenDialog(!openDialog);
-                mutate(formData);
+                const updatedFormData = {
+                  ...formData,
+                  start_date: date?.toISOString().slice(0, 10),
+                  end_date: endDate?.toISOString().slice(0, 10),
+                };
+
+                mutate(updatedFormData);
+                setOpenDialog(false);
               }}
             >
               {isPending ? "Saqlanmoqda..." : "Save changes"}
