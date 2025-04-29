@@ -19,6 +19,7 @@ import { Calendar } from "../ui/calendar";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import toast from "react-hot-toast";
 
 const AdminsStaffDialog = ({ prop }: { prop: string }) => {
   const [date, setDate] = React.useState<Date>();
@@ -36,15 +37,17 @@ const AdminsStaffDialog = ({ prop }: { prop: string }) => {
   });
   return (
     <div>
-      <Dialog onOpenChange={() => setOpenDialog(!openDialog)}>
-        <DialogTrigger asChild>
-          <Button
-            onClick={() => setOpenDialog(!openDialog)}
-            className="cursor-pointer bg-transparent flex items-start ml-[-10px] dark:text-gray-200 hover:!bg-transparent text-start text-zinc-900 "
-          >
-            Sabab bildirish
-          </Button>
-        </DialogTrigger>
+      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+        <Button
+          onClick={() =>
+            user?.role?.toLowerCase() !== "manager"
+              ? toast.error("Sizga ruxsat berilmagan!")
+              : setOpenDialog(!openDialog)
+          }
+          className="cursor-pointer bg-transparent flex items-start ml-[-10px] dark:text-gray-200 hover:!bg-transparent text-start text-zinc-900 "
+        >
+          Sabab bildirish
+        </Button>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Sabab bildirish</DialogTitle>

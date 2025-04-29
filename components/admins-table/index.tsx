@@ -50,6 +50,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import toast from "react-hot-toast";
 
 export function AdminsTable() {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -63,7 +64,7 @@ export function AdminsTable() {
 
   const cookie = Cookies;
   const userCookie = cookie.get("user");
-  const user: UserType = userCookie ? JSON.parse(userCookie) : null;
+  const loggedUser: UserType = userCookie ? JSON.parse(userCookie) : null;
   const [formData, setFormData] = useState({
     _id: "",
     email: "",
@@ -114,7 +115,6 @@ export function AdminsTable() {
             <TableHead className="min-w-[150px]">CreatedAt</TableHead>
             <TableHead className="min-w-[100px]">Reason</TableHead>
             <TableHead className="min-w-[150px]">Email</TableHead>
-            <TableHead className="min-w-[200px]">Address</TableHead>
             <TableHead className="w-[80px]">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -174,7 +174,6 @@ export function AdminsTable() {
                 </TableCell>
 
                 <TableCell>{user.email}</TableCell>
-                <TableCell>{user.address}</TableCell>
                 <TableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -187,9 +186,10 @@ export function AdminsTable() {
                       <DropdownMenuItem
                         className="w-full cursor-pointer"
                         onClick={() => {
-                          setDialogOpen(!dialogOpen);
+                          loggedUser?.role?.toLowerCase() !== "manager"
+                            ? toast.error("Sizga ruxsat berilmagan!")
+                            : setDialogOpen(!dialogOpen);
                           setId(user._id);
-                          console.log(formData);
                           setFormData({
                             _id: user._id,
                             email: user.email,
@@ -206,7 +206,9 @@ export function AdminsTable() {
                       <DropdownMenuSeparator />
                       <DropdownMenuItem
                         onClick={() => {
-                          deleteAdmin(user);
+                          loggedUser?.role !== "manager"
+                            ? toast.error("Sizga ruxsat berilmagan!")
+                            : deleteAdmin(user);
                         }}
                         className="text-red-500 cursor-pointer"
                       >

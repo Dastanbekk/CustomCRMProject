@@ -38,8 +38,7 @@ const AdminsDialog = () => {
 
   return (
     <div>
-      <Dialog onOpenChange={() => setOpenDialog(false)}>
-        <DialogTrigger asChild>
+      <Dialog open={openDialog} onOpenChange={() => setOpenDialog(false)}>
           <Button
             onClick={() => {
               user?.role.toLowerCase() !== "manager"
@@ -50,7 +49,6 @@ const AdminsDialog = () => {
           >
             <Plus /> Qo'shish
           </Button>
-        </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Admin Qo'shish</DialogTitle>

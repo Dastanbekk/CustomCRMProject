@@ -72,10 +72,9 @@ export function UsersTable() {
             <TableHead className="min-w-[180px]">Full Name</TableHead>
             <TableHead className="min-w-[100px]">Status</TableHead>
             <TableHead className="min-w-[120px]">Role</TableHead>
-            <TableHead className="min-w-[150px]">Phone Number</TableHead>
-            <TableHead className="min-w-[100px]">Gender</TableHead>
-            <TableHead className="min-w-[150px]">Birthday</TableHead>
-            <TableHead className="min-w-[200px]">Address</TableHead>
+            <TableHead className="min-w-[150px]">CreatedAt</TableHead>
+            <TableHead className="min-w-[100px]">Reason</TableHead>
+            <TableHead className="min-w-[150px]">Email</TableHead>
             <TableHead className="w-[80px]">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -114,17 +113,27 @@ export function UsersTable() {
                 <TableCell>
                   <Badge
                     variant="outline"
-                    className="bg-red-500/10 text-red-500 border-red-500/20"
+                    className={`${
+                      user.status === "faol"
+                        ? "bg-green-500/10 text-green-500 border-green-500/20"
+                        : "bg-red-500/10 text-red-500 border-red-500/20"
+                    }`}
                   >
-                    <span className="mr-1.5 h-1.5 w-1.5 rounded-full bg-red-500 inline-block"></span>
-                    {user.status === "active" ? "Active" : "Inactive"}
+                    <span
+                      className={`${
+                        user.status === "faol" ? "bg-green-700" : "bg-red-500"
+                      } mr-1.5 h-1.5 w-1.5 rounded-full inline-block`}
+                    ></span>
+                    {user.status === "faol" ? "Faol" : user.status}
                   </Badge>
                 </TableCell>
                 <TableCell>{user.role}</TableCell>
-                <TableCell>{user.phone}</TableCell>
-                <TableCell>{user.gender}</TableCell>
-                <TableCell>{user.birthday}</TableCell>
-                <TableCell>{user.address}</TableCell>
+                <TableCell>{user.createdAt?.slice(0, 10)}</TableCell>
+                <TableCell>
+                  {user?.leave_history[user?.leave_history.length - 1]?.reason}
+                </TableCell>
+
+                <TableCell>{user.email}</TableCell>
                 <TableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>

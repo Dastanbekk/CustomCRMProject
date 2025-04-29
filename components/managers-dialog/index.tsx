@@ -32,19 +32,19 @@ const ManagersDialog = () => {
   });
   return (
     <div>
-      <Dialog onOpenChange={() => setOpenDialog(false)}>
-        <DialogTrigger asChild>
-          <Button
-            onClick={() => {
-              user?.role.toLowerCase() !== "manager"
-                ? toast.error("Sizga ruxsat berilmagan")
-                : setOpenDialog(!openDialog);
-            }}
-            className="cursor-pointer"
-          >
-            <Plus /> Qo'shish
-          </Button>
-        </DialogTrigger>
+      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+        <Button
+          onClick={() => {
+            if (!user || user?.role?.toLowerCase() !== "manager") {
+              toast.error("Sizga ruxsat berilmagan");
+              return;
+            }
+            setOpenDialog(true);
+          }}
+          className="cursor-pointer"
+        >
+          <Plus /> Qo'shish
+        </Button>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Manager Qo'shish</DialogTitle>

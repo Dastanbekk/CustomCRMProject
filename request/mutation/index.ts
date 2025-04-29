@@ -7,6 +7,8 @@ import cookie from "js-cookie";
 import { ManagersType, NewUserType, UserType } from "@/@types";
 import Cookies from "js-cookie";
 
+
+// Tizimga kirish uchun mutation
 export const useLoginMutation = () => {
   const router = useRouter();
   return useMutation({
@@ -29,6 +31,8 @@ export const useLoginMutation = () => {
   });
 };
 
+
+// Tizimdan chiqish uchun mutation
 export const useLogOutMutation = () => {
   const router = useRouter();
   return useMutation({
@@ -50,6 +54,8 @@ export const useLogOutMutation = () => {
   });
 };
 
+
+// Managerlarni backendan  olish uchun mutation
 export const useGetManagersMutation = () => {
   const token = cookie.get("jwt");
   return useMutation({
@@ -70,6 +76,7 @@ export const useGetManagersMutation = () => {
   });
 };
 
+// Adminlarni backendan  olish uchun mutation
 export const useGetAdminsMutation = () => {
   return useMutation({
     mutationKey: ["admins"],
@@ -93,6 +100,8 @@ export const useGetAdminsMutation = () => {
 //   });
 // };
 
+
+// Adminni ozgartirish uchun mutation
 export const useEditAdminsMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -110,6 +119,8 @@ export const useEditAdminsMutation = () => {
   });
 };
 
+
+// Adminni o'chirish uchun mutation
 export const useDeleteAdminsMutation = () => {
   return useMutation({
     mutationKey: ["deleteAdmin"],
@@ -129,6 +140,8 @@ export const useDeleteAdminsMutation = () => {
   });
 };
 
+
+// Admin qo'shish uchun mutation
 export const useAddAdminMutation = () => {
   return useMutation({
     mutationKey: ["add-admin"],
@@ -142,6 +155,8 @@ export const useAddAdminMutation = () => {
   });
 };
 
+
+// Profile Img ozgartirish uchun mutation
 export const useUploadImgMutation = () => {
   return useMutation({
     mutationKey: ["upload-img"],
@@ -162,6 +177,7 @@ export const useUploadImgMutation = () => {
   });
 };
 
+// Profile infoni ozgartirish uchun mutation
 export const useUpdateUserProfile = () => {
   return useMutation({
     mutationKey: ["update-profile"],
@@ -175,6 +191,8 @@ export const useUpdateUserProfile = () => {
   });
 };
 
+
+// Sababli qilish  uchun mutation
 export const useAdminStaffMutation = () => {
   return useMutation({
     mutationKey: ["admin-staff"],
