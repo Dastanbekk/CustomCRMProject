@@ -226,3 +226,18 @@ export const useLeaveExitStaff = () => {
     },
   });
 };
+
+// Ishga qaytarish uchun mutation
+export const useReturnToWork = () => {
+  return useMutation({
+    mutationKey: ["return-work"],
+    mutationFn: (data: object) =>
+      request.post("/api/staff/return-work-staff", data),
+    onSuccess() {
+      toast.success("Ishga qaytarildi");
+    },
+    onError(err) {
+      toast.error(`Xatolik ${err}`);
+    },
+  });
+};

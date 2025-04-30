@@ -1,14 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Loader, MoreHorizontal, User } from "lucide-react";
+import { Loader, MoreHorizontal } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -26,6 +25,7 @@ import {
   useEditAdminsMutation,
   useGetAdminsMutation,
   useLeaveExitStaff,
+  useReturnToWork,
 } from "@/request/mutation";
 import { ManagersType, UserType } from "@/@types";
 import {
@@ -35,7 +35,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "../ui/dialog";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
@@ -53,16 +52,21 @@ import {
 } from "../ui/select";
 import toast from "react-hot-toast";
 import { useSearchParams } from "next/navigation";
+import Image from "next/image";
 
 export function AdminsTable() {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [viewDialog, setViewDialog] = useState(false);
   const [id, setId] = useState("");
+  const [viewId, setViewId] = useState("");
+
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   const { data: usersData, mutate, isPending } = useGetAdminsMutation();
   const users = usersData;
   const { mutate: editAdmin, isPending: isEditing } = useEditAdminsMutation();
   const { mutate: deleteAdmin } = useDeleteAdminsMutation();
   const { mutate: exitStaff } = useLeaveExitStaff();
+  const { mutate: returnToWork } = useReturnToWork();
   const searchParams = useSearchParams();
   const [value, setValue] = useState("");
   const cookie = Cookies;
@@ -141,7 +145,13 @@ export function AdminsTable() {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-3">
-                      <Avatar>
+                      <Avatar
+                        onClick={() => {
+                          setViewDialog(!viewDialog);
+                          setViewId(user._id);
+                        }}
+                        className="cursor-pointer"
+                      >
                         <AvatarImage
                           src={user.image || "/placeholder.svg"}
                           alt={user.first_name}
@@ -223,6 +233,16 @@ export function AdminsTable() {
                           }
                         >
                           Faollashtirish
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onClick={() =>
+                            loggedUser.role.toLowerCase() !== "manager"
+                              ? toast.error("Sizga ruxsat berilmagan")
+                              : returnToWork({ _id: user?._id })
+                          }
+                        >
+                          Ishga qaytarish
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
@@ -327,14 +347,15 @@ export function AdminsTable() {
                           <DropdownMenuSeparator />
                           <AdminsStaffDialog prop={user._id} />
                           <DropdownMenuSeparator />
+                          <DropdownMenuSeparator />
                           <DropdownMenuItem
                             onClick={() =>
                               loggedUser.role.toLowerCase() !== "manager"
                                 ? toast.error("Sizga ruxsat berilmagan")
-                                : exitStaff({ _id: user?._id })
+                                : returnToWork({ _id: user?._id })
                             }
                           >
-                            Faollashtirish
+                            Ishga qaytarish
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
@@ -364,6 +385,7 @@ export function AdminsTable() {
       ) : (
         ""
       )}
+      {/* Edit Profile Dialog */}
       <Dialog open={dialogOpen} onOpenChange={() => setDialogOpen(false)}>
         {users?.map(
           (value: ManagersType) =>
@@ -385,7 +407,10 @@ export function AdminsTable() {
                       id="name"
                       value={formData.first_name}
                       onChange={(e) =>
-                        setFormData({ ...formData, first_name: e.target.value })
+                        setFormData({
+                          ...formData,
+                          first_name: e.target.value,
+                        })
                       }
                       className="col-span-3"
                     />
@@ -398,7 +423,10 @@ export function AdminsTable() {
                       id="username"
                       value={formData.last_name}
                       onChange={(e) =>
-                        setFormData({ ...formData, last_name: e.target.value })
+                        setFormData({
+                          ...formData,
+                          last_name: e.target.value,
+                        })
                       }
                       className="col-span-3"
                     />
@@ -462,8 +490,103 @@ export function AdminsTable() {
             )
         )}
       </Dialog>
+
+      {/* View Profile Dialog */}
+      <Dialog open={viewDialog} onOpenChange={() => setViewDialog(false)}>
+        {users?.map(
+          (value: ManagersType) =>
+            value?._id === viewId && (
+              <DialogContent key={value._id} className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle className="flex justify-center gap-1">
+                    <span className="capitalize">{value?.role}</span> profile
+                  </DialogTitle>
+                </DialogHeader>
+                <div className="flex justify-center">
+                  <Avatar className="cursor-pointer min-w-[50px] min-h-[50px] max-w-[150px] w-full h-full max-h-[150px]">
+                    <AvatarImage
+                      src={value.image || "/placeholder.svg"}
+                      alt={value.first_name}
+                    />
+                    <AvatarFallback>
+                      {value.first_name.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                </div>
+                <div className="grid gap-4 py-4">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="name" className="text-right">
+                      Ismi
+                    </Label>
+                    <Input
+                      disabled={true}
+                      id="name"
+                      defaultValue={value?.first_name}
+                      className="col-span-3"
+                    />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="username" className="text-right">
+                      Familyasi
+                    </Label>
+                    <Input
+                      id="username"
+                      disabled={true}
+                      defaultValue={value?.last_name}
+                      className="col-span-3"
+                    />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="email" className="text-right">
+                      Email
+                    </Label>
+                    <Input
+                      id="email"
+                      disabled={true}
+                      defaultValue={value?.email}
+                      className="col-span-3"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className=" items-center gap-4">
+                      <Label htmlFor="status" className="text-right">
+                        Lavozimi
+                      </Label>
+                      <Input
+                        className="mt-2"
+                        id="status"
+                        disabled={true}
+                        defaultValue={value?.role}
+                      />
+                    </div>
+                    <div className=" items-center gap-4">
+                      <Label htmlFor="status" className="text-right">
+                        Status
+                      </Label>
+                      <Input
+                        className="mt-2"
+                        id="status"
+                        disabled={true}
+                        defaultValue={value?.status}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button
+                    className="cursor-pointer"
+                    type="button"
+                    onClick={() => {
+                      setViewDialog(!viewDialog);
+                    }}
+                  >
+                    Chiqish
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            )
+        )}
+      </Dialog>
     </div>
   );
 }
-
-// /api/staff/edited-admin

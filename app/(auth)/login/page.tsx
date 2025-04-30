@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import logo from "@/public/CRM-logo/vector/default-monochrome-white.svg";
+import { ModeToggle } from "@/components/mode-toggle";
 
 const loginSchema = z.object({
   email: z.string().email("Email noto‘g‘ri formatda"),
@@ -45,6 +46,9 @@ const Login = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#0f0f0f] relative overflow-hidden">
+      <div className="absolute z-90 right-5 top-5">
+        <ModeToggle />
+      </div>
       <div className="absolute w-[360px] h-[360px] animate-spinGlow rounded-full bg-gradient-to-tr from-purple-500 via-indigo-500 to-pink-500 blur-3xl opacity-40 z-0"></div>
 
       <motion.div

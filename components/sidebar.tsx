@@ -68,7 +68,7 @@ export function DashboardSidebar() {
                     className={`h-10  ${
                       pathname == item.href
                         ? " bg-black hover:bg-black dark:bg-white  dark:hover:bg-white"
-                        : " !py-3"
+                        : "!py-3"
                     }`}
                   >
                     <Link
@@ -80,14 +80,14 @@ export function DashboardSidebar() {
                           className={`h-6 w-6  ${
                             pathname == item.href
                               ? "text-white dark:text-black"
-                              : ""
+                              : "text-black dark:text-white"
                           }`}
                         />
                         <span
                           className={`ml-2 text-md  ${
                             pathname == item.href
                               ? "text-white dark:text-black"
-                              : ""
+                              : "text-black dark:text-white"
                           }`}
                         >
                           {item.label}
@@ -98,7 +98,7 @@ export function DashboardSidebar() {
                           className={`h-5 w-5 ${
                             pathname == item.href
                               ? "text-white dark:text-black"
-                              : ""
+                              : "text-black dark:text-white"
                           }`}
                         />
                       )}

@@ -1,5 +1,5 @@
-"use client";
-import React, { useState } from "react";
+"use client"
+import React, { Suspense, useState } from "react";
 import { AdminsTable } from "@/components/admins-table";
 
 import { Input } from "@/components/ui/input";
@@ -94,7 +94,9 @@ const Admins = () => {
         </div>
       </div>
       <div className="rounded-lg border bg-card mt-5 text-card-foreground shadow-sm overflow-hidden">
-        <AdminsTable />
+        <Suspense fallback={<div>Yuklanmoqda...</div>}>
+          <AdminsTable />
+        </Suspense>
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Loader, MoreHorizontal, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
+import Cookies from "js-cookie";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,13 +22,19 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { useGetManagersMutation } from "@/request/mutation";
-import { ManagersType } from "@/@types";
+import { useGetManagersMutation, useReturnToWork } from "@/request/mutation";
+import { ManagersType, UserType } from "@/@types";
+import toast from "react-hot-toast";
 
 export function UsersTable() {
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   const { data: usersData, mutate, isPending } = useGetManagersMutation();
   const users = usersData;
+  const cookie = Cookies;
+  const userCookie = cookie.get("user");
+  const loggedUser: UserType = userCookie ? JSON.parse(userCookie) : null;
+
+  const { mutate: returnToWork } = useReturnToWork();
 
   useEffect(() => {
     mutate();
@@ -144,6 +151,16 @@ export function UsersTable() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem>Edit user</DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        onClick={() =>
+                          loggedUser.role.toLowerCase() !== "manager"
+                            ? toast.error("Sizga ruxsat berilmagan")
+                            : returnToWork({ _id: user?._id })
+                        }
+                      >
+                        Ishga qaytarish
+                      </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem className="text-red-500">
                         Delete
