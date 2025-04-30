@@ -61,7 +61,7 @@ export function AdminsTable() {
   const [viewId, setViewId] = useState("");
 
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
-  const { data: usersData, mutate, isPending } = useGetAdminsMutation();
+  const { data: usersData, isPending } = useGetAdminsMutation();
   const users = usersData;
   const { mutate: editAdmin, isPending: isEditing } = useEditAdminsMutation();
   const { mutate: deleteAdmin } = useDeleteAdminsMutation();
@@ -79,9 +79,7 @@ export function AdminsTable() {
     first_name: "",
     last_name: "",
   });
-  useEffect(() => {
-    mutate();
-  }, []);
+
   useEffect(() => {
     const currentStatus = searchParams.get("status");
     setValue(currentStatus || "barchasi");
@@ -174,12 +172,18 @@ export function AdminsTable() {
                       className={`${
                         user.status === "faol"
                           ? "bg-green-500/10 text-green-500 border-green-500/20"
+                          : user.status === "ta'tilda"
+                          ? "bg-yellow-500/10 text-yellow-500 border-yellow-500/20"
                           : "bg-red-500/10 text-red-500 border-red-500/20"
                       }`}
                     >
                       <span
                         className={`${
-                          user.status === "faol" ? "bg-green-700" : "bg-red-500"
+                          user.status === "faol"
+                            ? "bg-green-700"
+                            : user.status == "ta'tilda"
+                            ? "bg-yellow-500"
+                            : "bg-red-500"
                         } mr-1.5 h-1.5 w-1.5 rounded-full inline-block`}
                       ></span>
                       {user.status === "faol" ? "Faol" : user.status}

@@ -1,5 +1,5 @@
 "use client";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { request } from "..";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -75,15 +75,11 @@ export const useGetManagersMutation = () => {
 
 // Adminlarni backendan  olish uchun mutation
 export const useGetAdminsMutation = () => {
-  return useMutation({
-    mutationKey: ["admins"],
-    mutationFn: async () => {
+  return useQuery({
+    queryKey: ["admins"],
+    queryFn: async () => {
       const res = await request.get("/api/staff/all-admins");
-      const data = await res;
-      return data.data.data;
-    },
-    onError: (err: any) => {
-      toast.error(`Xatolik: ${err.message}`);
+      return res.data.data;
     },
   });
 };
@@ -117,6 +113,8 @@ export const useEditAdminsMutation = () => {
 
 // Adminni o'chirish uchun mutation
 export const useDeleteAdminsMutation = () => {
+  const { refetch: adminRefetch } = useGetAdminsMutation();
+
   return useMutation({
     mutationKey: ["deleteAdmin"],
     mutationFn: (data: ManagersType) => {
@@ -128,6 +126,7 @@ export const useDeleteAdminsMutation = () => {
     },
     onSuccess() {
       toast.success("Admin tizimdan chiqarildi");
+      adminRefetch();
     },
     onError(err) {
       toast.error(`Xatolik ${err.message}`);
@@ -214,12 +213,15 @@ export const useForgotPasswordMutation = () => {
 
 // Faollashtirish uchun mutation
 export const useLeaveExitStaff = () => {
+  const { refetch: adminRefetch } = useGetAdminsMutation();
+
   return useMutation({
     mutationKey: ["exit-staff"],
     mutationFn: (data: object) =>
       request.post("/api/staff/leave-exit-staff", data),
     onSuccess() {
       toast.success("Faollashtirildi");
+      adminRefetch();
     },
     onError(err) {
       toast.error(`Xatolik ${err}`);
@@ -229,12 +231,16 @@ export const useLeaveExitStaff = () => {
 
 // Ishga qaytarish uchun mutation
 export const useReturnToWork = () => {
+  const { refetch: adminRefetch } = useGetAdminsMutation();
+
   return useMutation({
     mutationKey: ["return-work"],
     mutationFn: (data: object) =>
       request.post("/api/staff/return-work-staff", data),
     onSuccess() {
       toast.success("Ishga qaytarildi");
+
+      adminRefetch();
     },
     onError(err) {
       toast.error(`Xatolik ${err}`);
