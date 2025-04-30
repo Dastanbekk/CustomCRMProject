@@ -25,8 +25,20 @@ import { Badge } from "@/components/ui/badge";
 import { useGetManagersMutation, useReturnToWork } from "@/request/mutation";
 import { ManagersType, UserType } from "@/@types";
 import toast from "react-hot-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
 
 export function UsersTable() {
+  const [viewDialog, setViewDialog] = useState(false);
+  const [viewId, setViewId] = useState("");
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   const { data: usersData, mutate, isPending } = useGetManagersMutation();
   const users = usersData;
@@ -100,7 +112,13 @@ export function UsersTable() {
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-3">
-                    <Avatar>
+                    <Avatar
+                      onClick={() => {
+                        setViewDialog(!viewDialog);
+                        setViewId(user._id);
+                      }}
+                      className="cursor-pointer"
+                    >
                       <AvatarImage
                         src={user.image || "/placeholder.svg"}
                         alt={user.first_name}
@@ -180,6 +198,103 @@ export function UsersTable() {
       ) : (
         ""
       )}
+
+      {/* View Profile Dialog */}
+      <Dialog open={viewDialog} onOpenChange={() => setViewDialog(false)}>
+        {users?.map(
+          (value: ManagersType) =>
+            value?._id === viewId && (
+              <DialogContent key={value._id} className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle className="flex justify-center gap-1">
+                    <span className="capitalize">{value?.role}</span> profile
+                  </DialogTitle>
+                </DialogHeader>
+                <div className="flex justify-center">
+                  <Avatar className="cursor-pointer min-w-[50px] min-h-[50px] max-w-[150px] w-full h-full max-h-[150px]">
+                    <AvatarImage
+                      src={value.image || "/placeholder.svg"}
+                      alt={value.first_name}
+                    />
+                    <AvatarFallback>
+                      {value.first_name.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                </div>
+                <div className="grid gap-4 py-4">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="name" className="text-right">
+                      Ismi
+                    </Label>
+                    <Input
+                      disabled={true}
+                      id="name"
+                      defaultValue={value?.first_name}
+                      className="col-span-3"
+                    />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="username" className="text-right">
+                      Familyasi
+                    </Label>
+                    <Input
+                      id="username"
+                      disabled={true}
+                      defaultValue={value?.last_name}
+                      className="col-span-3"
+                    />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="email" className="text-right">
+                      Email
+                    </Label>
+                    <Input
+                      id="email"
+                      disabled={true}
+                      defaultValue={value?.email}
+                      className="col-span-3"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className=" items-center gap-4">
+                      <Label htmlFor="status" className="text-right">
+                        Lavozimi
+                      </Label>
+                      <Input
+                        className="mt-2"
+                        id="status"
+                        disabled={true}
+                        defaultValue={value?.role}
+                      />
+                    </div>
+                    <div className=" items-center gap-4">
+                      <Label htmlFor="status" className="text-right">
+                        Status
+                      </Label>
+                      <Input
+                        className="mt-2"
+                        id="status"
+                        disabled={true}
+                        defaultValue={value?.status}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button
+                    className="cursor-pointer"
+                    type="button"
+                    onClick={() => {
+                      setViewDialog(!viewDialog);
+                    }}
+                  >
+                    Chiqish
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            )
+        )}
+      </Dialog>
     </div>
   );
 }
