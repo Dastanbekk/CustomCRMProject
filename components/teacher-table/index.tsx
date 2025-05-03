@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Loader, MoreHorizontal, User } from "lucide-react";
+import { useState } from "react";
+import { Loader, MoreHorizontal } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
 import Cookies from "js-cookie";
@@ -9,7 +9,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -22,8 +21,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { useGetManagersMutation, useReturnToWork } from "@/request/mutation";
-import { ManagersType, UserType } from "@/@types";
+import {
+  useDeleteTeachers,
+  useGetTeachersMutation,
+  useReturnToWorkTeacher,
+} from "@/request/mutation";
+import { TeacherType, UserType } from "@/@types";
 import toast from "react-hot-toast";
 import {
   Dialog,
@@ -36,25 +39,26 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 
-export function UsersTable() {
+export function TeachersTable() {
   const [viewDialog, setViewDialog] = useState(false);
   const [viewId, setViewId] = useState("");
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
-  const { data: usersData, isPending } = useGetManagersMutation();
+  const { data: usersData, isPending } = useGetTeachersMutation();
   const users = usersData;
   const cookie = Cookies;
   const userCookie = cookie.get("user");
   const loggedUser: UserType = userCookie ? JSON.parse(userCookie) : null;
 
-  const { mutate: returnToWork } = useReturnToWork();
+  const { mutate: returnToWork } = useReturnToWorkTeacher();
+  const { mutate: deleteTeachers } = useDeleteTeachers();
 
   const toggleSelectAll = () => {
     if (!users) return;
 
-    if (selectedUsers.length === users.length) {
+    if (selectedUsers?.length === users?.length) {
       setSelectedUsers([]);
     } else {
-      setSelectedUsers(users?.map((user: ManagersType) => user._id));
+      setSelectedUsers(users?.map((user: TeacherType) => user._id));
     }
   };
 
@@ -70,8 +74,8 @@ export function UsersTable() {
       <Table className="min-w-[1000px] ">
         <TableHeader className="bg-muted/20">
           <TableRow>
-            <TableHead className="w-[40px]">
-              <Checkbox
+            <TableHead className="w-[40px] ml-2">
+              {/* <Checkbox
                 checked={
                   isPending
                     ? false
@@ -80,13 +84,12 @@ export function UsersTable() {
                 }
                 onCheckedChange={toggleSelectAll}
                 aria-label="Select all"
-              />
+              /> */}
             </TableHead>
             <TableHead className="min-w-[180px]">Full Name</TableHead>
             <TableHead className="min-w-[100px]">Status</TableHead>
-            <TableHead className="min-w-[120px]">Role</TableHead>
+            <TableHead className="min-w-[120px]">Yo'nalish</TableHead>
             <TableHead className="min-w-[150px]">CreatedAt</TableHead>
-            <TableHead className="min-w-[100px]">Reason</TableHead>
             <TableHead className="min-w-[150px]">Email</TableHead>
             <TableHead className="w-[80px]">Actions</TableHead>
           </TableRow>
@@ -95,14 +98,15 @@ export function UsersTable() {
           ""
         ) : (
           <TableBody>
-            {users?.map((user: ManagersType) => (
+            {users?.map((user: TeacherType, idx: number) => (
               <TableRow key={user._id}>
                 <TableCell>
-                  <Checkbox
+                  {/* <Checkbox
                     checked={selectedUsers.includes(user._id)}
                     onCheckedChange={() => toggleSelectUser(user._id)}
                     aria-label={`Select ${user.first_name}`}
-                  />
+                  /> */}
+                  <div className="pl-2">{idx}</div>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-3">
@@ -146,14 +150,8 @@ export function UsersTable() {
                     {user.status === "faol" ? "Faol" : user.status}
                   </Badge>
                 </TableCell>
-                <TableCell>{user.role}</TableCell>
+                <TableCell>{user.field}</TableCell>
                 <TableCell>{user.createdAt?.slice(0, 10)}</TableCell>
-                <TableCell>
-                  {user.status?.toLowerCase() == "faol"
-                    ? ""
-                    : user?.leave_history[user?.leave_history.length - 1]
-                        ?.reason}
-                </TableCell>
 
                 <TableCell>{user.email}</TableCell>
                 <TableCell>
@@ -167,19 +165,29 @@ export function UsersTable() {
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem>Edit user</DropdownMenuItem>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        onClick={() =>
-                          loggedUser.role.toLowerCase() !== "manager"
-                            ? toast.error("Sizga ruxsat berilmagan")
-                            : returnToWork({ _id: user?._id })
-                        }
-                      >
-                        Ishga qaytarish
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem className="text-red-500">
-                        Delete
-                      </DropdownMenuItem>
+                      {user?.status?.toLowerCase() == "faol" ? (
+                        <DropdownMenuItem
+                          onClick={() => {
+                            console.log({ _id: user?._id });
+                            loggedUser?.role !== "manager"
+                              ? toast.error("Sizga ruxsat berilmagan!")
+                              : deleteTeachers({ _id: user?._id });
+                          }}
+                          className="text-red-500 cursor-pointer"
+                        >
+                          Delete
+                        </DropdownMenuItem>
+                      ) : (
+                        <DropdownMenuItem
+                          onClick={() =>
+                            loggedUser.role.toLowerCase() == "teacher"
+                              ? toast.error("Sizga ruxsat berilmagan")
+                              : returnToWork({ _id: user?._id })
+                          }
+                        >
+                          Ishga qaytarish
+                        </DropdownMenuItem>
+                      )}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>
@@ -199,12 +207,12 @@ export function UsersTable() {
       {/* View Profile Dialog */}
       <Dialog open={viewDialog} onOpenChange={() => setViewDialog(false)}>
         {users?.map(
-          (value: ManagersType) =>
+          (value: TeacherType) =>
             value?._id === viewId && (
               <DialogContent key={value._id} className="sm:max-w-[425px]">
                 <DialogHeader>
                   <DialogTitle className="flex justify-center gap-1">
-                    <span className="capitalize">{value?.role}</span> profile
+                    Teacher profile
                   </DialogTitle>
                 </DialogHeader>
                 <div className="flex justify-center">
@@ -261,7 +269,7 @@ export function UsersTable() {
                         className="mt-2"
                         id="status"
                         disabled={true}
-                        defaultValue={value?.role}
+                        defaultValue={value?.field}
                       />
                     </div>
                     <div className=" items-center gap-4">

@@ -12,15 +12,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenuContent,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { GitPullRequestDraft, Plus, Search } from "lucide-react";
+
+import { Search } from "lucide-react";
 import AdminsDialog from "@/components/admins-dialog";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 
@@ -59,8 +53,8 @@ const AdminsGlobalPage = () => {
   return (
     <div className="pt-10 px-5">
       <h3 className="font-bold text-2xl">Admins</h3>
-      <div className="pt-3 flex justify-between">
-        <form onSubmit={handleSubmit} className="max-w-[25%] flex  gap-[4px]">
+      <div className="pt-3 flex justify-between gap-2">
+        <form onSubmit={handleSubmit} className="flex  gap-[4px]">
           <Input
             onChange={(e) => setSearchValue(e.target.value)}
             placeholder="Qidirish..."
@@ -73,7 +67,9 @@ const AdminsGlobalPage = () => {
           {/* SELECT */}
           <Select value={value} onValueChange={handleChange}>
             <SelectTrigger className="max-w-[180px]">
-              <SelectValue placeholder="Barchasi" />
+              <div className="hidden sm:block">
+                <SelectValue placeholder="Barchasi" />
+              </div>
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
@@ -87,29 +83,10 @@ const AdminsGlobalPage = () => {
               </SelectGroup>
             </SelectContent>
           </Select>
-          {/* DROPDOWN */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline">
-                <GitPullRequestDraft className="rotate-90" /> ko'rish
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-10">
-              <DropdownMenuRadioGroup>
-                <DropdownMenuRadioItem value="top">Top</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="bottom">
-                  role Bottom
-                </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="right">
-                  Right
-                </DropdownMenuRadioItem>
-              </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
           <AdminsDialog />
         </div>
       </div>
-      <div className="rounded-lg border bg-card mt-5 text-card-foreground shadow-sm overflow-hidden">
+      <div className="rounded-lg overflow-x-scroll w-full max-w-full sm:max-w-[700px] md:max-w-[1000px] lg:max-w-full border bg-card mt-5 text-card-foreground shadow-sm ">
         <AdminsTable />
       </div>
     </div>

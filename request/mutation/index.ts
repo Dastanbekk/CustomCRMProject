@@ -55,20 +55,16 @@ export const useLogOutMutation = () => {
 // Managerlarni backendan  olish uchun mutation
 export const useGetManagersMutation = () => {
   const token = cookie.get("jwt");
-  return useMutation({
-    mutationKey: ["managers"],
-    mutationFn: async () => {
+  return useQuery({
+    queryKey: ["managers"],
+    queryFn: async () => {
       const res = await request.get("/api/staff/all-managers", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      const data = await res;
-      return data.data.data;
-    },
-    onError: (err: any) => {
-      toast.error(`Xatolik: ${err.message}`);
+      return res.data.data;
     },
   });
 };
@@ -79,7 +75,7 @@ export const useGetAdminsMutation = () => {
     queryKey: ["admins"],
     queryFn: async () => {
       const res = await request.get("/api/staff/all-admins");
-      return res.data.data;
+      return await res.data.data;
     },
   });
 };
@@ -96,6 +92,7 @@ export const useGetAdminsMutation = () => {
 // Adminni ozgartirish uchun mutation
 export const useEditAdminsMutation = () => {
   const queryClient = useQueryClient();
+  const { refetch: adminRefetch } = useGetAdminsMutation();
   return useMutation({
     mutationKey: ["editAdmin"],
     mutationFn: (data: object) => {
@@ -104,6 +101,7 @@ export const useEditAdminsMutation = () => {
     },
     onSuccess() {
       toast.success("Admin o'zgartirildi");
+      adminRefetch();
     },
     onError(err) {
       toast.error(`Xatolik: ${err.message}`);
@@ -114,6 +112,7 @@ export const useEditAdminsMutation = () => {
 // Adminni o'chirish uchun mutation
 export const useDeleteAdminsMutation = () => {
   const { refetch: adminRefetch } = useGetAdminsMutation();
+  const { refetch: managerRefetch } = useGetManagersMutation();
 
   return useMutation({
     mutationKey: ["deleteAdmin"],
@@ -127,6 +126,7 @@ export const useDeleteAdminsMutation = () => {
     onSuccess() {
       toast.success("Admin tizimdan chiqarildi");
       adminRefetch();
+      managerRefetch();
     },
     onError(err) {
       toast.error(`Xatolik ${err.message}`);
@@ -136,11 +136,14 @@ export const useDeleteAdminsMutation = () => {
 
 // Admin qo'shish uchun mutation
 export const useAddAdminMutation = () => {
+  const { refetch: adminRefetch } = useGetAdminsMutation();
+
   return useMutation({
     mutationKey: ["add-admin"],
     mutationFn: (data: object) => request.post("/api/staff/create-admin", data),
     onSuccess() {
       toast.success("Admin qo'shildi");
+      adminRefetch();
     },
     onError(err) {
       toast.error(`Xatolik ${err.message}`);
@@ -185,11 +188,14 @@ export const useUpdateUserProfile = () => {
 
 // Sababli qilish  uchun mutation
 export const useAdminStaffMutation = () => {
+  const { refetch: adminRefetch } = useGetAdminsMutation();
+
   return useMutation({
     mutationKey: ["admin-staff"],
     mutationFn: (data: object) => request.post("/api/staff/leave-staff", data),
     onSuccess() {
       toast.success("Sabab qo'shildi");
+      adminRefetch();
     },
     onError(err) {
       toast.error(`Xatolik ${err.message}`);
@@ -232,18 +238,97 @@ export const useLeaveExitStaff = () => {
 // Ishga qaytarish uchun mutation
 export const useReturnToWork = () => {
   const { refetch: adminRefetch } = useGetAdminsMutation();
-
+  const { refetch: managerRefetch } = useGetManagersMutation();
   return useMutation({
     mutationKey: ["return-work"],
     mutationFn: (data: object) =>
       request.post("/api/staff/return-work-staff", data),
     onSuccess() {
       toast.success("Ishga qaytarildi");
-
+      managerRefetch();
       adminRefetch();
     },
     onError(err) {
       toast.error(`Xatolik ${err}`);
+    },
+  });
+};
+
+// O'qituvchilarni qoshish uchun mutation
+export const useCreateTeachersMutation = () => {
+  const { refetch: teacherGet } = useGetTeachersMutation();
+  return useMutation({
+    mutationKey: ["create-teacher"],
+    mutationFn: (data: object) => {
+      return request.post("/api/teacher/create-teacher", data);
+    },
+    onSuccess() {
+      toast.success("Qo'shildi");
+      teacherGet();
+    },
+    onError(err) {
+      toast.error(`Xatolik ${err}`);
+    },
+  });
+};
+
+// O'qituvchilarni beckenddan olish uchun query
+export const useGetTeachersMutation = () => {
+  return useQuery({
+    queryKey: ["get-teacher"],
+    queryFn: async () => {
+      const res = await request.get("/api/teacher/get-all-teachers");
+      return res.data.data;
+    },
+  });
+};
+
+export const useDeleteTeachers = () => {
+  const { refetch } = useGetTeachersMutation();
+  return useMutation({
+    mutationKey: ["delete-teacher"],
+    mutationFn: (data: object) => {
+      return request({
+        url: "/api/teacher/fire-teacher",
+        data,
+        method: "DELETE",
+      });
+    },
+    onSuccess() {
+      refetch();
+      toast.success("O'qituvchi ishdan bo'shatildi");
+    },
+    onError(err) {
+      toast.error(`Xatolik ${err}`);
+    },
+  });
+};
+
+export const useReturnToWorkTeacher = () => {
+  const { refetch } = useGetTeachersMutation();
+
+  return useMutation({
+    mutationKey: ["return-teachers"],
+    mutationFn: (data: object) => {
+      return request.post("/api/teacher/return-teacher", data);
+    },
+    onSuccess() {
+      toast.success("O'qituvchi ishga qaytarildi");
+      refetch();
+    },
+    onError(err) {
+      toast.error(`Xatolik ${err}`);
+    },
+  });
+};
+
+// guruhlarni beckenddan olish
+export const useGetAllGroups = () => {
+  return useQuery({
+    queryKey: ["get-groups"],
+    queryFn: async() => {
+      const res = await request.get("/api/group/get-all-group");
+      return res.data.data
     },
   });
 };

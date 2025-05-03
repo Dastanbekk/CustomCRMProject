@@ -58,3 +58,27 @@ export interface ManagersType {
     }
   ];
 }
+
+export interface TeacherType {
+  _id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  field: string;
+  salary: number;
+  status: "faol" | "ta'tilda" | "ishdan bo'shatilgan" | string; // agar aniq enumlar bo'lsa, ularga cheklash qo'yish mumkin
+  image: string | null;
+  createdAt: string; // yoki Date agar parse qilinsa
+  updatedAt: string;
+  work_date: string;
+  work_end: string | null;
+  is_deleted: boolean;
+  groups: any[]; // yoki agar grouplar turi ma'lum bo‘lsa: GroupType[]
+}
+
+export interface GroupsType {
+  name: string;
+  teacher: string;
+  started_group: string;
+}

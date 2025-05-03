@@ -14,41 +14,46 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { UserType } from "@/@types";
 import Cookies from "js-cookie";
-import toast from "react-hot-toast";
-import { useAddAdminMutation } from "@/request/mutation";
+import { useCreateTeachersMutation } from "@/request/mutation";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
-const AdminsDialog = () => {
-  const { mutate, isPending } = useAddAdminMutation();
+const GroupsDialog = () => {
+  const [selectValue, setSelectValue] = useState("");
+  const { mutate, isPending } = useCreateTeachersMutation();
   const cookie = Cookies;
   const userCookie = cookie.get("user");
   const user: UserType = userCookie ? JSON.parse(userCookie) : null;
   const [openDialog, setOpenDialog] = useState(false);
+
+  //   const handleChange = (value: string) => {
+  //     setSelectValue(value);
+  //   };
+
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
     email: "",
+    phone: "",
     password: "",
-    role: "admin",
-    work_date: new Date().toISOString().split("T")[0], // bugungi sana avtomatik
-    status: "faol",
-    active: true,
-    is_deleted: false,
+    field: "",
   });
-  
-
   return (
     <div>
       <Dialog open={openDialog} onOpenChange={() => setOpenDialog(false)}>
-          <Button
-            onClick={() => {
-              user?.role.toLowerCase() !== "manager"
-                ? toast.error("Sizga ruxsat berilmagan")
-                : setOpenDialog(!openDialog);
-            }}
-            className="cursor-pointer"
-          >
-            <Plus /> <span className="hidden sm:block">Qo'shish</span>
-          </Button>
+        <Button
+          onClick={() => setOpenDialog(!openDialog)}
+          className="cursor-pointer"
+        >
+          <Plus /> <span className="hidden sm:block">Qo'shish</span>
+        </Button>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Admin Qo'shish</DialogTitle>
@@ -107,18 +112,43 @@ const AdminsDialog = () => {
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="status" className="text-right">
-                Status :
+              <Label htmlFor="phone_number" className="text-right">
+                Raqam :
               </Label>
               <Input
-                id="status"
-                disabled
-                value={formData.status}
+                id="phone_number"
+                value={formData.phone}
                 onChange={(e) =>
-                  setFormData({ ...formData, status: e.target.value })
+                  setFormData({ ...formData, phone: e.target.value })
                 }
                 className="col-span-3"
               />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="field" className="text-right">
+                Yonalish :
+              </Label>
+              <Select
+                value={selectValue}
+                onValueChange={(e: string) =>
+                  setFormData({ ...formData, field: e })
+                }
+              >
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Yo'nalishni tanlash" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Yo'nalishlar</SelectLabel>
+                    <SelectItem value="Frontend dasturlash">
+                      Frontend
+                    </SelectItem>
+                    <SelectItem value="Backend dasturlash">Backend</SelectItem>
+                    <SelectItem value="Rus tili">Rus tili</SelectItem>
+                    <SelectItem value="Ingliz tili">Ingliz tili</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <DialogFooter>
@@ -139,4 +169,4 @@ const AdminsDialog = () => {
   );
 };
 
-export default AdminsDialog;
+export default GroupsDialog;

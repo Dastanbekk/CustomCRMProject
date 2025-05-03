@@ -1,15 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Loader, MoreHorizontal, User } from "lucide-react";
+import { useState } from "react";
+import { Loader, MoreHorizontal } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Checkbox } from "@/components/ui/checkbox";
 import Cookies from "js-cookie";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -21,9 +19,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { useGetManagersMutation, useReturnToWork } from "@/request/mutation";
-import { ManagersType, UserType } from "@/@types";
+import {
+  useDeleteTeachers,
+  useGetAllGroups,
+  useReturnToWorkTeacher,
+} from "@/request/mutation";
+import { GroupsType, TeacherType, UserType } from "@/@types";
 import toast from "react-hot-toast";
 import {
   Dialog,
@@ -36,58 +37,23 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 
-export function UsersTable() {
+export function GroupsTable() {
   const [viewDialog, setViewDialog] = useState(false);
-  const [viewId, setViewId] = useState("");
-  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
-  const { data: usersData, isPending } = useGetManagersMutation();
+  const [viewId, setViewId] = useState<Number>();
+  const { data: usersData, isPending } = useGetAllGroups();
   const users = usersData;
   const cookie = Cookies;
   const userCookie = cookie.get("user");
   const loggedUser: UserType = userCookie ? JSON.parse(userCookie) : null;
-
-  const { mutate: returnToWork } = useReturnToWork();
-
-  const toggleSelectAll = () => {
-    if (!users) return;
-
-    if (selectedUsers.length === users.length) {
-      setSelectedUsers([]);
-    } else {
-      setSelectedUsers(users?.map((user: ManagersType) => user._id));
-    }
-  };
-
-  const toggleSelectUser = (userId: string) => {
-    setSelectedUsers((prev) =>
-      prev.includes(userId)
-        ? prev.filter((id) => id !== userId)
-        : [...prev, userId]
-    );
-  };
   return (
     <div className=" min-w-[350px]   max-w-[600px] sm:max-w-full sm:w-full overflow-auto overflow-x-scroll">
       <Table className="min-w-[1000px] ">
         <TableHeader className="bg-muted/20">
           <TableRow>
-            <TableHead className="w-[40px]">
-              <Checkbox
-                checked={
-                  isPending
-                    ? false
-                    : selectedUsers?.length === users?.length &&
-                      users?.length > 0
-                }
-                onCheckedChange={toggleSelectAll}
-                aria-label="Select all"
-              />
-            </TableHead>
+            <TableHead className="w-[40px] ml-2"></TableHead>
             <TableHead className="min-w-[180px]">Full Name</TableHead>
-            <TableHead className="min-w-[100px]">Status</TableHead>
-            <TableHead className="min-w-[120px]">Role</TableHead>
+            <TableHead className="min-w-[120px]">Ustoz</TableHead>
             <TableHead className="min-w-[150px]">CreatedAt</TableHead>
-            <TableHead className="min-w-[100px]">Reason</TableHead>
-            <TableHead className="min-w-[150px]">Email</TableHead>
             <TableHead className="w-[80px]">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -95,67 +61,34 @@ export function UsersTable() {
           ""
         ) : (
           <TableBody>
-            {users?.map((user: ManagersType) => (
-              <TableRow key={user._id}>
+            {users?.map((user: GroupsType, idx: number) => (
+              <TableRow key={idx}>
                 <TableCell>
-                  <Checkbox
-                    checked={selectedUsers.includes(user._id)}
-                    onCheckedChange={() => toggleSelectUser(user._id)}
-                    aria-label={`Select ${user.first_name}`}
-                  />
+                  <div className="pl-2">{idx + 1}</div>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-3">
                     <Avatar
                       onClick={() => {
                         setViewDialog(!viewDialog);
-                        setViewId(user._id);
+                        setViewId(idx);
                       }}
                       className="cursor-pointer"
                     >
-                      <AvatarImage
-                        src={user.image || "/placeholder.svg"}
-                        alt={user.first_name}
-                      />
-                      <AvatarFallback>
-                        {user.first_name.charAt(0)}
-                      </AvatarFallback>
+                      <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
                     </Avatar>
                     <div>
-                      <div className="font-medium">{user.first_name}</div>
-                      <div className="text-sm text-muted-foreground">
-                        @{user.last_name}
-                      </div>
+                      <div className="font-medium">{user.name}</div>
                     </div>
                   </div>
                 </TableCell>
                 <TableCell>
-                  <Badge
-                    variant="outline"
-                    className={`${
-                      user.status === "faol"
-                        ? "bg-green-500/10 text-green-500 border-green-500/20"
-                        : "bg-red-500/10 text-red-500 border-red-500/20"
-                    }`}
-                  >
-                    <span
-                      className={`${
-                        user.status === "faol" ? "bg-green-700" : "bg-red-500"
-                      } mr-1.5 h-1.5 w-1.5 rounded-full inline-block`}
-                    ></span>
-                    {user.status === "faol" ? "Faol" : user.status}
-                  </Badge>
+                  {/* {setTeacher(
+                    request.get(`/api/teacher/get-teacher/${user._id}`)
+                  )} */}
+                  Davron Raimjonov
                 </TableCell>
-                <TableCell>{user.role}</TableCell>
-                <TableCell>{user.createdAt?.slice(0, 10)}</TableCell>
-                <TableCell>
-                  {user.status?.toLowerCase() == "faol"
-                    ? ""
-                    : user?.leave_history[user?.leave_history.length - 1]
-                        ?.reason}
-                </TableCell>
-
-                <TableCell>{user.email}</TableCell>
+                <TableCell>{user.started_group?.slice(0, 10)}</TableCell>
                 <TableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -164,23 +97,33 @@ export function UsersTable() {
                         <MoreHorizontal className="h-4 w-4" />
                       </button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
+                    {/* <DropdownMenuContent align="end">
                       <DropdownMenuItem>Edit user</DropdownMenuItem>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        onClick={() =>
-                          loggedUser.role.toLowerCase() !== "manager"
-                            ? toast.error("Sizga ruxsat berilmagan")
-                            : returnToWork({ _id: user?._id })
-                        }
-                      >
-                        Ishga qaytarish
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem className="text-red-500">
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
+                      {user?.status?.toLowerCase() == "faol" ? (
+                        <DropdownMenuItem
+                          onClick={() => {
+                            console.log({ _id: user?._id });
+                            loggedUser?.role !== "manager"
+                              ? toast.error("Sizga ruxsat berilmagan!")
+                              : deleteTeachers({ _id: user?._id });
+                          }}
+                          className="text-red-500 cursor-pointer"
+                        >
+                          Delete
+                        </DropdownMenuItem>
+                      ) : (
+                        <DropdownMenuItem
+                          onClick={() =>
+                            loggedUser.role.toLowerCase() == "teacher"
+                              ? toast.error("Sizga ruxsat berilmagan")
+                              : returnToWork({ _id: user?._id })
+                          }
+                        >
+                          Ishga qaytarish
+                        </DropdownMenuItem>
+                      )}
+                    </DropdownMenuContent> */}
                   </DropdownMenu>
                 </TableCell>
               </TableRow>
@@ -197,14 +140,14 @@ export function UsersTable() {
       )}
 
       {/* View Profile Dialog */}
-      <Dialog open={viewDialog} onOpenChange={() => setViewDialog(false)}>
+      {/* <Dialog open={viewDialog} onOpenChange={() => setViewDialog(false)}>
         {users?.map(
-          (value: ManagersType) =>
+          (value: TeacherType) =>
             value?._id === viewId && (
               <DialogContent key={value._id} className="sm:max-w-[425px]">
                 <DialogHeader>
                   <DialogTitle className="flex justify-center gap-1">
-                    <span className="capitalize">{value?.role}</span> profile
+                    Teacher profile
                   </DialogTitle>
                 </DialogHeader>
                 <div className="flex justify-center">
@@ -261,7 +204,7 @@ export function UsersTable() {
                         className="mt-2"
                         id="status"
                         disabled={true}
-                        defaultValue={value?.role}
+                        defaultValue={value?.field}
                       />
                     </div>
                     <div className=" items-center gap-4">
@@ -291,7 +234,7 @@ export function UsersTable() {
               </DialogContent>
             )
         )}
-      </Dialog>
+      </Dialog> */}
     </div>
   );
 }

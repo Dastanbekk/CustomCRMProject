@@ -102,8 +102,8 @@ export function AdminsTable() {
   };
 
   return (
-    <div className="w-full overflow-auto">
-      <Table className="min-w-[1000px] ">
+    <div className=" overflow-x-scroll max-w-[470px] sm:max-w-[720px] md:max-w-[1000px] lg:max-w-full">
+      <Table>
         <TableHeader className="bg-muted/20">
           <TableRow>
             <TableHead className="w-[40px]">
@@ -192,10 +192,10 @@ export function AdminsTable() {
                   <TableCell>{user.role}</TableCell>
                   <TableCell>{user.createdAt?.slice(0, 10)}</TableCell>
                   <TableCell>
-                    {
-                      user?.leave_history[user?.leave_history.length - 1]
-                        ?.reason
-                    }
+                    {user.status?.toLowerCase() == "faol"
+                      ? ""
+                      : user?.leave_history[user?.leave_history.length - 1]
+                          ?.reason}
                   </TableCell>
 
                   <TableCell>{user.email}</TableCell>
@@ -226,39 +226,42 @@ export function AdminsTable() {
                         >
                           Edit user
                         </DropdownMenuItem>
+                        {user.active == false ? (
+                          <DropdownMenuItem
+                            onClick={() =>
+                              loggedUser.role.toLowerCase() !== "manager"
+                                ? toast.error("Sizga ruxsat berilmagan")
+                                : exitStaff({ _id: user?._id })
+                            }
+                          >
+                            Faollashtirish
+                          </DropdownMenuItem>
+                        ) : (
+                          <AdminsStaffDialog prop={user._id} />
+                        )}
                         <DropdownMenuSeparator />
-                        <AdminsStaffDialog prop={user._id} />
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                          onClick={() =>
-                            loggedUser.role.toLowerCase() !== "manager"
-                              ? toast.error("Sizga ruxsat berilmagan")
-                              : exitStaff({ _id: user?._id })
-                          }
-                        >
-                          Faollashtirish
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                          onClick={() =>
-                            loggedUser.role.toLowerCase() !== "manager"
-                              ? toast.error("Sizga ruxsat berilmagan")
-                              : returnToWork({ _id: user?._id })
-                          }
-                        >
-                          Ishga qaytarish
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                          onClick={() => {
-                            loggedUser?.role !== "manager"
-                              ? toast.error("Sizga ruxsat berilmagan!")
-                              : deleteAdmin(user);
-                          }}
-                          className="text-red-500 cursor-pointer"
-                        >
-                          Delete
-                        </DropdownMenuItem>
+                        {user?.status?.toLowerCase() == "faol" ? (
+                          <DropdownMenuItem
+                            onClick={() => {
+                              loggedUser?.role !== "manager"
+                                ? toast.error("Sizga ruxsat berilmagan!")
+                                : deleteAdmin(user);
+                            }}
+                            className="text-red-500 cursor-pointer"
+                          >
+                            Delete
+                          </DropdownMenuItem>
+                        ) : (
+                          <DropdownMenuItem
+                            onClick={() =>
+                              loggedUser.role.toLowerCase() !== "manager"
+                                ? toast.error("Sizga ruxsat berilmagan")
+                                : returnToWork({ _id: user?._id })
+                            }
+                          >
+                            Ishga qaytarish
+                          </DropdownMenuItem>
+                        )}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
@@ -351,27 +354,28 @@ export function AdminsTable() {
                           <DropdownMenuSeparator />
                           <AdminsStaffDialog prop={user._id} />
                           <DropdownMenuSeparator />
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem
-                            onClick={() =>
-                              loggedUser.role.toLowerCase() !== "manager"
-                                ? toast.error("Sizga ruxsat berilmagan")
-                                : returnToWork({ _id: user?._id })
-                            }
-                          >
-                            Ishga qaytarish
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem
-                            onClick={() => {
-                              loggedUser?.role !== "manager"
-                                ? toast.error("Sizga ruxsat berilmagan!")
-                                : deleteAdmin(user);
-                            }}
-                            className="text-red-500 cursor-pointer"
-                          >
-                            Delete
-                          </DropdownMenuItem>
+                          {user?.status?.toLowerCase() == "faol" ? (
+                            <DropdownMenuItem
+                              onClick={() => {
+                                loggedUser?.role !== "manager"
+                                  ? toast.error("Sizga ruxsat berilmagan!")
+                                  : deleteAdmin(user);
+                              }}
+                              className="text-red-500 cursor-pointer"
+                            >
+                              Delete
+                            </DropdownMenuItem>
+                          ) : (
+                            <DropdownMenuItem
+                              onClick={() =>
+                                loggedUser.role.toLowerCase() !== "manager"
+                                  ? toast.error("Sizga ruxsat berilmagan")
+                                  : returnToWork({ _id: user?._id })
+                              }
+                            >
+                              Ishga qaytarish
+                            </DropdownMenuItem>
+                          )}
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>
