@@ -389,3 +389,15 @@ export const useDeleteGroups = () => {
     },
   });
 };
+
+// Students
+
+export const useGetAllStudents = () => {
+  return useQuery({
+    queryKey: ["get-students"],
+    queryFn: async () => {
+      const res = await request.get("/api/student/get-all-students");
+      return await res.data.data;
+    },
+  });
+};

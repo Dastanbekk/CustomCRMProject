@@ -1,20 +1,20 @@
 import {
+  GraduationCap,
   Group,
-  HelpCircle,
   Home,
   Settings,
+  ShieldUser,
   User,
-  User2,
   UserCircle,
   Users,
 } from "lucide-react";
 
 export const menuItems = [
-  { icon: Home, label: "Dashboard", href: "/dashboard" },
+  { icon: Home, label: "Asosiy", href: "/dashboard" },
   { icon: User, label: "Menejerlar", href: "/dashboard/managers" },
-  { icon: User, label: "Adminstratorlar", href: "/dashboard/admins" },
-  { icon: Users, label: "O'quvchilar", href: "/dashboard/students" },
-  { icon: User2, label: "O'qituvchilar", href: "/dashboard/teachers" },
+  { icon: ShieldUser, label: "Adminstratorlar", href: "/dashboard/admins" },
+  { icon: Users, label: "O'qituvchilar", href: "/dashboard/teachers" },
+  { icon: GraduationCap, label: "O'quvchilar", href: "/dashboard/students" },
   { icon: Group, label: "Guruhlar", href: "/dashboard/groups" },
   { icon: UserCircle, label: "Profilim", href: "/dashboard/profile" },
 ];
