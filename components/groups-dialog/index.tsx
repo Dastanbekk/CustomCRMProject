@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
 import {
@@ -12,9 +12,13 @@ import {
 } from "../ui/dialog";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-import { UserType } from "@/@types";
+import { TeacherType, UserType } from "@/@types";
 import Cookies from "js-cookie";
-import { useCreateTeachersMutation } from "@/request/mutation";
+import {
+  useCreateGroup,
+  useCreateTeachersMutation,
+  useSearchTeacher,
+} from "@/request/mutation";
 import {
   Select,
   SelectContent,
@@ -26,24 +30,30 @@ import {
 } from "../ui/select";
 
 const GroupsDialog = () => {
-  const [selectValue, setSelectValue] = useState("");
-  const { mutate, isPending } = useCreateTeachersMutation();
+  const [searchTerm, setSearchTerm] = useState("");
+  const { data: teachers, isLoading } = useSearchTeacher(searchTerm);
+  const [selectValue, setSelectValue] = useState({
+    id: "",
+    name: "",
+  });
+  const { mutate, isPending } = useCreateGroup();
   const cookie = Cookies;
   const userCookie = cookie.get("user");
   const user: UserType = userCookie ? JSON.parse(userCookie) : null;
   const [openDialog, setOpenDialog] = useState(false);
 
-  //   const handleChange = (value: string) => {
-  //     setSelectValue(value);
-  //   };
+  useEffect(() => {
+    if (selectValue?.name) {
+      setSearchTerm(selectValue.name);
+      setFormData((prev) => ({ ...prev, teacher: selectValue.id }));
+      setSearchTerm("");
+    }
+  }, [selectValue]);
 
   const [formData, setFormData] = useState({
-    first_name: "",
-    last_name: "",
-    email: "",
-    phone: "",
-    password: "",
-    field: "",
+    name: "",
+    teacher: selectValue.id,
+    started_group: "",
   });
   return (
     <div>
@@ -61,94 +71,66 @@ const GroupsDialog = () => {
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="name" className="text-right">
-                Name :
+                Nomi :
               </Label>
               <Input
                 id="name"
-                value={formData.first_name}
+                value={formData.name}
                 onChange={(e) =>
-                  setFormData({ ...formData, first_name: e.target.value })
+                  setFormData({ ...formData, name: e.target.value })
                 }
                 className="col-span-3"
               />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
+            <div className="grid grid-cols-4 relative items-center gap-4">
               <Label htmlFor="username" className="text-right">
-                Username :
+                Ustoz :
               </Label>
               <Input
                 id="username"
-                value={formData.last_name}
-                onChange={(e) =>
-                  setFormData({ ...formData, last_name: e.target.value })
-                }
                 className="col-span-3"
+                type="text"
+                value={searchTerm || selectValue.name}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setSelectValue({ id: "", name: "" });
+                }}
+                placeholder="Ustoz ismini yozing"
               />
+              {isLoading ? (
+                <p>Yuklanmoqda...</p>
+              ) : searchTerm && teachers?.length > 0 ? (
+                <div className="absolute top-10 rounded-xl w-full bg-black flex flex-col gap-2 max-h-[200px] overflow-y-scroll z-50">
+                  {teachers?.map((value: TeacherType) => (
+                    <div
+                      onClick={() => {
+                        setSelectValue({
+                          id: value._id,
+                          name: value.first_name,
+                        });
+                        setSearchTerm("");
+                      }}
+                      className="px-2 pt-2 cursor-pointer hover:bg-gray-800"
+                      key={value._id}
+                    >
+                      {value.last_name} {value.first_name}
+                    </div>
+                  ))}
+                </div>
+              ) : null}
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="email" className="text-right">
-                Email :
+            <div className="grid grid-cols-4 items-start gap-4">
+              <Label htmlFor="email" className="text-left">
+                Yaratilgan kun:
               </Label>
               <Input
                 id="email"
-                value={formData.email}
+                value={formData.started_group}
                 onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
+                  setFormData({ ...formData, started_group: e.target.value })
                 }
                 className="col-span-3"
               />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="password" className="text-right">
-                Parol :
-              </Label>
-              <Input
-                id="password"
-                value={formData.password}
-                onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
-                }
-                className="col-span-3"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="phone_number" className="text-right">
-                Raqam :
-              </Label>
-              <Input
-                id="phone_number"
-                value={formData.phone}
-                onChange={(e) =>
-                  setFormData({ ...formData, phone: e.target.value })
-                }
-                className="col-span-3"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="field" className="text-right">
-                Yonalish :
-              </Label>
-              <Select
-                value={selectValue}
-                onValueChange={(e: string) =>
-                  setFormData({ ...formData, field: e })
-                }
-              >
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Yo'nalishni tanlash" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Yo'nalishlar</SelectLabel>
-                    <SelectItem value="Frontend dasturlash">
-                      Frontend
-                    </SelectItem>
-                    <SelectItem value="Backend dasturlash">Backend</SelectItem>
-                    <SelectItem value="Rus tili">Rus tili</SelectItem>
-                    <SelectItem value="Ingliz tili">Ingliz tili</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
             </div>
           </div>
           <DialogFooter>
@@ -157,6 +139,13 @@ const GroupsDialog = () => {
               type="button"
               onClick={() => {
                 setOpenDialog(!openDialog);
+                setFormData({
+                  name: "",
+                  teacher: "",
+                  started_group: "",
+                });
+                setSearchTerm("");
+                setSelectValue({ id: "", name: "" });
                 mutate(formData);
               }}
             >

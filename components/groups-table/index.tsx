@@ -20,6 +20,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
+  useDeleteGroups,
   useDeleteTeachers,
   useGetAllGroups,
   useReturnToWorkTeacher,
@@ -41,6 +42,7 @@ export function GroupsTable() {
   const [viewDialog, setViewDialog] = useState(false);
   const [viewId, setViewId] = useState<Number>();
   const { data: usersData, isPending } = useGetAllGroups();
+  const { mutate: deleteTeachers } = useDeleteGroups();
   const users = usersData;
   const cookie = Cookies;
   const userCookie = cookie.get("user");
@@ -72,6 +74,7 @@ export function GroupsTable() {
                       onClick={() => {
                         setViewDialog(!viewDialog);
                         setViewId(idx);
+                        console.log(user.teacher);
                       }}
                       className="cursor-pointer"
                     >
@@ -83,48 +86,49 @@ export function GroupsTable() {
                   </div>
                 </TableCell>
                 <TableCell>
-                  {/* {setTeacher(
-                    request.get(`/api/teacher/get-teacher/${user._id}`)
-                  )} */}
-                  Davron Raimjonov
+                  <div className="flex items-center gap-2">
+                    <span>
+                      {(user.teacher as unknown as TeacherType)?.first_name}
+                    </span>
+                    <span>
+                      {(user.teacher as unknown as TeacherType)?.last_name}
+                    </span>
+                  </div>
                 </TableCell>
                 <TableCell>{user.started_group?.slice(0, 10)}</TableCell>
                 <TableCell>
-                  <DropdownMenu>
+                  {/* <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <button className="h-8 w-8 p-0 flex items-center justify-center">
                         <span className="sr-only">Open menu</span>
                         <MoreHorizontal className="h-4 w-4" />
                       </button>
                     </DropdownMenuTrigger>
-                    {/* <DropdownMenuContent align="end">
+                    <DropdownMenuContent align="end">
                       <DropdownMenuItem>Edit user</DropdownMenuItem>
                       <DropdownMenuSeparator />
-                      {user?.status?.toLowerCase() == "faol" ? (
-                        <DropdownMenuItem
-                          onClick={() => {
-                            console.log({ _id: user?._id });
-                            loggedUser?.role !== "manager"
-                              ? toast.error("Sizga ruxsat berilmagan!")
-                              : deleteTeachers({ _id: user?._id });
-                          }}
-                          className="text-red-500 cursor-pointer"
-                        >
-                          Delete
-                        </DropdownMenuItem>
-                      ) : (
-                        <DropdownMenuItem
-                          onClick={() =>
-                            loggedUser.role.toLowerCase() == "teacher"
-                              ? toast.error("Sizga ruxsat berilmagan")
-                              : returnToWork({ _id: user?._id })
-                          }
-                        >
-                          Ishga qaytarish
-                        </DropdownMenuItem>
-                      )}
-                    </DropdownMenuContent> */}
-                  </DropdownMenu>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          console.log({ _id: user?._id });
+                          loggedUser?.role !== "manager"
+                            ? toast.error("Sizga ruxsat berilmagan!")
+                            : deleteTeachers({ _id: user?.teacher });
+                        }}
+                        className="text-red-500 cursor-pointer"
+                      >
+                        Delete
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() =>
+                          loggedUser.role.toLowerCase() == "teacher"
+                            ? toast.error("Sizga ruxsat berilmagan")
+                            : returnToWork({ _id: user.teacher })
+                        }
+                      >
+                        Ishga qaytarish
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu> */}
                 </TableCell>
               </TableRow>
             ))}

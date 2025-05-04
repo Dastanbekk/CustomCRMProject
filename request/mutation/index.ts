@@ -326,9 +326,66 @@ export const useReturnToWorkTeacher = () => {
 export const useGetAllGroups = () => {
   return useQuery({
     queryKey: ["get-groups"],
-    queryFn: async() => {
+    queryFn: async () => {
       const res = await request.get("/api/group/get-all-group");
-      return res.data.data
+      return res.data.data;
+    },
+  });
+};
+
+export const useCreateGroup = () => {
+  const { refetch } = useGetAllGroups();
+  return useMutation({
+    mutationKey: ["create-group"],
+    mutationFn: (data: object) => request.post("/api/group/create-group", data),
+    onSuccess() {
+      refetch();
+      toast.success("Guruh qoshildi");
+    },
+    onError(err) {
+      toast.error(`Xatolik ${err}`);
+    },
+  });
+};
+
+export const useSearchTeacher = (name: string, enabled = true) => {
+  return useQuery({
+    queryKey: ["search-teacher", name],
+    queryFn: async () => {
+      const res = await request.get("/api/group/search-teacher", {
+        params: { name: name.trim() },
+      });
+      return await res.data.data;
+    },
+    enabled: !!name.trim(),
+  });
+};
+
+export const useGetGroupsTeacherWithId = (teacherId: string) => {
+  return useQuery({
+    queryKey: ["get-teacher-id", teacherId],
+    queryFn: async () => {
+      const res = await request.get(`/api/teacher/get-teacher/${teacherId}`);
+      return await res.data.data;
+    },
+    enabled: !!teacherId,
+  });
+};
+
+export const useDeleteGroups = () => {
+  const { refetch } = useGetAllGroups();
+
+  return useMutation({
+    mutationKey: ["delete-group"],
+    mutationFn: (data: object) => {
+      return request({ url: "/api/group/end-group", data, method: "DELETE" });
+    },
+    onSuccess() {
+      refetch();
+      toast.success("Guruh o'chirildi");
+    },
+    onError(err) {
+      toast.error(`Xatolik ${err}`);
     },
   });
 };
