@@ -49,6 +49,12 @@ export interface ManagersType {
   updatedAt?: string;
   work_date?: string;
   work_end?: null;
+  groups: {
+    group: {
+      _id: string;
+      name: string;
+    };
+  }[];
   leave_history: [
     {
       start_date: string;
@@ -78,6 +84,7 @@ export interface TeacherType {
 }
 
 export interface GroupsType {
+  _id: string;
   name: string;
   teacher: string;
   started_group: string;

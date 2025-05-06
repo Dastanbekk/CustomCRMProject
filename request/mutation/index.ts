@@ -19,8 +19,8 @@ export const useLoginMutation = () => {
         })
         .then((res) => res.data.data),
     onSuccess(data) {
-      cookie.set("jwt", data.token);
-      cookie.set("user", JSON.stringify(data));
+      cookie.set("jwt", data.token, { expires: 1 / 24 });
+      cookie.set("user", JSON.stringify(data), { expires: 1 / 24 });
       toast.success("Tizimga kirdingiz");
       router.push("/dashboard");
     },
@@ -374,7 +374,6 @@ export const useGetGroupsTeacherWithId = (teacherId: string) => {
 
 export const useDeleteGroups = () => {
   const { refetch } = useGetAllGroups();
-
   return useMutation({
     mutationKey: ["delete-group"],
     mutationFn: (data: object) => {
@@ -390,14 +389,123 @@ export const useDeleteGroups = () => {
   });
 };
 
-// Students
+export const useGetGroupsWithParams = (name: string) => {
+  return useQuery({
+    queryKey: ["get-group-id", name],
+    queryFn: async () => {
+      const res = await request.get("/api/student/search-group", {
+        params: { name: name.trim() },
+      });
+      return await res.data.data;
+    },
+    enabled: !!name.trim(),
+  });
+};
 
+// Students
 export const useGetAllStudents = () => {
   return useQuery({
     queryKey: ["get-students"],
     queryFn: async () => {
       const res = await request.get("/api/student/get-all-students");
       return await res.data.data;
+    },
+  });
+};
+
+export const useCreateStudent = () => {
+  const { refetch } = useGetAllStudents();
+  return useMutation({
+    mutationKey: ["create-student"],
+    mutationFn: (data: object) =>
+      request.post("/api/student/create-student", data),
+
+    onSuccess() {
+      refetch();
+      toast.success("O'quvchi tizimga qo'shildi");
+    },
+    onError(err) {
+      toast.error(`Xatolik ${err}`);
+    },
+  });
+};
+
+export const useGetGroupTeacher = (teacherId: string) => {
+  return useQuery({
+    queryKey: ["get-teacher-id", teacherId],
+    queryFn: async () => {
+      const res = await request.get(`/api/teacher/get-teacher/${teacherId}`);
+      return await res.data.data;
+    },
+    enabled: !!teacherId,
+  });
+};
+
+export const useDeleteStudent = () => {
+  const { refetch } = useGetAllStudents();
+  return useMutation({
+    mutationKey: ["delete-student"],
+    mutationFn: (data: object) => {
+      return request({
+        url: "/api/student/delete-student",
+        data,
+        method: "DELETE",
+      });
+    },
+    onSuccess() {
+      toast.success("O'quvchi o'chirildi");
+      refetch();
+    },
+    onError(err) {
+      toast.error(`Xatolik ${err}`);
+    },
+  });
+};
+
+export const useStudentStaffMutation = () => {
+  const { refetch } = useGetAllStudents();
+  return useMutation({
+    mutationKey: ["student-staff"],
+    mutationFn: (data: object) =>
+      request.post("/api/student/leave-student", data),
+    onSuccess() {
+      refetch();
+      toast.success("Ta'tilga chiqarildi");
+    },
+    onError(err) {
+      toast.error(`Xatolik ${err}`);
+    },
+  });
+};
+
+export const useReturnStaffStudentMutation = () => {
+  const { refetch } = useGetAllStudents();
+  return useMutation({
+    mutationKey: ["return-staff"],
+    mutationFn: (data: object) =>
+      request.post("/api/student/return-leave-student", data),
+    onSuccess() {
+      refetch();
+      toast.success("O'quvchi ta'tildan qaytarildi");
+    },
+    onError(err) {
+      toast.error(`Xatolik ${err}`);
+    },
+  });
+};
+
+export const useReturnStudentMutation = () => {
+  const { refetch } = useGetAllStudents();
+  return useMutation({
+    mutationKey: ["return-student"],
+    mutationFn: (data: object) =>
+      request.post("/api/student/return-student", data),
+    onSuccess() {
+      refetch();
+      toast.success("O'quvchi tizimga qaytarildi");
+    },
+    onError(err) {
+      toast.error(`Xatolik ${err}`);
     },
   });
 };

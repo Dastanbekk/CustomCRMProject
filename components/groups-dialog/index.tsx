@@ -8,7 +8,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "../ui/dialog";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
@@ -16,7 +15,6 @@ import { TeacherType, UserType } from "@/@types";
 import Cookies from "js-cookie";
 import {
   useCreateGroup,
-  useCreateTeachersMutation,
   useSearchTeacher,
 } from "@/request/mutation";
 import {
@@ -53,7 +51,7 @@ const GroupsDialog = () => {
   const [formData, setFormData] = useState({
     name: "",
     teacher: selectValue.id,
-    started_group: "",
+    started_group: new Date().toISOString().slice(0, 10),
   });
   return (
     <div>

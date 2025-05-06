@@ -1,7 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import { AdminsTable } from "@/components/admins-table";
-
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -13,10 +11,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-
 import { Search } from "lucide-react";
-import AdminsDialog from "@/components/admins-dialog";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import { StudentsTable } from "../students-table";
+import StudentsDialog from "../students-dialog";
 
 const StudentsGlobal = () => {
   const [value, setValue] = useState("");
@@ -83,11 +81,11 @@ const StudentsGlobal = () => {
               </SelectGroup>
             </SelectContent>
           </Select>
-          <AdminsDialog />
+          <StudentsDialog />
         </div>
       </div>
       <div className="rounded-lg overflow-x-scroll w-full max-w-full sm:max-w-[700px] md:max-w-[1000px] lg:max-w-full border bg-card mt-5 text-card-foreground shadow-sm ">
-        <AdminsTable />
+        <StudentsTable />
       </div>
     </div>
   );

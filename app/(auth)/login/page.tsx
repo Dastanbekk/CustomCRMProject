@@ -19,27 +19,20 @@ const loginSchema = z.object({
 });
 
 type FormDataType = z.infer<typeof loginSchema>;
-
 const Login = () => {
   const { mutate, isPending } = useLoginMutation();
-
   const [formData, setFormData] = useState<FormDataType>({
     email: "",
     password: "",
   });
-
   const [errorMsg, setErrorMsg] = useState<string>("");
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     const parsed = loginSchema.safeParse(formData);
-
     if (!parsed.success) {
       setErrorMsg(parsed.error.errors[0]?.message || "Xatolik yuz berdi");
       return;
     }
-
     setErrorMsg("");
     mutate(formData);
   };
