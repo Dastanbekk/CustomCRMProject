@@ -89,3 +89,39 @@ export interface GroupsType {
   teacher: string;
   started_group: string;
 }
+
+export interface StudentsType {
+  _id: string;
+  first_name: string;
+  last_name: string;
+  avatar?: string;
+  status?: string;
+  role?: string;
+  active?: boolean;
+  phone?: string;
+  gender?: string;
+  birthday?: string;
+  address?: string;
+  email: string;
+  createdAt?: string;
+  image?: string;
+  is_deleted?: boolean;
+  updatedAt?: string;
+  work_date?: string;
+  work_end?: null;
+  groups: {
+    group: {
+      _id: string;
+      name: string;
+    };
+  }[];
+  leave_history: [
+    {
+      _id: string;
+      start_date: string;
+      end_date: string; 
+      days: number;
+      reason: string;
+    }
+  ];
+}
