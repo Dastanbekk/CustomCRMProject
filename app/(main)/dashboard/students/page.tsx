@@ -1,8 +1,12 @@
 import StudentsGlobal from "@/components/students-global";
-import React from "react";
+import React, { Suspense } from "react";
 
 const Students = () => {
-  return <div><StudentsGlobal /></div>;
+  return (
+    <Suspense fallback={<div>Yuklanmoqda...</div>}>
+      <StudentsGlobal />
+    </Suspense>
+  );
 };
 
 export default Students;
