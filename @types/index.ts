@@ -113,13 +113,18 @@ export interface StudentsType {
     group: {
       _id: string;
       name: string;
+      price: number;
     };
+    exitedAt: string;
+    joinedAt: string;
+    payments: [];
+    status: string;
   }[];
   leave_history: [
     {
       _id: string;
       start_date: string;
-      end_date: string; 
+      end_date: string;
       days: number;
       reason: string;
     }

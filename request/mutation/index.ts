@@ -413,6 +413,7 @@ export const useGetAllStudents = () => {
   });
 };
 
+// Studentni tizimga qo'shish
 export const useCreateStudent = () => {
   const { refetch } = useGetAllStudents();
   return useMutation({
@@ -441,6 +442,7 @@ export const useGetGroupTeacher = (teacherId: string) => {
   });
 };
 
+// Studentni tizimdan chiqarish
 export const useDeleteStudent = () => {
   const { refetch } = useGetAllStudents();
   return useMutation({
@@ -462,6 +464,7 @@ export const useDeleteStudent = () => {
   });
 };
 
+// Studentni tatilga chiqarish
 export const useStudentStaffMutation = () => {
   const { refetch } = useGetAllStudents();
   return useMutation({
@@ -478,6 +481,7 @@ export const useStudentStaffMutation = () => {
   });
 };
 
+// Studentni tatildan qaytarish
 export const useReturnStaffStudentMutation = () => {
   const { refetch } = useGetAllStudents();
   return useMutation({
@@ -494,6 +498,7 @@ export const useReturnStaffStudentMutation = () => {
   });
 };
 
+// Studentni tizimga qaytarish
 export const useReturnStudentMutation = () => {
   const { refetch } = useGetAllStudents();
   return useMutation({
@@ -507,5 +512,17 @@ export const useReturnStudentMutation = () => {
     onError(err) {
       toast.error(`Xatolik ${err}`);
     },
+  });
+};
+
+// Studentni id orqali olish
+export const useGetStudentWithId = (studentId: string) => {
+  return useQuery({
+    queryKey: ["get-student-with-id", studentId],
+    queryFn: async () => {
+      const res = await request.get(`/api/student/student/${studentId}`);
+      return await res.data.data;
+    },
+    enabled: !!studentId,
   });
 };

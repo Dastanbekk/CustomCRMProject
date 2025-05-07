@@ -41,6 +41,7 @@ import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import Link from "next/link";
 
 export function StudentsTable() {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -55,8 +56,6 @@ export function StudentsTable() {
   const cookie = Cookies;
   const userCookie = cookie.get("user");
   const loggedUser: UserType = userCookie ? JSON.parse(userCookie) : null;
-
-  console.log(users);
 
   return (
     <div className=" overflow-x-scroll max-w-[470px] sm:max-w-[720px] md:max-w-[1000px] lg:max-w-full">
@@ -86,7 +85,6 @@ export function StudentsTable() {
                       onClick={() => {
                         setViewDialog(!viewDialog);
                         setViewId(user._id);
-                        console.log(user);
                       }}
                       className="cursor-pointer"
                     >
@@ -297,6 +295,9 @@ export function StudentsTable() {
                   </div>
                 </div>
                 <DialogFooter>
+                  <Link href={`/dashboard/students/${value._id}`}>
+                    <Button>Profiliga o'tish</Button>
+                  </Link>
                   <Button
                     className="cursor-pointer"
                     type="button"

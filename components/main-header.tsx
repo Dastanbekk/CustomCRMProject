@@ -18,14 +18,23 @@ import { UserType } from "@/@types";
 import Cookies from "js-cookie";
 import Image from "next/image";
 import userDefaultImg from "@/public/user.svg";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
+import {
+  Breadcrumb,
+  BreadcrumbEllipsis,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "./ui/breadcrumb";
 
 export function MainHeader() {
   const { mutate } = useLogOutMutation();
@@ -37,9 +46,45 @@ export function MainHeader() {
       setUser(JSON.parse(userCookie));
     }
   }, []);
+  const pathname = usePathname();
+  const pathParts = pathname.split("/").filter(Boolean);
+
   return (
     <header className="sticky top-0 z-30 flex h-16  items-center gap-4 border-b bg-white dark:bg-zinc-900 px-6 shadow-sm">
-      <SidebarTrigger className="lg:hidden" />
+      <div className="flex items-center gap-4">
+        <SidebarTrigger />
+        <div>
+          {" "}
+          <Breadcrumb>
+            <BreadcrumbList>
+              {pathParts[0] === "dashboard" && pathParts.length === 1 ? null : (
+                <>
+                  {pathParts.map((part, index) => {
+                    const href = "/" + pathParts.slice(0, index + 1).join("/");
+                    const isLast = index === pathParts.length - 1;
+                    return (
+                      <React.Fragment key={index}>
+                        <BreadcrumbItem className="capitalize">
+                          {isLast ? (
+                            <BreadcrumbPage>
+                              {decodeURIComponent(part)}
+                            </BreadcrumbPage>
+                          ) : (
+                            <BreadcrumbLink href={href}>
+                              {decodeURIComponent(part)}
+                            </BreadcrumbLink>
+                          )}
+                        </BreadcrumbItem>
+                        {!isLast && <BreadcrumbSeparator />}
+                      </React.Fragment>
+                    );
+                  })}
+                </>
+              )}
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
+      </div>
 
       <div className="w-full flex-1 md:w-auto md:flex-none"></div>
 

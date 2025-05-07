@@ -77,7 +77,7 @@ export function DashboardSidebar() {
                     >
                       <div className="flex items-center">
                         <item.icon
-                          className={`h-6 w-6  ${
+                          className={`!h-7 !w-7  pr-2 ${
                             pathname == item.href
                               ? "text-white dark:text-black"
                               : "text-black dark:text-white"
@@ -127,9 +127,10 @@ export function DashboardSidebar() {
               <SidebarMenuItem>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button className="w-full text-start cursor-pointer bg-transparent border border-red-600 text-red-600 hover:text-white  hover:bg-red-600 ">
-                      <LogOut className="rotate-180" /> Chiqish
-                    </Button>
+                    <SidebarMenuButton className="text-red-600 hover:text-white hover:bg-red-600">
+                      <LogOut className="h-5 w-5 rotate-180" />
+                      <span>Chiqish</span>
+                    </SidebarMenuButton>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
