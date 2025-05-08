@@ -97,7 +97,7 @@ export function GroupsTable() {
                 </TableCell>
                 <TableCell>{user.started_group?.slice(0, 10)}</TableCell>
                 <TableCell>
-                  {/* <DropdownMenu>
+                  <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <button className="h-8 w-8 p-0 flex items-center justify-center">
                         <span className="sr-only">Open menu</span>
@@ -119,16 +119,16 @@ export function GroupsTable() {
                         Delete
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        onClick={() =>
-                          loggedUser.role.toLowerCase() == "teacher"
-                            ? toast.error("Sizga ruxsat berilmagan")
-                            : returnToWork({ _id: user.teacher })
-                        }
+                        // onClick={() =>
+                        //   loggedUser.role.toLowerCase() == "teacher"
+                        //     ? toast.error("Sizga ruxsat berilmagan")
+                        //     : returnToWork({ _id: user.teacher })
+                        // }
                       >
                         Ishga qaytarish
                       </DropdownMenuItem>
                     </DropdownMenuContent>
-                  </DropdownMenu> */}
+                  </DropdownMenu>
                 </TableCell>
               </TableRow>
             ))}
@@ -142,103 +142,6 @@ export function GroupsTable() {
       ) : (
         ""
       )}
-
-      {/* View Profile Dialog */}
-      {/* <Dialog open={viewDialog} onOpenChange={() => setViewDialog(false)}>
-        {users?.map(
-          (value: TeacherType) =>
-            value?._id === viewId && (
-              <DialogContent key={value._id} className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle className="flex justify-center gap-1">
-                    Teacher profile
-                  </DialogTitle>
-                </DialogHeader>
-                <div className="flex justify-center">
-                  <Avatar className="cursor-pointer min-w-[50px] min-h-[50px] max-w-[150px] w-full h-full max-h-[150px]">
-                    <AvatarImage
-                      src={value.image || "/placeholder.svg"}
-                      alt={value.first_name}
-                    />
-                    <AvatarFallback>
-                      {value.first_name.charAt(0)}
-                    </AvatarFallback>
-                  </Avatar>
-                </div>
-                <div className="grid gap-4 py-4">
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="name" className="text-right">
-                      Ismi
-                    </Label>
-                    <Input
-                      disabled={true}
-                      id="name"
-                      defaultValue={value?.first_name}
-                      className="col-span-3"
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="username" className="text-right">
-                      Familyasi
-                    </Label>
-                    <Input
-                      id="username"
-                      disabled={true}
-                      defaultValue={value?.last_name}
-                      className="col-span-3"
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="email" className="text-right">
-                      Email
-                    </Label>
-                    <Input
-                      id="email"
-                      disabled={true}
-                      defaultValue={value?.email}
-                      className="col-span-3"
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className=" items-center gap-4">
-                      <Label htmlFor="status" className="text-right">
-                        Lavozimi
-                      </Label>
-                      <Input
-                        className="mt-2"
-                        id="status"
-                        disabled={true}
-                        defaultValue={value?.field}
-                      />
-                    </div>
-                    <div className=" items-center gap-4">
-                      <Label htmlFor="status" className="text-right">
-                        Status
-                      </Label>
-                      <Input
-                        className="mt-2"
-                        id="status"
-                        disabled={true}
-                        defaultValue={value?.status}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button
-                    className="cursor-pointer"
-                    type="button"
-                    onClick={() => {
-                      setViewDialog(!viewDialog);
-                    }}
-                  >
-                    Chiqish
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            )
-        )}
-      </Dialog> */}
     </div>
   );
 }

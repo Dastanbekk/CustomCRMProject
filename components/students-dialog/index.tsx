@@ -13,10 +13,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { GroupsType, UserType } from "@/@types";
 import Cookies from "js-cookie";
-import {
-  useCreateStudent,
-  useGetGroupsWithParams,
-} from "@/request/mutation";
+import { useCreateStudent, useGetGroupsWithParams } from "@/request/mutation";
 import {
   Select,
   SelectContent,
@@ -50,10 +47,7 @@ const StudentsDialog = () => {
   return (
     <div>
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-        <Button
-          onClick={() => setOpenDialog(true)}
-          className="cursor-pointer"
-        >
+        <Button onClick={() => setOpenDialog(true)} className="cursor-pointer">
           <Plus /> <span className="hidden sm:block">Qo'shish</span>
         </Button>
         <DialogContent className="sm:max-w-[425px]">
@@ -87,18 +81,25 @@ const StudentsDialog = () => {
                 className="col-span-3"
               />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name" className="text-right">
-                Raqam :
+            <div className="flex gap-4 justify-between w-full items-center ">
+              <Label htmlFor="phone" className="text-right">
+                Raqam:
               </Label>
-              <Input
-                id="name"
-                value={formData.phone}
-                onChange={(e) =>
-                  setFormData({ ...formData, phone: e.target.value })
-                }
-                className="col-span-3"
-              />
+              <div className="flex justify-end items-center w-full">
+                <span className="text-sm px-3 py-2 rounded-l-md border bg-transparent ">
+                  +998
+                </span>
+                <Input
+                  id="phone"
+                  className="w-[70%] rounded-l-none bg-black"
+                  placeholder="90 123-45-67"
+                  type="tel"
+                  maxLength={9}
+                  onChange={(e) =>
+                    setFormData({ ...formData, phone: `+998${e.target.value}` })
+                  }
+                />
+              </div>
             </div>
 
             <div className="grid grid-cols-4 relative items-center gap-4">
@@ -119,7 +120,9 @@ const StudentsDialog = () => {
                 placeholder="Guruh nomini yozing"
               />
               {isLoading ? (
-                <p><Loader2  className="animate-spin"/></p>
+                <p>
+                  <Loader2 className="animate-spin" />
+                </p>
               ) : searchTerm && groups?.length > 0 ? (
                 <div className="absolute top-10 left-0 right-0 rounded-xl bg-black flex flex-col gap-2 max-h-[200px] overflow-y-auto z-50">
                   {groups?.map((group: GroupsType) => (
