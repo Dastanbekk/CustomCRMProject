@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Loader, MoreHorizontal } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Checkbox } from "@/components/ui/checkbox";
 import Cookies from "js-cookie";
 import {
   DropdownMenu,
@@ -42,49 +41,20 @@ import { Button } from "../ui/button";
 export function TeachersTable() {
   const [viewDialog, setViewDialog] = useState(false);
   const [viewId, setViewId] = useState("");
-  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   const { data: usersData, isPending } = useGetTeachersMutation();
   const users = usersData;
   const cookie = Cookies;
   const userCookie = cookie.get("user");
   const loggedUser: UserType = userCookie ? JSON.parse(userCookie) : null;
-
   const { mutate: returnToWork } = useReturnToWorkTeacher();
   const { mutate: deleteTeachers } = useDeleteTeachers();
-
-  const toggleSelectAll = () => {
-    if (!users) return;
-
-    if (selectedUsers?.length === users?.length) {
-      setSelectedUsers([]);
-    } else {
-      setSelectedUsers(users?.map((user: TeacherType) => user._id));
-    }
-  };
-
-  const toggleSelectUser = (userId: string) => {
-    setSelectedUsers((prev) =>
-      prev.includes(userId)
-        ? prev.filter((id) => id !== userId)
-        : [...prev, userId]
-    );
-  };
   return (
     <div className=" min-w-[350px]   max-w-[600px] sm:max-w-full sm:w-full overflow-auto overflow-x-scroll">
       <Table className="min-w-[1000px] ">
         <TableHeader className="bg-muted/20">
           <TableRow>
             <TableHead className="w-[40px] ml-2">
-              {/* <Checkbox
-                checked={
-                  isPending
-                    ? false
-                    : selectedUsers?.length === users?.length &&
-                      users?.length > 0
-                }
-                onCheckedChange={toggleSelectAll}
-                aria-label="Select all"
-              /> */}
+              №
             </TableHead>
             <TableHead className="min-w-[180px]">Full Name</TableHead>
             <TableHead className="min-w-[100px]">Status</TableHead>
@@ -101,12 +71,8 @@ export function TeachersTable() {
             {users?.map((user: TeacherType, idx: number) => (
               <TableRow key={user._id}>
                 <TableCell>
-                  {/* <Checkbox
-                    checked={selectedUsers.includes(user._id)}
-                    onCheckedChange={() => toggleSelectUser(user._id)}
-                    aria-label={`Select ${user.first_name}`}
-                  /> */}
-                  <div className="pl-2">{idx}</div>
+                 
+                  <div className="pl-2">{idx +1}</div>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-3">

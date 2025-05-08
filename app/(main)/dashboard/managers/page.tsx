@@ -44,25 +44,6 @@ const Managers = () => {
               </SelectGroup>
             </SelectContent>
           </Select>
-          {/* DROPDOWN */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline">
-                <GitPullRequestDraft className="rotate-90" /> ko'rish
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-10">
-              <DropdownMenuRadioGroup>
-                <DropdownMenuRadioItem value="top">Top</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="bottom">
-                  Bottom
-                </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="right">
-                  Right
-                </DropdownMenuRadioItem>
-              </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
           <ManagersDialog />
         </div>
       </div>

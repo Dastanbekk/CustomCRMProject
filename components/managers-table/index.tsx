@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { Loader, MoreHorizontal, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Checkbox } from "@/components/ui/checkbox";
 import Cookies from "js-cookie";
 import {
   DropdownMenu,
@@ -39,49 +38,19 @@ import { Button } from "../ui/button";
 export function UsersTable() {
   const [viewDialog, setViewDialog] = useState(false);
   const [viewId, setViewId] = useState("");
-  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   const { data: usersData, isPending } = useGetManagersMutation();
   const users = usersData;
   const cookie = Cookies;
   const userCookie = cookie.get("user");
   const loggedUser: UserType = userCookie ? JSON.parse(userCookie) : null;
-
   const { mutate: returnToWork } = useReturnToWork();
-
-  const toggleSelectAll = () => {
-    if (!users) return;
-
-    if (selectedUsers.length === users.length) {
-      setSelectedUsers([]);
-    } else {
-      setSelectedUsers(users?.map((user: ManagersType) => user._id));
-    }
-  };
-
-  const toggleSelectUser = (userId: string) => {
-    setSelectedUsers((prev) =>
-      prev.includes(userId)
-        ? prev.filter((id) => id !== userId)
-        : [...prev, userId]
-    );
-  };
+  
   return (
     <div className=" min-w-[350px]   max-w-[600px] sm:max-w-full sm:w-full overflow-auto overflow-x-scroll">
       <Table className="min-w-[1000px] ">
         <TableHeader className="bg-muted/20">
           <TableRow>
-            <TableHead className="w-[40px]">
-              <Checkbox
-                checked={
-                  isPending
-                    ? false
-                    : selectedUsers?.length === users?.length &&
-                      users?.length > 0
-                }
-                onCheckedChange={toggleSelectAll}
-                aria-label="Select all"
-              />
-            </TableHead>
+            <TableHead className="w-[40px]">№</TableHead>
             <TableHead className="min-w-[180px]">Full Name</TableHead>
             <TableHead className="min-w-[100px]">Status</TableHead>
             <TableHead className="min-w-[120px]">Role</TableHead>
@@ -95,15 +64,9 @@ export function UsersTable() {
           ""
         ) : (
           <TableBody>
-            {users?.map((user: ManagersType) => (
+            {users?.map((user: ManagersType, idx: number) => (
               <TableRow key={user._id}>
-                <TableCell>
-                  <Checkbox
-                    checked={selectedUsers.includes(user._id)}
-                    onCheckedChange={() => toggleSelectUser(user._id)}
-                    aria-label={`Select ${user.first_name}`}
-                  />
-                </TableCell>
+                <TableCell>{idx + 1}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-3">
                     <Avatar

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { Button } from "../ui/button";
 import { Loader2, Plus } from "lucide-react";
 import {
@@ -14,16 +14,6 @@ import { Input } from "../ui/input";
 import { GroupsType, UserType } from "@/@types";
 import Cookies from "js-cookie";
 import { useCreateStudent, useGetGroupsWithParams } from "@/request/mutation";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
-
 const StudentsDialog = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const { data: groups, isLoading } = useGetGroupsWithParams(searchTerm);

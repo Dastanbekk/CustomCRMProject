@@ -50,7 +50,7 @@ export function MainHeader() {
   const pathParts = pathname.split("/").filter(Boolean);
 
   return (
-    <header className="sticky top-0 z-30 flex h-16  items-center gap-4 border-b bg-white dark:bg-zinc-900 px-6 shadow-sm">
+    <header className="sticky top-0 z-100 flex h-16  items-center gap-4 border-b bg-white dark:bg-zinc-900 px-6 shadow-sm">
       <div className="flex items-center gap-4">
         <SidebarTrigger />
         <div>

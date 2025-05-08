@@ -13,10 +13,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { TeacherType, UserType } from "@/@types";
 import Cookies from "js-cookie";
-import {
-  useCreateGroup,
-  useSearchTeacher,
-} from "@/request/mutation";
+import { useCreateGroup, useSearchTeacher } from "@/request/mutation";
 import {
   Select,
   SelectContent,
@@ -52,6 +49,7 @@ const GroupsDialog = () => {
     name: "",
     teacher: selectValue.id,
     started_group: new Date().toISOString().slice(0, 10),
+    price: 0,
   });
   return (
     <div>
@@ -117,7 +115,20 @@ const GroupsDialog = () => {
                 </div>
               ) : null}
             </div>
-            <div className="grid grid-cols-4 items-start gap-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="email" className="text-left">
+                Kurs narxi:
+              </Label>
+              <Input
+                id="email"
+                value={formData.price}
+                onChange={(e) =>
+                  setFormData({ ...formData, price: Number(e.target.value) })
+                }
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="email" className="text-left">
                 Yaratilgan kun:
               </Label>
@@ -141,7 +152,9 @@ const GroupsDialog = () => {
                   name: "",
                   teacher: "",
                   started_group: "",
+                  price: 0,
                 });
+
                 setSearchTerm("");
                 setSelectValue({ id: "", name: "" });
                 mutate(formData);

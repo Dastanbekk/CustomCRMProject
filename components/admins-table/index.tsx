@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { Loader, MoreHorizontal } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -52,7 +51,6 @@ import {
 } from "../ui/select";
 import toast from "react-hot-toast";
 import { useSearchParams } from "next/navigation";
-import Image from "next/image";
 
 export function AdminsTable() {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -60,7 +58,6 @@ export function AdminsTable() {
   const [id, setId] = useState("");
   const [viewId, setViewId] = useState("");
 
-  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   const { data: usersData, isPending } = useGetAdminsMutation();
   const users = usersData;
   const { mutate: editAdmin, isPending: isEditing } = useEditAdminsMutation();
@@ -84,40 +81,14 @@ export function AdminsTable() {
     const currentStatus = searchParams.get("status");
     setValue(currentStatus || "barchasi");
   }, [searchParams]);
-  const toggleSelectAll = () => {
-    if (!users) return;
 
-    if (selectedUsers.length === users.length) {
-      setSelectedUsers([]);
-    } else {
-      setSelectedUsers(users?.map((user: ManagersType) => user._id));
-    }
-  };
-  const toggleSelectUser = (userId: string) => {
-    setSelectedUsers((prev) =>
-      prev.includes(userId)
-        ? prev.filter((id) => id !== userId)
-        : [...prev, userId]
-    );
-  };
 
   return (
     <div className=" overflow-x-scroll max-w-[470px] sm:max-w-[720px] md:max-w-[1000px] lg:max-w-full">
       <Table>
         <TableHeader className="bg-muted/20">
           <TableRow>
-            <TableHead className="w-[40px]">
-              <Checkbox
-                checked={
-                  isPending
-                    ? false
-                    : selectedUsers?.length === users?.length &&
-                      users?.length > 0
-                }
-                onCheckedChange={toggleSelectAll}
-                aria-label="Select all"
-              />
-            </TableHead>
+            <TableHead className="w-[40px]">№</TableHead>
             <TableHead className="min-w-[180px]">Full Name</TableHead>
             <TableHead className="min-w-[100px]">Status</TableHead>
             <TableHead className="min-w-[120px]">Role</TableHead>
@@ -131,16 +102,10 @@ export function AdminsTable() {
           ""
         ) : (
           <TableBody>
-            {users?.map((user: ManagersType) =>
+            {users?.map((user: ManagersType, idx: number) =>
               "barchasi" === value ? (
                 <TableRow key={user._id}>
-                  <TableCell>
-                    <Checkbox
-                      checked={selectedUsers.includes(user._id)}
-                      onCheckedChange={() => toggleSelectUser(user._id)}
-                      aria-label={`Select ${user.first_name}`}
-                    />
-                  </TableCell>
+                  <TableCell>{idx + 1}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-3">
                       <Avatar
@@ -270,11 +235,7 @@ export function AdminsTable() {
                 user?.status == value && (
                   <TableRow key={user._id}>
                     <TableCell>
-                      <Checkbox
-                        checked={selectedUsers.includes(user._id)}
-                        onCheckedChange={() => toggleSelectUser(user._id)}
-                        aria-label={`Select ${user.first_name}`}
-                      />
+                     {idx+1}
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-3">

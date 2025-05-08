@@ -111,18 +111,25 @@ const GroupsDialog = () => {
                 className="col-span-3"
               />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="phone_number" className="text-right">
-                Raqam :
+            <div className="flex gap-4 justify-between w-full items-center ">
+              <Label htmlFor="phone" className="text-right">
+                Raqam:
               </Label>
-              <Input
-                id="phone_number"
-                value={formData.phone}
-                onChange={(e) =>
-                  setFormData({ ...formData, phone: e.target.value })
-                }
-                className="col-span-3"
-              />
+              <div className="flex justify-end items-center w-full">
+                <span className="text-sm px-3 py-2 rounded-l-md border bg-transparent ">
+                  +998
+                </span>
+                <Input
+                  id="phone"
+                  className="w-[70%] rounded-l-none bg-black"
+                  placeholder="90 123-45-67"
+                  type="tel"
+                  maxLength={9}
+                  onChange={(e) =>
+                    setFormData({ ...formData, phone: `+998${e.target.value}` })
+                  }
+                />
+              </div>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="field" className="text-right">

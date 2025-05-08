@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Loader, MoreHorizontal } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import Cookies from "js-cookie";
 import {
   DropdownMenu,
@@ -19,25 +19,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  useDeleteGroups,
-  useDeleteTeachers,
-  useGetAllGroups,
-  useReturnToWorkTeacher,
-} from "@/request/mutation";
+import { useDeleteGroups, useGetAllGroups } from "@/request/mutation";
 import { GroupsType, TeacherType, UserType } from "@/@types";
 import toast from "react-hot-toast";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "../ui/dialog";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-
 export function GroupsTable() {
   const [viewDialog, setViewDialog] = useState(false);
   const [viewId, setViewId] = useState<Number>();
@@ -53,9 +37,10 @@ export function GroupsTable() {
         <TableHeader className="bg-muted/20">
           <TableRow>
             <TableHead className="w-[40px] ml-2"></TableHead>
-            <TableHead className="min-w-[180px]">Full Name</TableHead>
+            <TableHead className="min-w-[180px]">Guruh nomi</TableHead>
             <TableHead className="min-w-[120px]">Ustoz</TableHead>
-            <TableHead className="min-w-[150px]">CreatedAt</TableHead>
+            <TableHead className="min-w-[120px]">Narxi</TableHead>
+            <TableHead className="min-w-[150px]">Yaratilgan kun</TableHead>
             <TableHead className="w-[80px]">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -74,7 +59,6 @@ export function GroupsTable() {
                       onClick={() => {
                         setViewDialog(!viewDialog);
                         setViewId(idx);
-                        console.log(user.teacher);
                       }}
                       className="cursor-pointer"
                     >
@@ -95,6 +79,7 @@ export function GroupsTable() {
                     </span>
                   </div>
                 </TableCell>
+                <TableCell>{user.price}</TableCell>
                 <TableCell>{user.started_group?.slice(0, 10)}</TableCell>
                 <TableCell>
                   <DropdownMenu>
@@ -118,15 +103,8 @@ export function GroupsTable() {
                       >
                         Delete
                       </DropdownMenuItem>
-                      <DropdownMenuItem
-                        // onClick={() =>
-                        //   loggedUser.role.toLowerCase() == "teacher"
-                        //     ? toast.error("Sizga ruxsat berilmagan")
-                        //     : returnToWork({ _id: user.teacher })
-                        // }
-                      >
-                        Ishga qaytarish
-                      </DropdownMenuItem>
+                      <DropdownMenuItem>Narxini o'zgartirish</DropdownMenuItem>
+                      <DropdownMenuItem>Narxini o'zgartirish</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>

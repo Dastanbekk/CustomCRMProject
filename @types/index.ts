@@ -87,6 +87,7 @@ export interface GroupsType {
   _id: string;
   name: string;
   teacher: string;
+  price: number;
   started_group: string;
 }
 
