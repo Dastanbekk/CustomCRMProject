@@ -1,4 +1,4 @@
-import AdminsGlobalPage from "@/components/admins-global-page";
+import AdminsGlobalPage from "@/components/admins/admins-global-page";
 import { Suspense } from "react";
 
 const Admins = () => {

@@ -131,3 +131,20 @@ export interface StudentsType {
     }
   ];
 }
+
+export interface CoursesType {
+  createdAt: string;
+  description: string;
+  duration: string;
+  name: {
+    _id: string;
+    name: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+  };
+  price: number;
+  updatedAt: string;
+  __v: number;
+  _id: string;
+}

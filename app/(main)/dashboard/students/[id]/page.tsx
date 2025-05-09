@@ -1,14 +1,7 @@
-import StudentInfo from "@/components/student-info";
-interface Props {
-  params: {
-    id: string;
-  };
+import StudentInfo from "@/components/students/student-info";
+
+export default async function StudentDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const {id} = await params
+  return <StudentInfo studentId={id} />;
 }
-export default function StudentDetailPage({ params }: Props) {
-  const { id } = params;
-  return (
-    <div>
-      <StudentInfo studentId={id} />
-    </div>
-  );
-}
+

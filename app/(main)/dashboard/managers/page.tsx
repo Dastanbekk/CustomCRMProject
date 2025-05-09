@@ -1,6 +1,6 @@
 "use client";
-import ManagersDialog from "@/components/managers-dialog";
-import { UsersTable } from "@/components/managers-table";
+import ManagersDialog from "@/components/managers/managers-dialog";
+import { UsersTable } from "@/components/managers/managers-table";
 import { Button } from "@/components/ui/button";
 import { DatePickerWithRange } from "@/components/ui/date";
 import {

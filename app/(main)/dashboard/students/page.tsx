@@ -1,4 +1,4 @@
-import StudentsGlobal from "@/components/students-global";
+import StudentsGlobal from "@/components/students/students-global";
 import React, { Suspense } from "react";
 
 const Students = () => {

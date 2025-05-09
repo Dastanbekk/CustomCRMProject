@@ -1,4 +1,5 @@
 import {
+  BookOpenText,
   GraduationCap,
   Group,
   Home,
@@ -16,9 +17,10 @@ export const menuItems = [
   { icon: Users, label: "O'qituvchilar", href: "/dashboard/teachers" },
   { icon: GraduationCap, label: "O'quvchilar", href: "/dashboard/students" },
   { icon: Group, label: "Guruhlar", href: "/dashboard/groups" },
+  { icon: BookOpenText, label: "Kurslar", href: "/dashboard/course" },
   { icon: UserCircle, label: "Profilim", href: "/dashboard/profile" },
 ];
 
 export const bottomMenuItems = [
-  { icon: Settings, label: "Sozlamalar", href: "/settings" },
+  { icon: Settings, label: "Sozlamalar", href: "/dashboard/settings" },
 ];

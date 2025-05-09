@@ -1,4 +1,4 @@
-import TeacherGlobal from "@/components/teachers-global-page";
+import TeacherGlobal from "@/components/teachers/teachers-global-page";
 import React from "react";
 
 const Teachers = () => {

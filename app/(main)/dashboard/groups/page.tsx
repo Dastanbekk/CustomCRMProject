@@ -1,4 +1,4 @@
-import GroupsGlobal from "@/components/groups-global";
+import GroupsGlobal from "@/components/groups/groups-global";
 import React from "react";
 
 const Groups = () => {

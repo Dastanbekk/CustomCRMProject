@@ -526,3 +526,73 @@ export const useGetStudentWithId = (studentId: string) => {
     enabled: !!studentId,
   });
 };
+
+// GET Courses
+export const useGetAllCourses = () => {
+  return useQuery({
+    queryKey: ["get-all-courses"],
+    queryFn: async () => {
+      const res = request.get("/api/course/get-courses");
+      return (await res).data.data;
+    },
+  });
+};
+
+// Categoriya yaratish uchun mutation
+export const useCreateCourseCategory = () => {
+  return useMutation({
+    mutationKey: ["create-category"],
+    mutationFn: (data: object) =>
+      request.post("/api/course/create-category", data),
+  });
+};
+
+// Kurs yaratish uchun mutation
+export const useCreateCourse = () => {
+  const { refetch } = useGetAllCourses();
+  return useMutation({
+    mutationKey: ["create-course"],
+    mutationFn: (data: object) =>
+      request.post("/api/course/create-course", data),
+    onSuccess() {
+      refetch();
+      toast.success("Kurs muvaffaqiyatli yaratildi");
+    },
+    onError(err) {
+      toast.error(`Xatolik ${err}`);
+    },
+  });
+};
+
+// Kursni o'chirish uchun mutation
+export const useDeleteCourse = () => {
+  const { refetch } = useGetAllCourses();
+  return useMutation({
+    mutationKey: ["delete-course"],
+    mutationFn: (data: object) =>
+      request({ url: "/api/course/delete-course", data, method: "DELETE" }),
+    onSuccess() {
+      refetch();
+      toast.success("Kurs o'chirildi");
+    },
+    onError(err) {
+      toast.error(`Xatolik ${err}`);
+    },
+  });
+};
+
+// Kursni o'zgartirish uchun mutation
+export const useEditCourse = () => {
+  const { refetch } = useGetAllCourses();
+  return useMutation({
+    mutationKey: ["edit-course"],
+    mutationFn: (data: object) => request.post("/api/course/edit-course", data),
+    onSuccess() {
+      refetch();
+      toast.success("Kurs ma'lumotlari o'zgartirildi");
+    },
+    onError(err) {
+      toast.error(`Xatolik ${err}`);
+    },
+  });
+};

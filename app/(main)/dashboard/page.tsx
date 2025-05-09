@@ -1,4 +1,4 @@
-import { MainContent } from "@/components/main-content";
+import { MainContent } from "@/components/layouts/main-content";
 import React from "react";
 
 const Dashboard = () => {

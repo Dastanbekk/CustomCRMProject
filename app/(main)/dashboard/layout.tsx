@@ -1,7 +1,6 @@
-"use client"
-import { DashboardSidebar } from "@/components/sidebar";
-import { MainHeader } from "@/components/main-header";
-import { MainContent } from "@/components/main-content";
+"use client";
+import { DashboardSidebar } from "@/components/layouts/sidebar";
+import { MainHeader } from "@/components/layouts/main-header";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { ThemeProvider } from "@/components/theme-provider";
 import { useLogOutMutation } from "@/request/mutation";
