@@ -46,7 +46,6 @@ import StudentStaffDialog from "../student-staff-dialog";
 import StudentAddTheGroup from "../student-add-the-group";
 
 export function StudentsTable() {
-  const [dialogOpen, setDialogOpen] = useState(false);
   const [viewDialog, setViewDialog] = useState(false);
   const [viewId, setViewId] = useState("");
 
@@ -55,7 +54,6 @@ export function StudentsTable() {
   const { mutate: deleteAdmin } = useDeleteStudent();
   const { mutate: exitStaff } = useReturnStaffStudentMutation();
   const { mutate: returnToWork } = useReturnStudentMutation();
-  const { mutate: AddNewGroupStudent } = useAddNewGroupStudent();
   const cookie = Cookies;
   const userCookie = cookie.get("user");
   const loggedUser: UserType = userCookie ? JSON.parse(userCookie) : null;
@@ -200,7 +198,6 @@ export function StudentsTable() {
                             loggedUser?.role !== "manager"
                               ? toast.error("Sizga ruxsat berilmagan!")
                               : deleteAdmin({ _id: user?._id });
-                            console.log({ _id: user?._id });
                           }}
                           className="text-red-500 cursor-pointer"
                         >

@@ -140,7 +140,6 @@ const StudentAddTheGroup = ({ prop }: { prop: string }) => {
               onClick={() => {
                 mutate({ ...formData, joinedAt: date?.toISOString() });
                 setOpenDialog(false);
-                console.log({ ...formData, joinedAt: date?.toISOString() });
               }}
             >
               {isPending ? "Saqlanmoqda..." : "Save changes"}

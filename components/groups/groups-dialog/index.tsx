@@ -9,11 +9,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../../ui/dialog";
-import { Label } from "../../ui/label";
-import { Input } from "../../ui/input";
-import { TeacherType, UserType } from "@/@types";
-import Cookies from "js-cookie";
-import { useCreateGroup, useSearchTeacher } from "@/request/mutation";
 import {
   Select,
   SelectContent,
@@ -22,21 +17,27 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "../../ui/select";
+} from "@/components/ui/select";
+import { Label } from "../../ui/label";
+import { Input } from "../../ui/input";
+import { CoursesType, TeacherType } from "@/@types";
+import {
+  useCreateGroup,
+  useGetAllCourses,
+  useSearchTeacher,
+} from "@/request/mutation";
 
 const GroupsDialog = () => {
+  const [courseId, setCourseId] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const { data: teachers, isLoading } = useSearchTeacher(searchTerm);
+  const { data: AllCourses } = useGetAllCourses();
   const [selectValue, setSelectValue] = useState({
     id: "",
     name: "",
   });
   const { mutate, isPending } = useCreateGroup();
-  const cookie = Cookies;
-  const userCookie = cookie.get("user");
-  const user: UserType = userCookie ? JSON.parse(userCookie) : null;
   const [openDialog, setOpenDialog] = useState(false);
-
   useEffect(() => {
     if (selectValue?.name) {
       setSearchTerm(selectValue.name);
@@ -44,12 +45,9 @@ const GroupsDialog = () => {
       setSearchTerm("");
     }
   }, [selectValue]);
-
   const [formData, setFormData] = useState({
-    name: "",
     teacher: selectValue.id,
     started_group: new Date().toISOString().slice(0, 10),
-    price: 0,
   });
   return (
     <div>
@@ -65,19 +63,6 @@ const GroupsDialog = () => {
             <DialogTitle>Admin Qo'shish</DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name" className="text-right">
-                Nomi :
-              </Label>
-              <Input
-                id="name"
-                value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
-                className="col-span-3"
-              />
-            </div>
             <div className="grid grid-cols-4 relative items-center gap-4">
               <Label htmlFor="username" className="text-right">
                 Ustoz :
@@ -100,6 +85,8 @@ const GroupsDialog = () => {
                   {teachers?.map((value: TeacherType) => (
                     <div
                       onClick={() => {
+                        console.log(value);
+
                         setSelectValue({
                           id: value._id,
                           name: value.first_name,
@@ -115,18 +102,34 @@ const GroupsDialog = () => {
                 </div>
               ) : null}
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
+            <div className="flex relative items-center gap-11">
               <Label htmlFor="email" className="text-left">
-                Kurs narxi:
+                Kurslar:
               </Label>
-              <Input
-                id="email"
-                value={formData.price}
-                onChange={(e) =>
-                  setFormData({ ...formData, price: Number(e.target.value) })
-                }
-                className="col-span-3"
-              />
+              <Select
+                onValueChange={(val) => {
+                  const selected = AllCourses.find(
+                    (item: CoursesType) => item.name.name === val
+                  );
+                  if (selected) {
+                    setCourseId(selected._id);
+                  }
+                }}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Kursni tanlash" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Courses</SelectLabel>
+                    {AllCourses?.map((value: CoursesType) => (
+                      <SelectItem key={value._id} value={value?.name?.name}>
+                        {value.name.name}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="email" className="text-left">
@@ -147,17 +150,14 @@ const GroupsDialog = () => {
               className="cursor-pointer"
               type="button"
               onClick={() => {
+                mutate({ ...formData, course_id: courseId });
                 setOpenDialog(!openDialog);
                 setFormData({
-                  name: "",
                   teacher: "",
                   started_group: "",
-                  price: 0,
                 });
-
                 setSearchTerm("");
                 setSelectValue({ id: "", name: "" });
-                mutate(formData);
               }}
             >
               {isPending ? "Saqlanmoqda..." : "Save changes"}

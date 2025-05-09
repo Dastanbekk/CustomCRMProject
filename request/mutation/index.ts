@@ -373,6 +373,7 @@ export const useSearchTeacher = (name: string, enabled = true) => {
   });
 };
 
+
 // Id orqali ustozlarni o'lish
 export const useGetGroupsTeacherWithId = (teacherId: string) => {
   return useQuery({
@@ -656,3 +657,4 @@ export const useUnFreezeCourse = () => {
     },
   });
 };
+
