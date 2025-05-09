@@ -149,3 +149,12 @@ export interface CoursesType {
   __v: number;
   _id: string;
 }
+
+export interface APIError {
+  response?: {
+    data?: {
+      message: string;
+      status?: number;
+    };
+  };
+}

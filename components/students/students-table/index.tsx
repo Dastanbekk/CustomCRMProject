@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import {
+  useAddNewGroupStudent,
   useDeleteStudent,
   useGetAllStudents,
   useReturnStaffStudentMutation,
@@ -36,12 +37,13 @@ import {
 import { Label } from "../../ui/label";
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
-import AdminsStaffDialog from "../../admins/admins-staff-dialog";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../../ui/tooltip";
 import Link from "next/link";
+import StudentStaffDialog from "../student-staff-dialog";
+import StudentAddTheGroup from "../student-add-the-group";
 
 export function StudentsTable() {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -53,6 +55,7 @@ export function StudentsTable() {
   const { mutate: deleteAdmin } = useDeleteStudent();
   const { mutate: exitStaff } = useReturnStaffStudentMutation();
   const { mutate: returnToWork } = useReturnStudentMutation();
+  const { mutate: AddNewGroupStudent } = useAddNewGroupStudent();
   const cookie = Cookies;
   const userCookie = cookie.get("user");
   const loggedUser: UserType = userCookie ? JSON.parse(userCookie) : null;
@@ -184,8 +187,12 @@ export function StudentsTable() {
                           Faollashtirish
                         </DropdownMenuItem>
                       ) : (
-                        <AdminsStaffDialog prop={user._id} />
+                        <DropdownMenuItem>
+                          <StudentStaffDialog prop={user._id} />
+                        </DropdownMenuItem>
                       )}
+                      <DropdownMenuSeparator />
+                      <StudentAddTheGroup prop={user._id} />
                       <DropdownMenuSeparator />
                       {user?.status?.toLowerCase() == "faol" ? (
                         <DropdownMenuItem

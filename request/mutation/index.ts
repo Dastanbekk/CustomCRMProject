@@ -6,6 +6,14 @@ import toast from "react-hot-toast";
 import cookie from "js-cookie";
 import { ManagersType } from "@/@types";
 import Cookies from "js-cookie";
+type APIError = {
+  response?: {
+    data?: {
+      message: string;
+      status?: number;
+    };
+  };
+};
 
 // Tizimga kirish uchun mutation
 export const useLoginMutation = () => {
@@ -24,8 +32,8 @@ export const useLoginMutation = () => {
       toast.success("Tizimga kirdingiz");
       router.push("/dashboard");
     },
-    onError(err) {
-      toast.error(`Xatolik | ${err.message}`);
+    onError(err: APIError) {
+      toast.error(`Xatolik ${err?.response?.data?.message}`);
     },
   });
 };
@@ -46,8 +54,8 @@ export const useLogOutMutation = () => {
       toast.success("Tizimdan chiqdingiz");
       router.push("login");
     },
-    onError(err) {
-      toast.error(`Tizimdan chiqishda xatolik ${err.message}`);
+    onError(err: APIError) {
+      toast.error(`Xatolik ${err?.response?.data?.message}`);
     },
   });
 };
@@ -103,8 +111,8 @@ export const useEditAdminsMutation = () => {
       toast.success("Admin o'zgartirildi");
       adminRefetch();
     },
-    onError(err) {
-      toast.error(`Xatolik: ${err.message}`);
+    onError(err: APIError) {
+      toast.error(`Xatolik ${err?.response?.data?.message}`);
     },
   });
 };
@@ -128,8 +136,8 @@ export const useDeleteAdminsMutation = () => {
       adminRefetch();
       managerRefetch();
     },
-    onError(err) {
-      toast.error(`Xatolik ${err.message}`);
+    onError(err: APIError) {
+      toast.error(`Xatolik ${err?.response?.data?.message}`);
     },
   });
 };
@@ -145,8 +153,8 @@ export const useAddAdminMutation = () => {
       toast.success("Admin qo'shildi");
       adminRefetch();
     },
-    onError(err) {
-      toast.error(`Xatolik ${err.message}`);
+    onError(err: APIError) {
+      toast.error(`Xatolik ${err?.response?.data?.message}`);
     },
   });
 };
@@ -166,8 +174,8 @@ export const useUploadImgMutation = () => {
       }
       toast.success("Rasm yuklandi");
     },
-    onError(err) {
-      toast.error(`Xatolik: ${err.message}`);
+    onError(err: APIError) {
+      toast.error(`Xatolik ${err?.response?.data?.message}`);
     },
   });
 };
@@ -180,8 +188,8 @@ export const useUpdateUserProfile = () => {
     onSuccess(data) {
       toast.success("Ma'lumotlaringiz o'zgartirildi");
     },
-    onError(err) {
-      toast.error(`Xatolik ${err.message}`);
+    onError(err: APIError) {
+      toast.error(`Xatolik ${err?.response?.data?.message}`);
     },
   });
 };
@@ -197,8 +205,8 @@ export const useAdminStaffMutation = () => {
       toast.success("Sabab qo'shildi");
       adminRefetch();
     },
-    onError(err) {
-      toast.error(`Xatolik ${err.message}`);
+    onError(err: APIError) {
+      toast.error(`Xatolik ${err?.response?.data?.message}`);
     },
   });
 };
@@ -211,8 +219,8 @@ export const useForgotPasswordMutation = () => {
     onSuccess() {
       toast.success("Parolingiz o'zgartirildi");
     },
-    onError(err) {
-      toast.error(`Xatolik ${err}`);
+    onError(err: APIError) {
+      toast.error(`Xatolik ${err?.response?.data?.message}`);
     },
   });
 };
@@ -229,8 +237,8 @@ export const useLeaveExitStaff = () => {
       toast.success("Faollashtirildi");
       adminRefetch();
     },
-    onError(err) {
-      toast.error(`Xatolik ${err}`);
+    onError(err: APIError) {
+      toast.error(`Xatolik ${err?.response?.data?.message}`);
     },
   });
 };
@@ -248,8 +256,8 @@ export const useReturnToWork = () => {
       managerRefetch();
       adminRefetch();
     },
-    onError(err) {
-      toast.error(`Xatolik ${err}`);
+    onError(err: APIError) {
+      toast.error(`Xatolik ${err?.response?.data?.message}`);
     },
   });
 };
@@ -266,8 +274,8 @@ export const useCreateTeachersMutation = () => {
       toast.success("Qo'shildi");
       teacherGet();
     },
-    onError(err) {
-      toast.error(`Xatolik ${err}`);
+    onError(err: APIError) {
+      toast.error(`Xatolik ${err?.response?.data?.message}`);
     },
   });
 };
@@ -299,8 +307,8 @@ export const useDeleteTeachers = () => {
       refetch();
       toast.success("O'qituvchi ishdan bo'shatildi");
     },
-    onError(err) {
-      toast.error(`Xatolik ${err}`);
+    onError(err: APIError) {
+      toast.error(`Xatolik ${err?.response?.data?.message}`);
     },
   });
 };
@@ -318,8 +326,8 @@ export const useReturnToWorkTeacher = () => {
       toast.success("O'qituvchi ishga qaytarildi");
       refetch();
     },
-    onError(err) {
-      toast.error(`Xatolik ${err}`);
+    onError(err: APIError) {
+      toast.error(`Xatolik ${err?.response?.data?.message}`);
     },
   });
 };
@@ -345,8 +353,8 @@ export const useCreateGroup = () => {
       refetch();
       toast.success("Guruh qoshildi");
     },
-    onError(err) {
-      toast.error(`Xatolik ${err}`);
+    onError(err: APIError) {
+      toast.error(`Xatolik ${err?.response?.data?.message}`);
     },
   });
 };
@@ -389,8 +397,8 @@ export const useDeleteGroups = () => {
       refetch();
       toast.success("Guruh o'chirildi");
     },
-    onError(err) {
-      toast.error(`Xatolik ${err}`);
+    onError(err: APIError) {
+      toast.error(`Xatolik ${err?.response?.data?.message}`);
     },
   });
 };
@@ -432,8 +440,8 @@ export const useCreateStudent = () => {
       refetch();
       toast.success("O'quvchi tizimga qo'shildi");
     },
-    onError(err) {
-      toast.error(`Xatolik ${err}`);
+    onError(err: APIError) {
+      toast.error(`Xatolik ${err?.response?.data?.message}`);
     },
   });
 };
@@ -465,8 +473,8 @@ export const useDeleteStudent = () => {
       toast.success("O'quvchi o'chirildi");
       refetch();
     },
-    onError(err) {
-      toast.error(`Xatolik ${err}`);
+    onError(err: APIError) {
+      toast.error(`Xatolik ${err?.response?.data?.message}`);
     },
   });
 };
@@ -482,8 +490,8 @@ export const useStudentStaffMutation = () => {
       refetch();
       toast.success("Ta'tilga chiqarildi");
     },
-    onError(err) {
-      toast.error(`Xatolik ${err}`);
+    onError(err: APIError) {
+      toast.error(`Xatolik ${err?.response?.data?.message}`);
     },
   });
 };
@@ -499,8 +507,8 @@ export const useReturnStaffStudentMutation = () => {
       refetch();
       toast.success("O'quvchi ta'tildan qaytarildi");
     },
-    onError(err) {
-      toast.error(`Xatolik ${err}`);
+    onError(err: APIError) {
+      toast.error(`Xatolik ${err?.response?.data?.message}`);
     },
   });
 };
@@ -516,8 +524,8 @@ export const useReturnStudentMutation = () => {
       refetch();
       toast.success("O'quvchi tizimga qaytarildi");
     },
-    onError(err) {
-      toast.error(`Xatolik ${err}`);
+    onError(err: APIError) {
+      toast.error(`Xatolik ${err?.response?.data?.message}`);
     },
   });
 };
@@ -531,6 +539,21 @@ export const useGetStudentWithId = (studentId: string) => {
       return await res.data.data;
     },
     enabled: !!studentId,
+  });
+};
+
+// Studentni yangi guruhga qo'shish
+export const useAddNewGroupStudent = () => {
+  return useMutation({
+    mutationKey: ["add-new-group-for-student"],
+    mutationFn: (data: object) =>
+      request.post("/api/student/added-new-group-student", data),
+    onSuccess() {
+      toast.success("O'quvchi guruhga qoshildi");
+    },
+    onError(err: APIError) {
+      toast.error(`Xatolik ${err?.response?.data?.message}`);
+    },
   });
 };
 
@@ -565,8 +588,8 @@ export const useCreateCourse = () => {
       refetch();
       toast.success("Kurs muvaffaqiyatli yaratildi");
     },
-    onError(err) {
-      toast.error(`Xatolik ${err}`);
+    onError(err: APIError) {
+      toast.error(`Xatolik ${err?.response?.data?.message}`);
     },
   });
 };
@@ -582,8 +605,8 @@ export const useDeleteCourse = () => {
       refetch();
       toast.success("Kurs o'chirildi");
     },
-    onError(err) {
-      toast.error(`Xatolik ${err}`);
+    onError(err: APIError) {
+      toast.error(`Xatolik ${err?.response?.data?.message}`);
     },
   });
 };
@@ -598,8 +621,8 @@ export const useEditCourse = () => {
       refetch();
       toast.success("Kurs ma'lumotlari o'zgartirildi");
     },
-    onError(err) {
-      toast.error(`Xatolik ${err}`);
+    onError(err: APIError) {
+      toast.error(`Xatolik ${err?.response?.data?.message}`);
     },
   });
 };
@@ -613,12 +636,13 @@ export const useFreezeCourse = () => {
     onSuccess() {
       toast.success("Kurs muzlatildi");
     },
-    onError(err) {
-      toast.error(`Xatolik ${err}`);
+    onError(err: APIError) {
+      toast.error(`Xatolik ${err?.response?.data?.message}`);
     },
   });
 };
 
+// Kursni muzlatishdan chiqarish uchun mutation
 export const useUnFreezeCourse = () => {
   return useMutation({
     mutationKey: ["freeze-course"],
@@ -627,8 +651,8 @@ export const useUnFreezeCourse = () => {
     onSuccess() {
       toast.success("Kurs aktivlashtirildi");
     },
-    onError(err) {
-      toast.error(`Xatolik ${err}`);
+    onError(err: APIError) {
+      toast.error(`Xatolik ${err?.response?.data?.message}`);
     },
   });
 };
