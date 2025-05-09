@@ -14,9 +14,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   useDeleteCourse,
   useEditCourse,
+  useFreezeCourse,
   useGetAllCourses,
+  useUnFreezeCourse,
 } from "@/request/mutation";
 import {
   BookText,
@@ -25,6 +33,8 @@ import {
   Edit,
   Info,
   Loader2,
+  Snowflake,
+  SunSnow,
   Trash,
 } from "lucide-react";
 import React, { useState } from "react";
@@ -34,11 +44,15 @@ const CoursesTable = () => {
   const { data, isLoading, isError, isPending } = useGetAllCourses();
   const { mutate: editCourseMutate } = useEditCourse();
   const { mutate: DeleteCourseMutate } = useDeleteCourse();
+  const { mutate: FreezeCourseMutate } = useFreezeCourse();
+  const { mutate: UnFreezeCourseMutate } = useUnFreezeCourse();
   const [editForm, setFormEdit] = useState({
     course_id: "",
     duration: "",
     price: 0,
   });
+  console.log(data);
+
   if (isPending || isError) {
     <div className="w-full h-[80vh] flex items-center justify-center">
       <Loader2 className="animate-spin" />
@@ -73,31 +87,90 @@ const CoursesTable = () => {
               </div>
 
               <div className="relative">
-                <div className="h-8 w-8 rounded-full bg-blue-500/20 flex items-center justify-center">
-                  <BookText className="h-4 w-4 text-blue-500" />
+                <div className="h-8 w-8 rounded-full bg-green-500/20 flex items-center justify-center">
+                  <BookText className="h-4 w-4 text-green-500" />
                 </div>
 
-                <div className="flex-col mt-10 absolute top-0 right-0 flex gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-600 ease-in-out">
-                  <button
-                    onClick={() => {
-                      setFormEdit({
-                        ...editForm,
-                        price: value.price,
-                        course_id: value._id,
-                        duration: value.duration,
-                      });
-                      setEditDialog(true);
-                    }}
-                    className="h-8 w-8 rounded-full cursor-pointer bg-yellow-500/20 flex items-center justify-center"
-                  >
-                    <Edit className="h-4 w-4 text-yellow-500" />
-                  </button>
-                  <button
-                    onClick={() => DeleteCourseMutate({ course_id: value._id })}
-                    className="h-8 w-8 rounded-full cursor-pointer bg-red-500/20 flex items-center justify-center"
-                  >
-                    <Trash className="h-4 w-4 text-red-500" />
-                  </button>
+                <div className="flex-col mt-10 absolute top-0 right-0 flex gap-2 opacity-0 translate-y-15 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-600 ease-in-out">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          onClick={() => {
+                            setFormEdit({
+                              ...editForm,
+                              price: value.price,
+                              course_id: value._id,
+                              duration: value.duration,
+                            });
+                            setEditDialog(true);
+                          }}
+                          className="h-8 w-8 rounded-full cursor-pointer bg-yellow-500/20 flex items-center justify-center"
+                        >
+                          <Edit className="h-4 w-4 text-yellow-500" />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Tahrirlash</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          onClick={() =>
+                            DeleteCourseMutate({ course_id: value._id })
+                          }
+                          className="h-8 w-8 rounded-full cursor-pointer bg-red-500/20 flex items-center justify-center"
+                        >
+                          <Trash className="h-4 w-4 text-red-500" />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>O'chirish</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+
+                  {value.is_freeze ? (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            onClick={() =>
+                              UnFreezeCourseMutate({ course_id: value._id })
+                            }
+                            className="h-8 w-8 rounded-full cursor-pointer bg-blue-500/20 flex items-center justify-center"
+                          >
+                            <SunSnow className="h-4 w-4 text-blue-500" />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Aktivlash</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  ) : (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            onClick={() =>
+                              FreezeCourseMutate({ course_id: value._id })
+                            }
+                            className="h-8 w-8 rounded-full cursor-pointer bg-blue-500/20 flex items-center justify-center"
+                          >
+                            <Snowflake className="h-4 w-4 text-blue-500" />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Muzlatish</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
                 </div>
               </div>
             </CardHeader>

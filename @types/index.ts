@@ -136,6 +136,7 @@ export interface CoursesType {
   createdAt: string;
   description: string;
   duration: string;
+  is_freeze: boolean;
   name: {
     _id: string;
     name: string;

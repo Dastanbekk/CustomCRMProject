@@ -4,7 +4,7 @@ import { request } from "..";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import cookie from "js-cookie";
-import { ManagersType, NewUserType, UserType } from "@/@types";
+import { ManagersType } from "@/@types";
 import Cookies from "js-cookie";
 
 // Tizimga kirish uchun mutation
@@ -64,7 +64,7 @@ export const useGetManagersMutation = () => {
         },
       });
 
-      return res.data.data;
+      return await res.data.data;
     },
   });
 };
@@ -278,11 +278,12 @@ export const useGetTeachersMutation = () => {
     queryKey: ["get-teacher"],
     queryFn: async () => {
       const res = await request.get("/api/teacher/get-all-teachers");
-      return res.data.data;
+      return await res.data.data;
     },
   });
 };
 
+// O'qituvchilarni o'chirish uchun mutation
 export const useDeleteTeachers = () => {
   const { refetch } = useGetTeachersMutation();
   return useMutation({
@@ -304,6 +305,7 @@ export const useDeleteTeachers = () => {
   });
 };
 
+// O'qituvchini ishga qaytarish uchun mutation
 export const useReturnToWorkTeacher = () => {
   const { refetch } = useGetTeachersMutation();
 
@@ -328,11 +330,12 @@ export const useGetAllGroups = () => {
     queryKey: ["get-groups"],
     queryFn: async () => {
       const res = await request.get("/api/group/get-all-group");
-      return res.data.data;
+      return await res.data.data;
     },
   });
 };
 
+// Guruh yaratish uchun mutation
 export const useCreateGroup = () => {
   const { refetch } = useGetAllGroups();
   return useMutation({
@@ -348,6 +351,7 @@ export const useCreateGroup = () => {
   });
 };
 
+// Ustozni qidirish uchun mutation
 export const useSearchTeacher = (name: string, enabled = true) => {
   return useQuery({
     queryKey: ["search-teacher", name],
@@ -361,6 +365,7 @@ export const useSearchTeacher = (name: string, enabled = true) => {
   });
 };
 
+// Id orqali ustozlarni o'lish
 export const useGetGroupsTeacherWithId = (teacherId: string) => {
   return useQuery({
     queryKey: ["get-teacher-id", teacherId],
@@ -372,6 +377,7 @@ export const useGetGroupsTeacherWithId = (teacherId: string) => {
   });
 };
 
+// Guruhni o'chirish uchun mutation
 export const useDeleteGroups = () => {
   const { refetch } = useGetAllGroups();
   return useMutation({
@@ -389,6 +395,7 @@ export const useDeleteGroups = () => {
   });
 };
 
+// Params orqali studentni chiqaish uchun mutation
 export const useGetGroupsWithParams = (name: string) => {
   return useQuery({
     queryKey: ["get-group-id", name],
@@ -590,6 +597,35 @@ export const useEditCourse = () => {
     onSuccess() {
       refetch();
       toast.success("Kurs ma'lumotlari o'zgartirildi");
+    },
+    onError(err) {
+      toast.error(`Xatolik ${err}`);
+    },
+  });
+};
+
+// Kursni muzlatish uchun mutation
+export const useFreezeCourse = () => {
+  return useMutation({
+    mutationKey: ["freeze-course"],
+    mutationFn: (data: object) =>
+      request.put("/api/course/freeze-course", data),
+    onSuccess() {
+      toast.success("Kurs muzlatildi");
+    },
+    onError(err) {
+      toast.error(`Xatolik ${err}`);
+    },
+  });
+};
+
+export const useUnFreezeCourse = () => {
+  return useMutation({
+    mutationKey: ["freeze-course"],
+    mutationFn: (data: object) =>
+      request.put("/api/course/unfreeze-course", data),
+    onSuccess() {
+      toast.success("Kurs aktivlashtirildi");
     },
     onError(err) {
       toast.error(`Xatolik ${err}`);
