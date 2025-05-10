@@ -1,4 +1,4 @@
-import StudentInfo from "@/components/students/student-info";
+import AdminsInfo from "@/components/admins/admin-info";
 
 export default async function StudentDetailPage({
   params,
@@ -6,5 +6,5 @@ export default async function StudentDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  return <StudentInfo studentId={id} />;
+  return <AdminsInfo adminsId={id} />;
 }

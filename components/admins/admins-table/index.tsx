@@ -51,6 +51,7 @@ import {
 } from "../../ui/select";
 import toast from "react-hot-toast";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 export function AdminsTable() {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -539,6 +540,9 @@ export function AdminsTable() {
                   </div>
                 </div>
                 <DialogFooter>
+                  <Link href={`/dashboard/admins/${value._id}`}>
+                    <Button>Profiliga o'tish</Button>
+                  </Link>
                   <Button
                     className="cursor-pointer"
                     type="button"

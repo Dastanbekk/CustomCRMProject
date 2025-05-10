@@ -34,6 +34,7 @@ import {
 import { Label } from "../../ui/label";
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
+import Link from "next/link";
 
 export function UsersTable() {
   const [viewDialog, setViewDialog] = useState(false);
@@ -241,6 +242,9 @@ export function UsersTable() {
                   </div>
                 </div>
                 <DialogFooter>
+                  <Link href={`/dashboard/managers/${value._id}`}>
+                    <Button>Profiliga o'tish</Button>
+                  </Link>
                   <Button
                     className="cursor-pointer"
                     type="button"

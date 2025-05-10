@@ -51,8 +51,17 @@ export interface ManagersType {
   work_end?: null;
   groups: {
     group: {
-      _id: string;
+      course: string;
+      createdAt: string;
+      disable: boolean;
+      end_group: string;
+      is_deleted: boolean;
       name: string;
+      price: number;
+      started_group: string;
+      teacher: string;
+      updatedAt: string;
+      _id: string;
     };
   }[];
   leave_history: [
@@ -112,9 +121,17 @@ export interface StudentsType {
   work_end?: null;
   groups: {
     group: {
-      _id: string;
+      course: string;
+      createdAt: string;
+      disable: boolean;
+      end_group: string;
+      is_deleted: boolean;
       name: string;
       price: number;
+      started_group: string;
+      teacher: string;
+      updatedAt: string;
+      _id: string;
     };
     exitedAt: string;
     joinedAt: string;
@@ -157,4 +174,29 @@ export interface APIError {
       status?: number;
     };
   };
+}
+
+export interface AdminsType {
+  active: boolean;
+  createdAt: string;
+  email: string;
+  first_name: string;
+  image: string;
+  is_deleted: boolean;
+  last_name: string;
+  leave_history: [
+    {
+      start_date: string;
+      end_date: string;
+      reason: string;
+      _id: string;
+    }
+  ];
+  password: string;
+  role: string;
+  status: string;
+  updatedAt: string;
+  work_date: string;
+  work_end: null;
+  _id: string;
 }

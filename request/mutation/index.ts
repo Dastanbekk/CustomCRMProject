@@ -373,6 +373,20 @@ export const useSearchTeacher = (name: string, enabled = true) => {
   });
 };
 
+// Guruhni narxini o'zgartirish uchun mutate
+export const useEditGroupPrice = () => {
+  return useMutation({
+    mutationKey: ["edit-group-price"],
+    mutationFn: (data: object) =>
+      request.post("/api/group/edit-price-group", data),
+    onSuccess() {
+      toast.success("Guruh narxi o'zgardi");
+    },
+    onError(err: APIError) {
+      toast.error(`Xatolik ${err?.response?.data?.message}`);
+    },
+  });
+};
 
 // Id orqali ustozlarni o'lish
 export const useGetGroupsTeacherWithId = (teacherId: string) => {
@@ -542,6 +556,16 @@ export const useGetStudentWithId = (studentId: string) => {
     enabled: !!studentId,
   });
 };
+export const useAdminsWithID = (studentId: string) => {
+  return useQuery({
+    queryKey: ["get-admins-with-id", studentId],
+    queryFn: async () => {
+      const res = await request.get(`/api/staff/info/${studentId}`);
+      return await res.data.data;
+    },
+    enabled: !!studentId,
+  });
+};
 
 // Studentni yangi guruhga qo'shish
 export const useAddNewGroupStudent = () => {
@@ -657,4 +681,3 @@ export const useUnFreezeCourse = () => {
     },
   });
 };
-

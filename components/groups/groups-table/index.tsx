@@ -19,14 +19,35 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useDeleteGroups, useGetAllGroups } from "@/request/mutation";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  useDeleteGroups,
+  useEditGroupPrice,
+  useGetAllGroups,
+} from "@/request/mutation";
 import { GroupsType, TeacherType, UserType } from "@/@types";
 import toast from "react-hot-toast";
 export function GroupsTable() {
+  const [price, setPrice] = useState({
+    group_id: "",
+    price: "",
+  });
   const [viewDialog, setViewDialog] = useState(false);
   const [viewId, setViewId] = useState<Number>();
   const { data: usersData, isPending } = useGetAllGroups();
-  const { mutate: deleteTeachers } = useDeleteGroups();
+  const { mutate: deleteGroup } = useDeleteGroups();
+  const { mutate: EditPriceMutate } = useEditGroupPrice();
   const users = usersData;
   const cookie = Cookies;
   const userCookie = cookie.get("user");
@@ -90,21 +111,58 @@ export function GroupsTable() {
                       </button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem>Edit user</DropdownMenuItem>
-                      <DropdownMenuSeparator />
                       <DropdownMenuItem
                         onClick={() => {
-                          console.log({ _id: user?._id });
                           loggedUser?.role !== "manager"
                             ? toast.error("Sizga ruxsat berilmagan!")
-                            : deleteTeachers({ _id: user?.teacher });
+                            : deleteGroup({ _id: user._id });
                         }}
                         className="text-red-500 cursor-pointer"
                       >
                         Delete
                       </DropdownMenuItem>
-                      <DropdownMenuItem>Narxini o'zgartirish</DropdownMenuItem>
-                      <DropdownMenuItem>Narxini o'zgartirish</DropdownMenuItem>
+                      {/* <Dialog>
+                        <DialogTrigger asChild>
+                          <Button
+                            onClick={() =>
+                              setPrice({ ...price, group_id: user._id })
+                            }
+                            variant="ghost"
+                          >
+                            Narxini o'zgartirish
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[425px]">
+                          <DialogHeader>
+                            <DialogTitle>Narxini o'zgartish</DialogTitle>
+                          </DialogHeader>
+                          <div className="grid gap-4 py-4">
+                            <div className="grid grid-cols-4 items-center gap-4">
+                              <Label htmlFor="name" className="text-right">
+                                Narxi:
+                              </Label>
+                              <Input
+                                id="name"
+                                onChange={(e) =>
+                                  setPrice({ ...price, price: e.target.value })
+                                }
+                                defaultValue={user.price}
+                                className="col-span-3"
+                              />
+                            </div>
+                          </div>
+                          <DialogFooter>
+                            <DialogTrigger>
+                              <Button
+                                type="submit"
+                                onClick={() => EditPriceMutate(price)}
+                              >
+                                O'zgartirish
+                              </Button>
+                            </DialogTrigger>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog> */}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>

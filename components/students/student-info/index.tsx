@@ -5,14 +5,16 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useGetStudentWithId } from "@/request/mutation";
-import { StudentsType } from "@/@types";
+import {
+  useGetStudentWithId,
+  useGetTeachersMutation,
+} from "@/request/mutation";
+import { ManagersType, StudentsType, TeacherType } from "@/@types";
 
 export default function StudentInfo({ studentId }: { studentId: string }) {
   const { data } = useGetStudentWithId(studentId);
+  const { data: TeacherData } = useGetTeachersMutation();
   const userData = data as StudentsType;
-  console.log(userData);
-
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-background">
       {/* Sidebar */}
@@ -80,11 +82,13 @@ export default function StudentInfo({ studentId }: { studentId: string }) {
                       <thead>
                         <tr className="border-b text-xs uppercase text-muted-foreground">
                           <th className="px-4 py-3 text-left">Guruh nomi</th>
+                          <th className="px-4 py-3 text-left">Teacher</th>
                           <th className="px-4 py-3 text-left">Status</th>
                           <th className="px-4 py-3 text-left">
                             Qo'shilgan vaqti:
                           </th>
                           <th className="px-4 py-3 text-left">Kurs narxi:</th>
+                          <th className="px-4 py-3 text-left">Tolovlari</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -99,6 +103,15 @@ export default function StudentInfo({ studentId }: { studentId: string }) {
                                 </div>
                               </td>
                               <td className="px-4 py-3">
+                                <div className="font-medium">
+                                  {TeacherData?.map((teacher: TeacherType) =>
+                                    group?.group.teacher === teacher._id
+                                      ? teacher.first_name
+                                      : ""
+                                  )}
+                                </div>
+                              </td>
+                              <td className="px-4 py-3">
                                 {group?.status}
 
                                 <div className="text-xs text-muted-foreground">
@@ -110,6 +123,11 @@ export default function StudentInfo({ studentId }: { studentId: string }) {
                               </td>
                               <td className="px-4 py-3">
                                 {group?.group?.price}
+                              </td>
+                              <td className="px-4 py-3">
+                                {group?.payments?.map((value) => (
+                                  <p>{value}</p>
+                                ))}
                               </td>
                             </tr>
                           ) : (
