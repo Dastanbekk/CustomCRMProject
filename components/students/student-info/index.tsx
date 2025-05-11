@@ -8,12 +8,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   useGetStudentWithId,
   useGetTeachersMutation,
+  useShowAllPaymentsStudent,
 } from "@/request/mutation";
 import { ManagersType, StudentsType, TeacherType } from "@/@types";
+import { Button } from "@/components/ui/button";
 
 export default function StudentInfo({ studentId }: { studentId: string }) {
   const { data } = useGetStudentWithId(studentId);
   const { data: TeacherData } = useGetTeachersMutation();
+  const { data: PaymentsData, mutate: PaymentsMutate } =
+    useShowAllPaymentsStudent();
   const userData = data as StudentsType;
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-background">
@@ -62,133 +66,139 @@ export default function StudentInfo({ studentId }: { studentId: string }) {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto">
-        <div className="flex justify-between items-center p-4 md:p-6">
-          <h1 className="text-2xl font-bold">Groups</h1>
-        </div>
+      <div className="w-full">
+        <div className="flex-1 overflow-auto">
+          <div className="flex justify-between items-center p-4 md:p-6">
+            <h1 className="text-2xl font-bold">Groups</h1>
+            <Button onClick={() => PaymentsMutate({ student_id: studentId })}>
+              CLick here
+            </Button>
+          </div>
 
-        <div className="px-4 md:px-6 pb-6">
-          <Tabs defaultValue="uncompleted">
-            <TabsList className="mb-4">
-              <TabsTrigger value="uncompleted">Tugallanmagan</TabsTrigger>
-              <TabsTrigger value="completed">Tugallangan</TabsTrigger>
-            </TabsList>
+          <div className="px-4 md:px-6 pb-6">
+            <Tabs defaultValue="uncompleted">
+              <TabsList className="mb-4">
+                <TabsTrigger value="uncompleted">Tugallanmagan</TabsTrigger>
+                <TabsTrigger value="completed">Tugallangan</TabsTrigger>
+              </TabsList>
 
-            <TabsContent value="uncompleted" className="space-y-4">
-              <Card>
-                <CardContent className="p-0">
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead>
-                        <tr className="border-b text-xs uppercase text-muted-foreground">
-                          <th className="px-4 py-3 text-left">Guruh nomi</th>
-                          <th className="px-4 py-3 text-left">Teacher</th>
-                          <th className="px-4 py-3 text-left">Status</th>
-                          <th className="px-4 py-3 text-left">
-                            Qo'shilgan vaqti:
-                          </th>
-                          <th className="px-4 py-3 text-left">Kurs narxi:</th>
-                          <th className="px-4 py-3 text-left">Tolovlari</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {userData?.groups?.map((group) =>
-                          group?.status == "aktiv" ? (
-                            <tr key={group.group._id} className="border-b">
-                              <td className="px-4 py-3">
-                                <div>
-                                  <div className="font-medium">
-                                    {group?.group?.name}
+              <TabsContent value="uncompleted" className="space-y-4">
+                <Card>
+                  <CardContent className="p-0">
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="border-b text-xs uppercase text-muted-foreground">
+                            <th className="px-4 py-3 text-left">Guruh nomi</th>
+                            <th className="px-4 py-3 text-left">Teacher</th>
+                            <th className="px-4 py-3 text-left">Status</th>
+                            <th className="px-4 py-3 text-left">
+                              Qo'shilgan vaqti:
+                            </th>
+                            <th className="px-4 py-3 text-left">Kurs narxi:</th>
+                            <th className="px-4 py-3 text-left">Tolovlari</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {userData?.groups?.map((group) =>
+                            group?.status == "aktiv" ? (
+                              <tr key={group.group._id} className="border-b">
+                                <td className="px-4 py-3">
+                                  <div>
+                                    <div className="font-medium">
+                                      {group?.group?.name}
+                                    </div>
                                   </div>
-                                </div>
-                              </td>
-                              <td className="px-4 py-3">
-                                <div className="font-medium">
-                                  {TeacherData?.map((teacher: TeacherType) =>
-                                    group?.group.teacher === teacher._id
-                                      ? teacher.first_name
-                                      : ""
-                                  )}
-                                </div>
-                              </td>
-                              <td className="px-4 py-3">
-                                {group?.status}
-
-                                <div className="text-xs text-muted-foreground">
-                                  {/* {lesson.points} */}
-                                </div>
-                              </td>
-                              <td className="px-4 py-3">
-                                {group?.joinedAt?.slice(0, 10)}
-                              </td>
-                              <td className="px-4 py-3">
-                                {group?.group?.price}
-                              </td>
-                              <td className="px-4 py-3">
-                                {group?.payments?.map((value) => (
-                                  <p>{value}</p>
-                                ))}
-                              </td>
-                            </tr>
-                          ) : (
-                            ""
-                          )
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="completed">
-              <Card>
-                <CardContent className="p-0">
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead>
-                        <tr className="border-b text-xs uppercase text-muted-foreground">
-                          <th className="px-4 py-3 text-left">Guruh nomi</th>
-                          <th className="px-4 py-3 text-left">Status</th>
-                          <th className="px-4 py-3 text-left">
-                            Qo'shilgan vaqti:
-                          </th>
-                          <th className="px-4 py-3 text-left">
-                            Chiqarilgan vaqti:
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {userData?.groups?.map((group, idx) =>
-                          group?.status !== "aktiv" ? (
-                            <tr key={idx} className="border-b">
-                              <td className="px-4 py-3">
-                                <div>
+                                </td>
+                                <td className="px-4 py-3">
                                   <div className="font-medium">
-                                    {group?.group?.name}
+                                    {TeacherData?.map((teacher: TeacherType) =>
+                                      group?.group.teacher === teacher._id
+                                        ? teacher.first_name
+                                        : ""
+                                    )}
                                   </div>
-                                </div>
-                              </td>
-                              <td className="px-4 py-3">{group?.status}</td>
-                              <td className="px-4 py-3">
-                                {group?.joinedAt?.slice(0, 10)}
-                              </td>
-                              <td className="px-4 py-3">
-                                {group?.exitedAt?.slice(0, 10)}
-                              </td>
-                            </tr>
-                          ) : (
-                            ""
-                          )
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
+                                </td>
+                                <td className="px-4 py-3">
+                                  {group?.status}
+
+                                  <div className="text-xs text-muted-foreground">
+                                    {/* {lesson.points} */}
+                                  </div>
+                                </td>
+                                <td className="px-4 py-3">
+                                  {group?.joinedAt?.slice(0, 10)}
+                                </td>
+                                <td className="px-4 py-3">
+                                  {group?.group?.price}
+                                </td>
+                                <td className="px-4 py-3">
+                                  {group?.payments?.map((value) => (
+                                    <p>{value}</p>
+                                  ))}
+                                </td>
+                              </tr>
+                            ) : (
+                              ""
+                            )
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="completed">
+                <Card>
+                  <CardContent className="p-0">
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="border-b text-xs uppercase text-muted-foreground">
+                            <th className="px-4 py-3 text-left">Guruh nomi</th>
+                            <th className="px-4 py-3 text-left">Status</th>
+                            <th className="px-4 py-3 text-left">
+                              Qo'shilgan vaqti:
+                            </th>
+                            <th className="px-4 py-3 text-left">
+                              Chiqarilgan vaqti:
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {userData?.groups?.map((group, idx) =>
+                            group?.status !== "aktiv" ? (
+                              <tr key={idx} className="border-b">
+                                <td className="px-4 py-3">
+                                  <div>
+                                    <div className="font-medium">
+                                      {group?.group?.name}
+                                    </div>
+                                  </div>
+                                </td>
+                                <td className="px-4 py-3">{group?.status}</td>
+                                <td className="px-4 py-3">
+                                  {group?.joinedAt?.slice(0, 10)}
+                                </td>
+                                <td className="px-4 py-3">
+                                  {group?.exitedAt?.slice(0, 10)}
+                                </td>
+                              </tr>
+                            ) : (
+                              ""
+                            )
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
+          </div>
         </div>
+        <div></div>
       </div>
     </div>
   );

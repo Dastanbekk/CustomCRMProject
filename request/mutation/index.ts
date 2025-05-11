@@ -681,3 +681,15 @@ export const useUnFreezeCourse = () => {
     },
   });
 };
+
+// studentning barcha tolovlarini korsatish uchun mutation
+export const useShowAllPaymentsStudent = () => {
+  return useMutation({
+    mutationKey: ["show-all-payment"],
+    mutationFn: (data: object) =>
+      request.post("/api/payment/show-allprice-student", data),
+    onError(err: APIError) {
+      toast.error(`Xatolik ${err?.response?.data?.message}`);
+    },
+  });
+};
