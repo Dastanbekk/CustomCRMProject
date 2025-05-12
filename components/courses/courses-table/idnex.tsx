@@ -89,7 +89,7 @@ const CoursesTable = () => {
                   <BookText className="h-4 w-4 text-green-500" />
                 </div>
 
-                <div className="flex-col mt-10 absolute top-0 right-0 flex gap-2 opacity-0 translate-y-15 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-600 ease-in-out">
+                <div className="flex-col mt-10 absolute top-0 right-0 flex gap-2 lg:opacity-0 lg:translate-y-15 opacity-100 translate-y-0 lg:group-hover:opacity-100 lg:group-hover:translate-y-0 transition-all duration-600 ease-in-out">
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>

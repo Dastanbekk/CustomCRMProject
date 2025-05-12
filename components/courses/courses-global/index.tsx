@@ -7,15 +7,18 @@ import CoursesDialog from "../courses-dialog";
 const CourseGlobal = () => {
   return (
     <div>
-      <div className="pt-10 px-5">
+      <div className="py-10 px-5">
         <h3 className="font-bold text-2xl">Kurslar</h3>
         <div className="pt-3 flex justify-between">
-          <Input className="max-w-[20%]" placeholder="Qidirish..." />{" "}
+          <Input
+            className="max-w-[50%] sm:max-w-[20%]"
+            placeholder="Qidirish..."
+          />{" "}
           <div className="flex items-center gap-3">
             <CoursesDialog />
           </div>
         </div>
-        <div className="mt-5" >
+        <div className="mt-5">
           <CoursesTable />
         </div>
       </div>
