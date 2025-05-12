@@ -24,6 +24,9 @@ export const useLoginMutation = () => {
       request
         .post("/api/auth/sign-in", {
           ...data,
+          headers: {
+            Authorization: "", // yoki umuman header'ni qo‘shmang
+          },
         })
         .then((res) => res.data.data),
     onSuccess(data) {
