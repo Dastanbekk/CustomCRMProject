@@ -82,13 +82,13 @@ const Profile = () => {
   };
 
   return (
-    <div className="px-5 py-5">
+    <div className="px-5 py-5 border">
       <Image
         src={backgroundImg}
         alt="profile-bg"
         className="min-h-[70px] max-h-[150px] object-cover rounded-t-xl h-full w-full"
       />
-      <div className="flex items-end mt-[-3%] px-5 justify-between">
+      <div className="flex items-end mt-[-5%] sm:mt-[-3%] px-5 justify-between">
         <div className="flex items-end gap-3">
           <div className="bg-gray-200 rounded-full relative ">
             <label
@@ -115,9 +115,9 @@ const Profile = () => {
           <div className="flex flex-col">
             <h3 className="font-bold text-lg">{`${
               user ? user?.first_name : ""
-            }  ${user ? user?.first_name : ""}`}</h3>
+            }  ${user ? user?.last_name : ""}`}</h3>
             <h3 className="text-[15px] text-zinc-400">
-              {user ? user?.first_name : ""}
+              {user ? user?.role : ""}
             </h3>
           </div>
         </div>
@@ -197,7 +197,7 @@ const Profile = () => {
       </form>
       <form
         onSubmit={handleSubmit}
-        className="grid grid-cols-1 mt-5 px-5 sm:grid-cols-2 gap-3 sm:gap-5"
+        className="grid grid-cols-1 mt-5 px-5 pb-5 sm:grid-cols-2 gap-3 sm:gap-5"
       >
         <div className="flex flex-col space-y-3 relative">
           <Label htmlFor="current_password">Joriy parol:</Label>

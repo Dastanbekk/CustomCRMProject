@@ -11,8 +11,6 @@ import { AdminsType } from "@/@types";
 export default function ManagersInfo({ managerId }: { managerId: string }) {
   const { data } = useAdminsWithID(managerId);
   const userData = data as AdminsType;
-  console.log(data);
-
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-background">
       {/* Sidebar */}
@@ -39,12 +37,10 @@ export default function ManagersInfo({ managerId }: { managerId: string }) {
             <div className="flex flex-wrap gap-2 mb-4">
               <Badge variant="outline">{userData?.email}</Badge>
             </div>
-
             <h3 className="text-sm font-medium mb-2">Status</h3>
             <Badge variant="outline" className="mb-4">
               {userData?.status}
             </Badge>
-
             <h3 className="text-sm font-medium mb-2">
               Tizimga qoshilgan vaqti
             </h3>

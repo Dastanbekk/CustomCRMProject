@@ -1,7 +1,5 @@
 "use client";
 
-import { Bell, Search, Moon, Sun } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -28,7 +26,6 @@ import {
 } from "../ui/tooltip";
 import {
   Breadcrumb,
-  BreadcrumbEllipsis,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
@@ -85,24 +82,12 @@ export function MainHeader() {
           </Breadcrumb>
         </div>
       </div>
-
-      <div className="w-full flex-1 md:w-auto md:flex-none"></div>
-
       <div className="flex items-center gap-4 ml-auto">
         <ModeToggle />
-        <Button variant="outline" size="icon" className="rounded-full relative">
-          <Bell className="h-5 w-5" />
-          <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-medium text-white">
-            3
-          </span>
-          <span className="sr-only">Notifications</span>
-        </Button>
-
-        <div className="flex flex-col justify-end">
-          <h3 className="text-sm">
-            {user?.first_name} {user?.last_name}
+        <div className="flex flex-col items-end w-full justify-end">
+          <h3 className="text-sm hidden sm:flex flex-col  text-end sm:flex-row gap-0 sm:gap-1">
+            <span>{user?.first_name}</span> <span>{user?.last_name}</span>
           </h3>
-
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -159,7 +144,7 @@ export function MainHeader() {
               <span className="sr-only">User menu</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align="end" className="z-500">
             <DropdownMenuItem
               onClick={() => router.push("/dashboard/profile")}
               className="cursor-pointer"
