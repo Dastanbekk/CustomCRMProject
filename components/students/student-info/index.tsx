@@ -96,7 +96,7 @@ export default function StudentInfo({ studentId }: { studentId: string }) {
                               Qo'shilgan vaqti:
                             </th>
                             <th className="px-4 py-3 text-left">Kurs narxi:</th>
-                            <th className="px-4 py-3 text-left">Tolovlari</th>
+                            {/* <th className="px-4 py-3 text-left">Tolovlari</th> */}
                           </tr>
                         </thead>
                         <tbody>
@@ -132,11 +132,11 @@ export default function StudentInfo({ studentId }: { studentId: string }) {
                                 <td className="px-4 py-3">
                                   {group?.group?.price}
                                 </td>
-                                <td className="px-4 py-3">
-                                  {group?.payments?.map((value) => (
-                                    <p>{value}</p>
+                                {/* <td className="px-4 py-3">
+                                  {group?.payments?.map((value, idx) => (
+                                    <p key={idx}>{value}</p>
                                   ))}
-                                </td>
+                                </td> */}
                               </tr>
                             ) : (
                               ""
@@ -169,7 +169,7 @@ export default function StudentInfo({ studentId }: { studentId: string }) {
                         <tbody>
                           {userData?.groups?.map((group, idx) =>
                             group?.status !== "aktiv" ? (
-                              <tr key={idx} className="border-b">
+                              <tr key={group.group._id} className="border-b">
                                 <td className="px-4 py-3">
                                   <div>
                                     <div className="font-medium">
@@ -198,7 +198,6 @@ export default function StudentInfo({ studentId }: { studentId: string }) {
             </Tabs>
           </div>
         </div>
-        <div></div>
       </div>
     </div>
   );

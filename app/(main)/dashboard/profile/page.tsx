@@ -14,6 +14,7 @@ import {
   useUpdateUserProfile,
   useUploadImgMutation,
 } from "@/request/mutation";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Profile = () => {
   const [curPas, setCurPas] = useState(true);
@@ -21,13 +22,8 @@ const Profile = () => {
   const [edit, setEdit] = useState(true);
   const cookie = Cookies;
   const [user, setUser] = useState<UserType | null>(null);
-  useEffect(() => {
-    const userCookie = Cookies.get("user");
-    if (userCookie) {
-      setUser(JSON.parse(userCookie));
-    }
-  }, []);
-  const { mutate } = useUploadImgMutation();
+
+  const { mutate, isSuccess, isPending } = useUploadImgMutation();
   const { mutate: updateProfile } = useUpdateUserProfile();
   const { mutate: forgotPassword } = useForgotPasswordMutation();
 
@@ -60,7 +56,6 @@ const Profile = () => {
 
   const handlePassword = () => {
     forgotPassword(newPassword);
-    console.log(newPassword);
   };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -80,9 +75,14 @@ const Profile = () => {
     formData.append("image", selectedFile);
     mutate(formData);
   };
-
+  useEffect(() => {
+    const userCookie = Cookies.get("user");
+    if (userCookie) {
+      setUser(JSON.parse(userCookie));
+    }
+  }, [isSuccess]);
   return (
-    <div className="px-5 py-5 border">
+    <div className="px-5 py-5 ">
       <Image
         src={backgroundImg}
         alt="profile-bg"
@@ -125,7 +125,6 @@ const Profile = () => {
           <span className="hidden sm:block">O'zgartirish</span> <Edit />
         </Button>
       </div>
-
       <div className="flex items-start">
         <div className="flex  gap-1 p-4">
           <div className="flex">
@@ -137,134 +136,150 @@ const Profile = () => {
               className="hidden"
             />
           </div>
-          <Button size="sm" onClick={handleUpload}>
-            Rasmni yuklash
+          <Button disabled={isPending} size="sm" onClick={handleUpload}>
+            {isPending ? "Yoklanmoqda..." : "Rasmni yuklash"}
           </Button>
         </div>
       </div>
-      <form
-        onSubmit={handleSubmit}
-        className="grid grid-cols-1 mt-5 px-5 sm:grid-cols-2 gap-3 sm:gap-5"
-      >
-        <div className="flex flex-col space-y-3">
-          <Label htmlFor="first_name">First Name:</Label>
-          <Input
-            id="first_name"
-            disabled={edit}
-            defaultValue={user?.first_name}
-            onChange={(e) =>
-              setNewUser({ ...newUser, first_name: e.target.value })
-            }
-          />
-        </div>
 
-        <div className="flex flex-col space-y-3">
-          <Label htmlFor="last_name">Last Name:</Label>
-          <Input
-            id="last_name"
-            disabled={edit}
-            defaultValue={user?.last_name}
-            onChange={(e) =>
-              setNewUser({ ...newUser, last_name: e.target.value })
-            }
-          />
-        </div>
+      <Tabs defaultValue="profile" >
+        <TabsList className="grid w-[400px] grid-cols-2">
+          <TabsTrigger value="profile">Profile</TabsTrigger>
+          <TabsTrigger value="password">Parol</TabsTrigger>
+        </TabsList>
+        <TabsContent value="profile">
+          <form
+            onSubmit={handleSubmit}
+            className="grid grid-cols-1 mt-5 px-5 sm:grid-cols-2 gap-3 sm:gap-5"
+          >
+            <div className="flex flex-col space-y-3">
+              <Label htmlFor="first_name">First Name:</Label>
+              <Input
+                id="first_name"
+                disabled={edit}
+                defaultValue={user?.first_name}
+                onChange={(e) =>
+                  setNewUser({ ...newUser, first_name: e.target.value })
+                }
+              />
+            </div>
 
-        <div className="flex flex-col space-y-3">
-          <Label htmlFor="email">Email:</Label>
-          <Input
-            id="email"
-            type="email"
-            disabled={edit}
-            defaultValue={user?.email}
-            onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
-          />
-        </div>
+            <div className="flex flex-col space-y-3">
+              <Label htmlFor="last_name">Last Name:</Label>
+              <Input
+                id="last_name"
+                disabled={edit}
+                defaultValue={user?.last_name}
+                onChange={(e) =>
+                  setNewUser({ ...newUser, last_name: e.target.value })
+                }
+              />
+            </div>
 
-        <div className="flex flex-col space-y-3">
-          <Label htmlFor="role">Role:</Label>
-          <Input id="role" disabled={true} defaultValue={user?.role} />
-        </div>
-        <div>
-          <Button
-            onClick={handlePush}
-            disabled={edit}
-            className="flex items-start"
-          >
-            Saqlash
-          </Button>
-        </div>
-      </form>
-      <form
-        onSubmit={handleSubmit}
-        className="grid grid-cols-1 mt-5 px-5 pb-5 sm:grid-cols-2 gap-3 sm:gap-5"
-      >
-        <div className="flex flex-col space-y-3 relative">
-          <Label htmlFor="current_password">Joriy parol:</Label>
-          <Input
-            id="current_password"
-            type={`${curPas ? "text" : "password"}`}
-            disabled={edit}
-            placeholder="********"
-            onChange={(e) =>
-              setNewPassword({
-                ...newPassword,
-                current_password: e.target.value,
-              })
-            }
-          />
-          <Button
-            type="button"
-            variant="link"
-            disabled={edit}
-            size="icon"
-            className="absolute right-2 top-6 cursor-pointer"
-            onClick={() => setCurPas(!curPas)}
-          >
-            {curPas ? (
-              <EyeOff className="h-5 w-5" />
-            ) : (
-              <Eye className="h-5 w-5" />
-            )}
-          </Button>
-        </div>
+            <div className="flex flex-col space-y-3">
+              <Label htmlFor="email">Email:</Label>
+              <Input
+                id="email"
+                type="email"
+                disabled={edit}
+                defaultValue={user?.email}
+                onChange={(e) =>
+                  setNewUser({ ...newUser, email: e.target.value })
+                }
+              />
+            </div>
 
-        <div className="flex flex-col space-y-3 relative">
-          <Label htmlFor="new_password">Yangi parol:</Label>
-          <Input
-            type={`${newPas ? "text" : "password"}`}
-            id="new_password"
-            disabled={edit}
-            placeholder="********"
-            onChange={(e) =>
-              setNewPassword({ ...newPassword, new_password: e.target.value })
-            }
-          />
-          <Button
-            type="button"
-            variant="link"
-            disabled={edit}
-            size="icon"
-            className="absolute right-2 top-6 cursor-pointer"
-            onClick={() => setNewPas(!newPas)}
+            <div className="flex flex-col space-y-3">
+              <Label htmlFor="role">Role:</Label>
+              <Input id="role" disabled={true} defaultValue={user?.role} />
+            </div>
+            <div>
+              <Button
+                onClick={handlePush}
+                disabled={edit}
+                className="flex items-start"
+              >
+                Saqlash
+              </Button>
+            </div>
+          </form>
+        </TabsContent>
+        <TabsContent value="password">
+          <form
+            onSubmit={handleSubmit}
+            className="grid grid-cols-1 mt-5 px-5 pb-5 sm:grid-cols-2 gap-3 sm:gap-5"
           >
-            {newPas ? (
-              <EyeOff className="h-5 w-5" />
-            ) : (
-              <Eye className="h-5 w-5" />
-            )}
-          </Button>
-        </div>
-        <div>
-          <Button
-            onClick={handlePassword}
-            disabled={edit}
-            className="flex items-start"
-          >
-            Saqlash
-          </Button>
-        </div>
-      </form>
+            <div className="flex flex-col space-y-3 relative">
+              <Label htmlFor="current_password">Joriy parol:</Label>
+              <Input
+                id="current_password"
+                type={`${curPas ? "text" : "password"}`}
+                disabled={edit}
+                placeholder="********"
+                onChange={(e) =>
+                  setNewPassword({
+                    ...newPassword,
+                    current_password: e.target.value,
+                  })
+                }
+              />
+              <Button
+                type="button"
+                variant="link"
+                disabled={edit}
+                size="icon"
+                className="absolute right-2 top-6 cursor-pointer"
+                onClick={() => setCurPas(!curPas)}
+              >
+                {curPas ? (
+                  <EyeOff className="h-5 w-5" />
+                ) : (
+                  <Eye className="h-5 w-5" />
+                )}
+              </Button>
+            </div>
+
+            <div className="flex flex-col space-y-3 relative">
+              <Label htmlFor="new_password">Yangi parol:</Label>
+              <Input
+                type={`${newPas ? "text" : "password"}`}
+                id="new_password"
+                disabled={edit}
+                placeholder="********"
+                onChange={(e) =>
+                  setNewPassword({
+                    ...newPassword,
+                    new_password: e.target.value,
+                  })
+                }
+              />
+              <Button
+                type="button"
+                variant="link"
+                disabled={edit}
+                size="icon"
+                className="absolute right-2 top-6 cursor-pointer"
+                onClick={() => setNewPas(!newPas)}
+              >
+                {newPas ? (
+                  <EyeOff className="h-5 w-5" />
+                ) : (
+                  <Eye className="h-5 w-5" />
+                )}
+              </Button>
+            </div>
+            <div>
+              <Button
+                onClick={handlePassword}
+                disabled={edit}
+                className="flex items-start"
+              >
+                Saqlash
+              </Button>
+            </div>
+          </form>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

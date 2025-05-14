@@ -185,9 +185,7 @@ export function StudentsTable() {
                           Faollashtirish
                         </DropdownMenuItem>
                       ) : (
-                        <DropdownMenuItem>
-                          <StudentStaffDialog prop={user._id} />
-                        </DropdownMenuItem>
+                        <StudentStaffDialog prop={user._id} />
                       )}
                       <DropdownMenuSeparator />
                       <StudentAddTheGroup prop={user._id} />

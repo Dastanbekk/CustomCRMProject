@@ -58,7 +58,7 @@ const CoursesTable = () => {
   }
   return (
     <div>
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 2xl:grid-cols-3">
         {data?.map((value: CoursesType) => (
           <Card
             key={value._id}
@@ -70,16 +70,17 @@ const CoursesTable = () => {
                   {value?.name?.name}
                 </CardTitle>
                 <CardTitle className="flex items-center gap-2">
-                  <Clock /> <p>Davomiyligi:</p> <p>{value?.duration}</p>
+                  <Clock /> <p className="sm:block hidden">Davomiyligi:</p>{" "}
+                  <p>{value?.duration}</p>
                 </CardTitle>
                 <div className="flex gap-2 items-center mt-2">
                   <Info />
-                  <p>Kurs haqida:</p>
+                  <p className="sm:block hidden">Kurs haqida:</p>
                   <p>{value.description}</p>
                 </div>
                 <div className="flex gap-2 items-center mt-2">
                   <Calendar />
-                  <p>Kurs ochilgan vaqti:</p>
+                  <p className="sm:block hidden">Kurs ochilgan vaqti:</p>
                   <p>{value.createdAt.slice(0, 10)}</p>
                 </div>
               </div>
@@ -174,7 +175,7 @@ const CoursesTable = () => {
             </CardHeader>
 
             <CardContent className="">
-              <div className="text-2xl mt-4 text-green-600 font-bold">
+              <div className="text-2xl mt-2 text-green-600 font-bold">
                 {value.price.toLocaleString()} sum
               </div>
             </CardContent>

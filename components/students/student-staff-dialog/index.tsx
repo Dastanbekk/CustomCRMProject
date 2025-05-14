@@ -44,8 +44,8 @@ const StudentStaffDialog = ({ prop }: { prop: string }) => {
             <DialogTitle>Sabab bildirish</DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="days" className="text-right">
+            <div className="grid grid-cols-4 items-center leading-15 gap-4">
+              <Label htmlFor="days" className="text-left">
                 Necha kun
               </Label>
               <Input
