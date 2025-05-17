@@ -693,3 +693,18 @@ export const useShowAllPaymentsStudent = () => {
     },
   });
 };
+
+// Tolov uchun mutation
+export const usePaymentStudent = () => {
+  useMutation({
+    mutationKey: ["payment-student"],
+    mutationFn: (data: object) =>
+      request.post("/api/payment/payment-student", data),
+    onSuccess() {
+      toast.success("Tollov amalga oshirildi");
+    },
+    onError(err: APIError) {
+      toast.error(`Xatolik ${err?.response?.data?.message}`);
+    },
+  });
+};

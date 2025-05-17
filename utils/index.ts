@@ -1,5 +1,6 @@
 import {
   BookOpenText,
+  CircleDollarSign,
   GraduationCap,
   Group,
   Home,
@@ -18,6 +19,7 @@ export const menuItems = [
   { icon: GraduationCap, label: "O'quvchilar", href: "/dashboard/students" },
   { icon: Group, label: "Guruhlar", href: "/dashboard/groups" },
   { icon: BookOpenText, label: "Kurslar", href: "/dashboard/course" },
+  { icon: CircleDollarSign, label: "Tolovlar", href: "/dashboard/payments" },
   { icon: UserCircle, label: "Profilim", href: "/dashboard/profile" },
 ];
 
