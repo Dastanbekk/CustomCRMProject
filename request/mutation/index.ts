@@ -696,15 +696,39 @@ export const useShowAllPaymentsStudent = () => {
 
 // Tolov uchun mutation
 export const usePaymentStudent = () => {
-  useMutation({
+  return useMutation({
     mutationKey: ["payment-student"],
     mutationFn: (data: object) =>
       request.post("/api/payment/payment-student", data),
     onSuccess() {
-      toast.success("Tollov amalga oshirildi");
+      toast.success("Tolov amalga oshirildi");
     },
     onError(err: APIError) {
       toast.error(`Xatolik ${err?.response?.data?.message}`);
     },
+  });
+};
+
+export const useSearchStudent = (name: string, enabled = true) => {
+  return useQuery({
+    queryKey: ["search-student", name],
+    queryFn: async () => {
+      const res = await request.get("/api/payment/search-student", {
+        params: { name: name.trim() },
+      });
+      return await res.data.data;
+    },
+    enabled: !!name.trim(),
+  });
+};
+
+export const useGetGroupWithId = (group_id: string) => {
+  return useQuery({
+    queryKey: ["group-id"],
+    queryFn: async () => {
+      const res = await request.get(`/api/group/one-group/${group_id}`);
+      return await res.data.data;
+    },
+    enabled: !!group_id,
   });
 };

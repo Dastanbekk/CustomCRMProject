@@ -98,6 +98,33 @@ export interface GroupsType {
   teacher: string;
   price: number;
   started_group: string;
+  group: {
+    course: string;
+    createdAt: string;
+    disable: boolean;
+    end_group: string;
+    is_deleted: boolean;
+    name: string;
+    price: number;
+    started_group: string;
+    teacher: string;
+    updatedAt: string;
+    _id: string;
+  };
+}
+
+export interface GroupType {
+    course: string;
+    createdAt: string;
+    disable: boolean;
+    end_group: string;
+    is_deleted: boolean;
+    name: string;
+    price: number;
+    started_group: string;
+    teacher: string;
+    updatedAt: string;
+    _id: string;
 }
 
 export interface StudentsType {
@@ -199,4 +226,13 @@ export interface AdminsType {
   work_date: string;
   work_end: null;
   _id: string;
+}
+
+export interface PaymentsType {
+  student_id: string;
+  group_id: string;
+  payment_price: number;
+  month?: string;
+  method: string;
+  paidAt?: string ;
 }
